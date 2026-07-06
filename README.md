@@ -4,17 +4,33 @@
 
 ```text
 src/
-  app.js
-  config/
-  constants/
-  middleware/
-  modules/
-    items/
-      item.controller.js
-      item.model.js
-      item.routes.js
-      item.service.js
-  utils/
+│
+├── modules/
+│   ├── auth/
+│   │   ├── auth.routes.js
+│   │   ├── auth.controller.js
+│   │   ├── auth.service.js
+│   │   ├── auth.model.js
+│   │   └── auth.validation.js
+│   │
+│   ├── users/
+│   │   ├── user.routes.js
+│   │   ├── user.controller.js
+│   │   ├── user.service.js
+│   │   ├── user.model.js
+│   │   └── user.validation.js
+│   │
+│   ├── reports/
+│   ├── maps/
+│   ├── notifications/
+│   └── ...
+│
+├── middleware/
+├── config/
+├── utils/
+├── constants/
+├── app.js
+└── server.js
 ```
 
 ## Kickstart rules
