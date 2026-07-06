@@ -1,4 +1,4 @@
-const { findAllItems } = require('../models/item.model');
+const { findAllItems } = require('./item.model');
 
 async function getItems() {
   return findAllItems();

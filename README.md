@@ -6,16 +6,15 @@
 src/
   app.js
   config/
-  controllers/
-    item.controller.js
-  middlewares/
-  models/
-    item.model.js
-  routes/
-    index.js
-  services/
-    item.service.js
-  views/
+  constants/
+  middleware/
+  modules/
+    items/
+      item.controller.js
+      item.model.js
+      item.routes.js
+      item.service.js
+  utils/
 ```
 
 ## Kickstart rules
