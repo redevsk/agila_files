@@ -1,0 +1,15 @@
+{
+  "name": "agila-files",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Hackathon MVP scaffold for vector surveillance operations.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "check": "node scripts/check-syntax.js"
+  },
+  "dependencies": {
+    "express": "^4.18.3"
+  },
+  "devDependencies": {}
+}
