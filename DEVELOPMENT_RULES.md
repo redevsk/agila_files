@@ -32,15 +32,15 @@ Request flow:
 
 ```text
 Request
-    ↓
+    ->
 Route
-    ↓
+    ->
 Controller
-    ↓
+    ->
 Service
-    ↓
+    ->
 Model (Database)
-    ↓
+    ->
 Response
 ```
 
@@ -59,7 +59,7 @@ Response
 
 ```json
 {
-  "data": ...
+  "data": "..."
 }
 ```
 

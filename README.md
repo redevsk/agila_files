@@ -50,7 +50,27 @@ src/
 
 ## Current Source State
 
-The source currently contains a small generic MVC example under `src/modules/items`. Replace it with the domain modules listed above as implementation begins.
+The source now follows the feature/module MVC structure. The first implementation pass uses in-memory seed data so frontend and map work can start quickly before SQLite is wired in.
+
+## Run
+
+```bash
+npm install
+npm start
+```
+
+The API is mounted under:
+
+```text
+/api/v1
+```
+
+Useful prototype endpoints:
+*   `GET /api/v1/dashboard/city`
+*   `GET /api/v1/maps/layers`
+*   `GET /api/v1/areas/priority-ranking`
+*   `POST /api/v1/tasks/generate-preventive`
+*   `GET /api/v1/public-status/areas`
 
 ## Kickstart Rules
 
