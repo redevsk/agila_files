@@ -3,7 +3,7 @@
 ## Team Structure
 
 ### Dev 1: Frontend Engineer
-Owns the user-facing web/mobile-friendly interface, role-based screens, forms, dashboards, and workflow interactions.
+Owns the Refine-based frontend, user-facing web/mobile-friendly interface, role-based screens, forms, dashboards, and workflow interactions.
 
 ### Dev 2: Backend Engineer
 Owns the API, database, authentication, permissions, workflow state, task assignment logic, reporting, and data processing.
@@ -14,6 +14,8 @@ Owns GIS/map implementation, spatial data modeling, route/coverage logic, map la
 ## Shared MVP Goal
 Build a working prototype that supports:
 *   City and barangay dashboards.
+*   Preventive surveillance route planning.
+*   Preventive Zone Prioritization with lightweight geo analysis.
 *   Citizen reporting and public location status.
 *   Field inspector route tracking and inspection validation.
 *   Treatment team task tracking.
@@ -22,9 +24,24 @@ Build a working prototype that supports:
 *   Optional/simulated Sentinel trap data.
 *   CSV/PDF reporting.
 
+## Hackathon Implementation Constraint
+
+This is a two-day hackathon build. Prefer the fastest reliable path:
+*   Use SQLite instead of PostgreSQL/PostGIS.
+*   Use plain `lat`/`lng` fields for points.
+*   Store route trails as JSON.
+*   Store boundaries/status areas as GeoJSON JSON fields if needed.
+*   Use predefined surveillance zones instead of advanced GIS analysis.
+*   Use simulated Sentinel readings before real IoT integration.
+*   Prioritize demo completeness over production-grade GIS infrastructure.
+
+See [Technical Architecture.md](Technical%20Architecture.md) for the implementation-oriented schema, APIs, status rules, and acceptance criteria.
+
 ## Dev 1: Frontend Engineer
 
 ### Primary Responsibilities
+*   Set up Refine as the frontend foundation.
+*   Configure Refine resources, data provider, auth provider, routing, and role-aware navigation.
 *   Build the main application layout and navigation.
 *   Build role-based screens for:
     *   City Administrator / City Health Office.
@@ -38,6 +55,7 @@ Build a working prototype that supports:
 *   Build task lists, route progress views, and status badges.
 *   Build dashboard cards for counts, overdue tasks, high-risk areas, route coverage, and treatment progress.
 *   Build export/report buttons and frontend states for CSV/PDF generation.
+*   Use Refine's ready-made CRUD patterns where possible to save hackathon time.
 
 ### Key Screens
 *   Login / role selection.
@@ -56,8 +74,9 @@ Build a working prototype that supports:
 *   Reports page.
 
 ### Deliverables
-*   Responsive frontend app.
+*   Responsive Refine frontend app.
 *   Reusable UI components for status badges, task cards, forms, filters, and role navigation.
+*   Refine resource definitions for reports, tasks, routes, inspections, treatments, public statuses, sentinel devices, users, and barangays.
 *   Frontend integration with backend API.
 *   Frontend integration with map components owned by Dev 3.
 *   Basic loading, empty, error, and offline-friendly states.
@@ -67,6 +86,7 @@ Build a working prototype that supports:
 *   Authentication and role permissions.
 *   Task, report, route, treatment, status, and user data.
 *   Export endpoints.
+*   REST responses compatible with Refine data-provider expectations.
 
 ### Needs From Dev 3
 *   Map component API.
@@ -82,6 +102,7 @@ Build a working prototype that supports:
 *   Build APIs for all user workflows.
 *   Implement task assignment and workflow state transitions.
 *   Implement basic rule-based risk scoring.
+*   Implement zone priority scoring and priority ranking.
 *   Implement public citizen status logic with Green status expiration.
 *   Implement CSV/PDF export support.
 *   Store photos, notes, route trails, and status histories.
@@ -124,9 +145,12 @@ Build a working prototype that supports:
 *   Sentinel trap check/update.
 *   Simulated Sentinel reading ingestion.
 *   Dashboard summaries.
+*   Area priority ranking.
 *   CSV/PDF exports.
 
 ### Workflow Rules
+*   System can recommend preventive patrol tasks from overdue coverage, expiring Green status, historical hotspots, unchecked areas, and sentinel signals.
+*   System can rank predefined zones using lightweight geo/risk scoring.
 *   Citizen report starts as Submitted.
 *   Barangay admin reviews and marks it Under Review, Duplicate, Rejected, or Scheduled for Inspection.
 *   Inspector validates the site and marks No Breeding Found, Confirmed, Need Revisit, or Unable to Access.
@@ -165,6 +189,8 @@ Build a working prototype that supports:
 *   Choose and implement the GIS/map stack.
 *   Define map layers, marker rules, route trail rendering, and coverage visualization.
 *   Define spatial data structures for barangays, zones, route points, checked areas, and public status areas.
+*   Define and seed 10-20 predefined surveillance zones for the demo.
+*   Define lightweight geo-analysis rules for zone prioritization.
 *   Research practical Sentinel trap integration options.
 *   Prototype simulated Sentinel trap data for the MVP.
 *   Define IoT payload structure for future hardware integration.
@@ -186,6 +212,11 @@ Build a working prototype that supports:
     *   Skipped areas.
     *   Need Revisit areas.
     *   Completed route trails.
+*   Display zone priority layers:
+    *   Low priority.
+    *   Medium priority.
+    *   High priority.
+    *   Critical priority.
 *   Display citizen public status colors:
     *   Gray: Neutral / Not Yet Checked.
     *   Yellow: Scheduled.
@@ -227,6 +258,8 @@ Build a working prototype that supports:
 ### Map/Spatial Data Questions To Resolve
 *   Should public status be shown by barangay, zone, street segment, block, or radius?
 *   How should checked and unchecked coverage be represented on the map?
+*   What 10-20 pilot zones should be seeded for the demo?
+*   Which zone attributes should affect priority?
 *   How long should Green status remain visible before expiring?
 *   What map provider should be used for MVP?
 *   Will field routes use live GPS trail tracking or periodic location points?
@@ -237,6 +270,8 @@ Build a working prototype that supports:
 *   Map layer specification.
 *   Reusable map component or integration guide.
 *   Spatial data format for backend.
+*   Predefined demo zone dataset.
+*   Zone prioritization rules.
 *   Route trail and coverage visualization rules.
 *   Public status color rules.
 *   Sentinel device data model recommendation.
@@ -311,13 +346,14 @@ Build a working prototype that supports:
 *   Risk-score spatial inputs.
 
 ## MVP Priority Order
-1. Citizen report submission.
-2. City/barangay dashboard with map.
-3. Task assignment.
+1. City/barangay dashboard with map.
+2. Preventive Zone Prioritization.
+3. Preventive patrol and task assignment.
 4. Inspector route tracking and validation.
-5. Treatment task tracking.
-6. Public location status.
-7. Monitoring and Green status expiration.
-8. Basic risk scoring.
-9. CSV/PDF reporting.
-10. Simulated Sentinel trap integration.
+5. Citizen report submission.
+6. Treatment task tracking.
+7. Public location status.
+8. Monitoring and Green status expiration.
+9. Basic risk scoring.
+10. CSV/PDF reporting.
+11. Simulated Sentinel trap integration.

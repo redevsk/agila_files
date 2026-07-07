@@ -9,6 +9,7 @@ Manage the citywide dengue surveillance and response program across all barangay
 1. **Open City GIS Dashboard**
    * Review citywide map of active reports, high-risk areas, confirmed breeding sites, treatment status, monitoring areas, and cleared areas.
    * Check barangay-level risk scores and compare which barangays need attention.
+   * Review scheduled preventive surveillance routes, overdue routine checks, and coverage gaps.
 
 2. **Review Alerts and Risk Changes**
    * Identify new high-risk reports, repeated reports, unresolved alerts, and areas with recurring breeding sites.
@@ -17,11 +18,12 @@ Manage the citywide dengue surveillance and response program across all barangay
 
 3. **Prioritize Areas**
    * Mark locations or barangays as Low, Medium, High, or Critical priority.
-   * Decide which areas require immediate inspection, treatment support, or monitoring.
+   * Decide which areas require preventive patrols, immediate inspection, treatment support, or monitoring.
 
 4. **Allocate Resources**
    * Assign or rebalance Field Inspectors, Treatment Teams, supplies, larvicide, equipment, and transport.
    * Assign trained Field Inspectors to deploy, retrieve, clean, refill, repair, or replace sentinel traps.
+   * Assign preventive inspection routes to areas with expiring Green status, historical hotspots, overdue checks, or sentinel activity signals.
    * Send city-level support to barangays with high workload or urgent hotspots.
 
 5. **Monitor Field Progress**
@@ -41,6 +43,7 @@ Manage the citywide dengue surveillance and response program across all barangay
 * Which barangays need more support?
 * Which hotspots should be escalated?
 * Which areas need additional monitoring?
+* Which areas should be inspected before a citizen report appears?
 * Which sentinel traps need maintenance, relocation, or replacement?
 * Are current risk-scoring rules and monitoring periods working?
 
@@ -66,7 +69,7 @@ Coordinate local dengue surveillance, validation, treatment follow-through, and 
    * Mark reports for inspection.
 
 3. **Plan Local Routes**
-   * Group nearby reports, routine checks, and follow-ups into inspection routes.
+   * Group preventive patrols, nearby reports, routine checks, sentinel checks, historical hotspots, and follow-ups into inspection routes.
    * Mark locations as Scheduled, Unchecked, Need Revisit, or Urgent.
 
 4. **Assign Field Tasks**
@@ -99,6 +102,7 @@ Coordinate local dengue surveillance, validation, treatment follow-through, and 
 ### Key Decisions
 * Which reports are urgent?
 * Which areas should be checked today?
+* Which high-risk or overdue areas should be checked even without a report?
 * Which sentinel traps need local maintenance or city-level technical support?
 * Which sites need treatment or follow-up?
 * Which locations should be marked public Red, Yellow, Orange, Green, or Gray?
@@ -120,6 +124,7 @@ Validate reports, inspect assigned locations, document findings, update coverage
    * Open the mobile-friendly field view.
    * Review scheduled inspection points, route order, priority level, and notes.
    * Check which locations are Scheduled, Unchecked, Need Revisit, or Urgent.
+   * Review preventive patrol points created from historical hotspots, coverage gaps, expiring Green status, and sentinel signals.
    * Review any assigned sentinel trap stops, including deployment, inspection, cleaning, refill, battery replacement, retrieval, or relocation tasks.
 
 2. **Start Inspection Activity**
@@ -166,6 +171,7 @@ Validate reports, inspect assigned locations, document findings, update coverage
 * Should the site be closed, monitored, or escalated for treatment?
 * Was the assigned area fully covered?
 * Which locations need a revisit?
+* Did preventive patrol find an issue before a citizen report was submitted?
 * Does any sentinel trap need repair, cleaning, refill, retrieval, or replacement?
 * Is a sentinel trap signal reliable enough to influence inspection priority?
 

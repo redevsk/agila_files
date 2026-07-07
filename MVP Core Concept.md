@@ -1,33 +1,35 @@
 # MVP Core Concept: Vector Surveillance Operations Platform with Sentinel Network
 
 ## Positioning
-This platform should be presented first as a practical operations system for Local Government Units (LGUs): a GIS-based tool that turns reports, inspections, treatment actions, and optional sentinel-device signals into prioritized field tasks.
+This platform should be presented first as a proactive prevention and operations system for Local Government Units (LGUs): a GIS-based tool that turns scheduled surveillance, historical hotspots, route coverage, sentinel-device signals, inspections, treatment actions, and citizen reports into prioritized field tasks.
 
-The Sentinel Network is a powerful differentiator, but the MVP should not depend on full hardware deployment to prove value. The first version should prove that better data routing, map-based prioritization, and closed-loop field workflows help LGUs inspect faster, treat confirmed sites, and monitor recurrence.
+The Sentinel Network is a powerful differentiator, but the MVP should not depend on full hardware deployment to prove value. The first version should prove that better surveillance planning, map-based prioritization, and closed-loop field workflows help LGUs inspect before issues escalate, treat confirmed sites, and monitor recurrence.
 
 ## 1. Problem Statement
 Current dengue prevention efforts are largely reactive. Local Government Units (LGUs) rely on manual inspections, paper-based records, and citizen reports, making it difficult to identify breeding sites early, prioritize inspections, and maintain continuous surveillance.
 
-The proposed platform provides a centralized GIS-based (Geographic Information Systems) surveillance and response system. It can be enhanced with an IoT Sentinel Network that monitors mosquito activity and surveillance assets, but its core value is the operational loop from detection to validation, treatment, and monitoring.
+The proposed platform provides a centralized GIS-based (Geographic Information Systems) surveillance, prevention, and response system. It can be enhanced with an IoT Sentinel Network that monitors mosquito activity and surveillance assets, but its core value is the prevention loop from planned surveillance to validation, treatment, and monitoring.
 
 ## 2. The Core MVP Loop & Workflow
 To create a Minimum Viable Product (MVP), we focus on a streamlined workflow:
-**Detect** (Reports, Inspections, Optional Sensors) -> **Locate** (GIS Map) -> **Act** (Field App) -> **Monitor** (Follow-up Status)
+**Plan** (Routine Coverage & Hotspots) -> **Detect** (Inspections, Sentinel Signals, Reports) -> **Prioritize** (Risk Map) -> **Act** (Field App) -> **Monitor** (Follow-up Status)
 
 ### Core Operations Workflow
-1. **Transmit:** Citizens, inspectors, and optional Smart Devices (Ovitraps/Mosquito Traps) submit reports, inspection results, and environmental/activity data.
-2. **Ingest:** GIS Command Center receives data.
-3. **Assess:** Risk Assessment Engine analyzes data to generate inspection recommendations and priority levels.
-4. **Validate:** Field Inspectors visit the site and validate findings.
+1. **Plan:** City and barangay staff define routine surveillance areas, historical hotspots, sentinel trap locations, and scheduled coverage routes.
+2. **Transmit:** Inspectors, optional Smart Devices (Ovitraps/Mosquito Traps), and citizens submit inspection results, environmental/activity data, and reports.
+3. **Ingest:** GIS Command Center receives data.
+4. **Assess:** Risk Assessment Engine analyzes data to generate proactive inspection recommendations and priority levels.
+5. **Validate:** Field Inspectors visit scheduled areas, hotspots, sentinel-alert areas, and citizen-report locations to validate findings.
    * *If No Breeding Found:* Close Alert.
    * *If Breeding Confirmed:* Trigger Treatment Team.
-5. **Treat & Monitor:** Treatment Team resolves the issue, and the area enters a Monitoring Period. The GIS is updated throughout this lifecycle.
+6. **Treat & Monitor:** Treatment Team resolves the issue, and the area enters a Monitoring Period. The GIS is updated throughout this lifecycle.
 
 ### MVP Scope Discipline
 The first MVP should focus on:
-*   GIS dashboard for reports, inspections, confirmed sites, treatment status, cleared/monitoring areas, and route coverage.
+*   GIS dashboard for scheduled surveillance, reports, inspections, confirmed sites, treatment status, cleared/monitoring areas, and route coverage.
 *   Mobile-friendly inspection and treatment workflows.
-*   Field activity tracking for checked, unchecked, and scheduled inspection/treatment areas.
+*   Field activity tracking for checked, unchecked, scheduled, skipped, and need-revisit inspection/treatment areas.
+*   Preventive Zone Prioritization using lightweight geo analysis.
 *   Simple, explainable risk scoring.
 *   Manual data entry and CSV/PDF export for LGU reporting.
 *   Optional simulated, manually uploaded, or limited-pilot sentinel data.
@@ -39,27 +41,27 @@ The MVP should avoid depending on large-scale hardware deployment, advanced AI p
 ### A. City Administrator / City Health Office (The Command Center)
 The city-level role manages the full operating picture across all barangays.
 *   **Citywide GIS Dashboard & Analytics:** View active reports, confirmed breeding sites, treatment status, sentinel devices if enabled, risk heatmaps, recurrence areas, and environmental trends across the city.
-*   **Cross-Barangay Risk Assessment:** Compare barangay-level risk scores and identify citywide hotspots that need additional resources.
-*   **Resource Allocation:** Assign or rebalance Field Inspectors, Treatment Teams, supplies, and equipment across barangays.
+*   **Cross-Barangay Risk Assessment:** Compare barangay-level risk scores and identify citywide hotspots, coverage gaps, and preventive patrol needs.
+*   **Resource Allocation:** Assign or rebalance Field Inspectors, Treatment Teams, supplies, equipment, sentinel checks, and preventive patrol routes across barangays.
 *   **Device Oversight:** Manage the full Sentinel Device inventory, deployment areas, maintenance status, and replacement needs when the pilot hardware layer is enabled.
 *   **City Reporting:** Export consolidated CSV/PDF summaries for city health-office reporting, council briefings, DOH coordination, and program evaluation.
-*   **Policy & Configuration:** Set citywide risk-scoring rules, monitoring periods, user roles, and escalation thresholds.
+*   **Policy & Configuration:** Set citywide risk-scoring rules, monitoring periods, routine surveillance cadence, user roles, and escalation thresholds.
 
 ### B. Barangay Administrator / Barangay Health Worker Lead (The Local Coordinator)
 The barangay-level role manages local validation, task coordination, and ground-level follow-through within their assigned barangay.
 *   **Barangay GIS View:** View reports, inspections, confirmed sites, treatment status, cleared areas, and monitoring locations within the barangay.
-*   **Local Task Assignment:** Assign validation visits and follow-up inspections to barangay staff or request city-level support when needed.
+*   **Local Task Assignment:** Assign preventive patrols, validation visits, sentinel checks, and follow-up inspections to barangay staff or request city-level support when needed.
 *   **Report Triage:** Review citizen reports, remove duplicates, flag urgent locations, and mark reports for inspection.
 *   **Treatment Coordination:** Coordinate cleanup, larvicide application, source removal, and before/after documentation for confirmed sites.
 *   **Local Reporting:** Export barangay-level summaries for local meetings, daily operations, and submission to the city health office.
 *   **Community Follow-up:** Track recurring sites, household follow-ups, and community education needs after treatment.
 
 ### C. Field Inspector (The Eyes)
-*   **Inspection Tasks:** Receive assigned routes, routine surveillance tasks, and alerts.
+*   **Inspection Tasks:** Receive assigned preventive patrol routes, routine surveillance tasks, sentinel checks, follow-ups, and alerts.
 *   **Route Tracking:** Start, pause, resume, and complete an inspection route, similar to an activity tracker.
 *   **Coverage Status:** See which streets, blocks, households, or inspection points are Scheduled, Checked, Unchecked, Skipped, or Need Revisit.
 *   **GPS Trail:** Record the path taken during fieldwork to show actual coverage, with privacy controls for staff location history.
-*   **Validation:** Validate citizen reports and sentinel alerts on-site.
+*   **Validation:** Validate scheduled surveillance points, historical hotspots, citizen reports, and sentinel alerts on-site.
 *   **Documentation:** Record findings (Yes/No), upload photos, and update site status via a mobile-friendly view.
 
 ### D. Treatment Team / Sanitation Personnel (The Muscle)
@@ -80,7 +82,7 @@ The barangay-level role manages local validation, task coordination, and ground-
 
 ### Module 1: GIS Command Center
 The central map interface. It displays multiple layers:
-*   **Operational Layers:** Citizen Reports, Confirmed Breeding Sites, Inspection Routes, Treatment Routes, Treatment Status, Cleared Areas.
+*   **Operational Layers:** Scheduled Surveillance Areas, Citizen Reports, Confirmed Breeding Sites, Inspection Routes, Treatment Routes, Treatment Status, Cleared Areas.
 *   **Coverage Layers:** Checked Areas, Unchecked Areas, Scheduled Areas, Skipped Areas, Need Revisit Areas, and Completed Route Trails.
 *   **Sentinel Layers:** Smart Ovitraps and Smart Mosquito Traps, if enabled during a pilot.
 *   **Analytics Layers:** Risk Heatmap, Historical Hotspots, Environmental Trends, and Recurrence Areas.
@@ -99,6 +101,7 @@ Important limitation: Sentinel devices provide operational signals and relative 
 Calculates a dynamic Risk Score using multiple inputs to prioritize higher-risk areas for inspection. The MVP should use a transparent, rule-based model before introducing advanced AI.
 
 Initial factors include:
+*   Scheduled surveillance coverage gaps and overdue routine checks.
 *   Recent citizen reports and unresolved alerts.
 *   Inspection results, especially confirmed breeding sites.
 *   Historical breeding sites and recurring hotspot areas.
@@ -108,16 +111,67 @@ Initial factors include:
 
 The score must be explainable so LGU staff can see why a location was marked Low, Medium, High, or Critical Risk.
 
-### Module 4: Inspection & Treatment Management
-*   **Inspection Workflow:** Manages routine inspections, report/alert validations, inspection history, and GIS status updates.
+### Module 4: Preventive Zone Prioritization
+For the hackathon MVP, geo analysis should be lightweight and zone-based. The goal is not advanced GIS modeling. The goal is to answer: "Which areas should we inspect first?"
+
+The pilot barangay should be divided into predefined surveillance zones such as:
+*   Barangay zone, purok, sitio, or block.
+*   Street segment.
+*   Drainage or canal corridor.
+*   School, market, church, terminal, or other public area.
+*   Known or historical hotspot.
+
+Each zone should have simple attributes:
+*   Zone name and barangay.
+*   Center `lat`/`lng`.
+*   Optional boundary GeoJSON.
+*   Last checked date.
+*   Public status.
+*   Historical hotspot flag.
+*   Drainage/canal risk flag.
+*   Density level.
+*   Current risk score and priority.
+
+Example lightweight scoring:
+*   `+30` if historical hotspot.
+*   `+25` if not checked in 14 days.
+*   `+20` if Green status expires soon.
+*   `+20` if citizen report nearby or assigned to the zone.
+*   `+15` if sentinel trap activity spikes.
+*   `+10` if dense residential area.
+*   `+10` if drainage/canal area.
+*   `+10` if skipped or unchecked in the last route.
+
+Priority bands:
+*   `0-24`: Low.
+*   `25-49`: Medium.
+*   `50-74`: High.
+*   `75+`: Critical.
+
+The system should sort zones by priority, generate preventive patrol suggestions, and display zone colors on the map. This is enough geo analysis for the MVP without requiring PostGIS, advanced spatial indexing, or predictive machine learning.
+
+### Module 5: Inspection & Treatment Management
+*   **Inspection Workflow:** Manages preventive patrols, routine inspections, report/alert validations, inspection history, and GIS status updates.
 *   **Treatment Management:** Dispatches teams upon confirmation for cleanup, larvicide application, and source elimination, capturing before/after documentation.
 *   **Field Activity Tracking:** Tracks assigned routes, actual GPS trails, route progress, checked/unchecked coverage, skipped locations, and scheduled follow-ups for inspectors and treatment teams.
 *   **Coverage Status Model:** Uses clear operational statuses such as Scheduled, In Progress, Checked, Unchecked, Skipped, Need Revisit, Confirmed, Scheduled for Treatment, Treated, Unable to Treat, Monitoring, and Cleared.
 
-### Module 5: Monitoring Period
+### Module 6: Preventive Surveillance Planning
+Creates proactive inspection routes before citizen complaints are submitted. The system should help barangays and city staff schedule routine coverage for high-risk areas, historical breeding sites, schools, markets, drainage corridors, dense residential zones, and areas where Green status is about to expire.
+
+Preventive route triggers include:
+*   Overdue routine inspection.
+*   Expiring Green public status.
+*   Historical or recurring hotspot.
+*   Nearby sentinel activity spike.
+*   Sentinel device maintenance uncertainty.
+*   Unchecked area after recent field routes.
+*   Seasonal or environmental risk signal.
+
+### Module 7: Monitoring Period
 After treatment, the area enters "Monitoring" status. Routine inspections continue for an agreed period. If no breeding activity is observed, the area is marked "Cleared". If activity reappears, the site returns to "High Risk".
 
-### Module 6: Citizen Location Status
+### Module 8: Citizen Location Status
 Provides a simplified public-facing location status so residents can understand the current condition of their area without exposing internal operational details.
 
 Suggested public color/status model:
@@ -134,6 +188,8 @@ Public status should be generalized by area, street segment, block, or barangay 
 ## 5. MVP Success Metrics
 The MVP should be validated against measurable operational outcomes:
 *   Reduction in time from report/alert creation to inspection assignment.
+*   Percentage of high-risk areas inspected before citizen reports are submitted.
+*   Percentage of scheduled preventive routes completed on time.
 *   Reduction in time from confirmed breeding site to treatment completion.
 *   Percentage of inspection tasks completed on time.
 *   Percentage of assigned route coverage completed.
