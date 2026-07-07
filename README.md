@@ -44,19 +44,27 @@ src/
   config/
   utils/
   constants/
-  app.js
-  server.js
+  app.ts
+  server.ts
 ```
 
 ## Current Source State
 
 The source now follows the feature/module MVC structure. The first implementation pass uses in-memory seed data so frontend and map work can start quickly before SQLite is wired in.
 
+The backend source is TypeScript and runs with `tsx`. Use `.ts` for API/server modules and reserve `.tsx` for future Refine/React frontend components.
+
 ## Run
 
 ```bash
 npm install
 npm start
+```
+
+Run a TypeScript check with:
+
+```bash
+npm run check
 ```
 
 The API is mounted under:
