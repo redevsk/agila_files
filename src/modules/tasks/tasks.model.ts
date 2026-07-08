@@ -4,7 +4,7 @@ const tasks = [
   {
     id: 1,
     type: TASK_TYPES.PREVENTIVE_PATROL,
-    status: 'scheduled',
+    status: 'in_progress',
     priority: 'critical',
     assignedTo: 3,
     barangayId: 1,
@@ -21,6 +21,16 @@ const tasks = [
     areaId: 2,
     sentinelDeviceId: 1,
     dueAt: '2026-07-08T17:00:00Z',
+  },
+  {
+    id: 3,
+    type: TASK_TYPES.INSPECTION,
+    status: 'scheduled',
+    priority: 'critical',
+    assignedTo: 4,
+    barangayId: 2,
+    areaId: 3,
+    dueAt: '2026-07-08T15:30:00Z',
   },
 ];
 

@@ -1,5 +1,5 @@
 const { ok } = require('../../utils/respond');
-const { appendTrail, changeRouteStatus, getRoute, listRoutes } = require('./routes.service');
+const { appendTrail, changeRouteStatus, getRoute, listRoutes, resetRoute } = require('./routes.service');
 
 async function list(_req, res) {
   return ok(res, await listRoutes());
@@ -29,11 +29,16 @@ async function addTrail(req, res) {
   return ok(res, await appendTrail(req.params.id, req.body.points || []));
 }
 
+async function reset(req, res) {
+  return ok(res, await resetRoute(req.params.id, req.body || {}));
+}
+
 module.exports = {
   addTrail,
   complete,
   list,
   pause,
+  reset,
   resume,
   show,
   start,

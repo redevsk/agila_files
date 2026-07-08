@@ -9,6 +9,7 @@ Planning and implementation scaffold for a two-day hackathon MVP: a vector surve
 *   [Dev Task Assignment.md](Dev%20Task%20Assignment.md)
 *   [Technical Architecture.md](Technical%20Architecture.md)
 *   [Validation Improvements.md](Validation%20Improvements.md)
+*   [MVP Map Views.md](MVP%20Map%20Views.md)
 *   [DEVELOPMENT_RULES.md](DEVELOPMENT_RULES.md)
 
 ## Hackathon Architecture
@@ -73,9 +74,18 @@ The API is mounted under:
 /api/v1
 ```
 
+The prototype map tester is available at:
+
+```text
+http://localhost:3000/map
+```
+
+The map MVP is focused on Valenzuela City, specifically Barangay Dambana and Barangay Marulas. It uses OpenStreetMap tiles when online and includes a schematic offline demo fallback so the route trail and risk-area workflow can still be shown without web map tiles.
+
 Useful prototype endpoints:
 *   `GET /api/v1/dashboard/city`
 *   `GET /api/v1/maps/layers`
+*   `GET /api/v1/maps/coverage`
 *   `GET /api/v1/areas/priority-ranking`
 *   `POST /api/v1/tasks/generate-preventive`
 *   `GET /api/v1/public-status/areas`

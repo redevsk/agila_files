@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agila Valenzuela MVP Map</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="toolbar" aria-label="Map controls">
+        <div>
+          <h1>Agila Valenzuela MVP Map</h1>
+          <p id="status">Loading Dambana and Marulas map layers...</p>
+        </div>
+        <div class="actions">
+          <select id="viewSelect" aria-label="Map view">
+            <option value="operations">City Operations</option>
+            <option value="dambana">Barangay Dambana</option>
+            <option value="marulas">Barangay Marulas</option>
+            <option value="public">Public Status</option>
+            <option value="inspector">Inspector Route</option>
+            <option value="treatment">Treatment Team</option>
+          </select>
+          <select id="baseMapSelect" aria-label="Map style">
+            <option value="osm">Street Map</option>
+            <option value="carto">Light Map</option>
+            <option value="satellite">Satellite</option>
+            <option value="topo">Topographic</option>
+          </select>
+          <button id="refreshButton" type="button">Refresh</button>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="panel" aria-label="Layer toggles">
+          <h2>Layers</h2>
+          <label><input type="checkbox" data-layer="areas" checked /> Risk areas</label>
+          <label><input type="checkbox" data-layer="reports" checked /> Citizen reports</label>
+          <label><input type="checkbox" data-layer="sentinelDevices" checked /> Sentinel devices</label>
+          <label><input type="checkbox" data-layer="tasks" checked /> Tasks</label>
+          <label><input type="checkbox" data-layer="routes" checked /> Routes</label>
+
+          <h2>Role Access</h2>
+          <div class="role-panel">
+            <strong id="roleTitle">City Operations</strong>
+            <p id="roleSees">Sees all operational layers.</p>
+            <p id="roleActions">Can coordinate city-wide response.</p>
+          </div>
+
+          <h2>Legend</h2>
+          <div class="legend" aria-label="Map legend">
+            <div><span class="legend-swatch risk-critical"></span> Critical risk area</div>
+            <div><span class="legend-swatch risk-high"></span> High risk area</div>
+            <div><span class="legend-line route-active"></span> Ongoing inspection trail</div>
+            <div><span class="legend-line route-cleared"></span> Cleared / inspected path</div>
+            <div><span class="legend-line route-pending"></span> Scheduled path</div>
+            <div><span class="legend-dot report-dot"></span> Citizen report</div>
+            <div><span class="legend-dot ovitrap-dot"></span> Smart ovitrap</div>
+            <div><span class="legend-dot mosquito-trap-dot"></span> Mosquito trap</div>
+            <div><span class="legend-dot task-dot"></span> Assigned task</div>
+          </div>
+
+          <h2>Role Demo</h2>
+          <p class="section-note">Simulation actions switch into the acting user's role, then update the shared map data.</p>
+          <div class="demo-panel">
+            <div class="demo-card" data-role-action="citizen">
+              <strong>Citizen</strong>
+              <span>Reports stagnant water in Marulas.</span>
+              <button id="citizenReportButton" type="button">Submit Report</button>
+            </div>
+            <div class="demo-card" data-role-action="barangay">
+              <strong>Barangay Admin</strong>
+              <span>Updates Dambana public status after validation.</span>
+              <button id="barangayStatusButton" type="button">Mark Dambana Red</button>
+            </div>
+            <div class="demo-card" data-role-action="city">
+              <strong>City Admin</strong>
+              <span>Generates preventive tasks for high-risk areas.</span>
+              <button id="cityTasksButton" type="button">Generate Tasks</button>
+            </div>
+            <div class="demo-card" data-role-action="inspector">
+              <strong>Field Inspector</strong>
+              <span>Starts a randomized street-following patrol, records a trail, and places trap markers in the field.</span>
+              <button id="inspectorDemoButton" type="button">Run Patrol Demo</button>
+              <button id="placeOvitrapButton" type="button">Place Ovitrap on Map</button>
+              <button id="placeMosquitoTrapButton" type="button">Place Mosquito Trap on Map</button>
+            </div>
+            <div class="demo-card" data-role-action="treatment">
+              <strong>Treatment Team</strong>
+              <span>Reviews assigned treatment areas and cleared inspection paths.</span>
+              <button id="treatmentFocusButton" type="button">Focus Treatment Work</button>
+            </div>
+          </div>
+
+          <h2>Route Tracker</h2>
+          <div class="tracker">
+            <div class="metric">
+              <span>Selected route</span>
+              <strong id="routeName">Route #1</strong>
+            </div>
+            <div class="metric">
+              <span>Distance</span>
+              <strong id="distanceValue">0.00 km</strong>
+            </div>
+            <div class="metric">
+              <span>Trail points</span>
+              <strong id="pointValue">0</strong>
+            </div>
+            <div class="button-grid">
+              <button id="startRouteButton" type="button">Start</button>
+              <button id="pauseRouteButton" type="button">Pause</button>
+              <button id="resumeRouteButton" type="button">Resume</button>
+              <button id="completeRouteButton" type="button">Complete</button>
+              <button id="addPointButton" type="button">Add Demo Point</button>
+              <button id="gpsButton" type="button">Use GPS</button>
+              <button id="resetRouteButton" type="button">Reset Route</button>
+            </div>
+          </div>
+
+          <h2>Summary</h2>
+          <dl class="summary" id="summary"></dl>
+        </aside>
+
+        <div id="map" aria-label="Agila operations map"></div>
+      </section>
+    </main>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="/map.js"></script>
+  </body>
+</html>

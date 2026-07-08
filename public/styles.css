@@ -1,0 +1,513 @@
+:root {
+  color-scheme: light;
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --ink: #1f2933;
+  --muted: #667085;
+  --line: #d9dee7;
+  --accent: #0f766e;
+  --accent-dark: #115e59;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+}
+
+.shell {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.toolbar {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+h2 {
+  margin-top: 22px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.section-note {
+  margin: -4px 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+#status {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+select {
+  min-height: 38px;
+  padding: 0 34px 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+button {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--accent-dark);
+}
+
+.workspace {
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  overflow: hidden;
+}
+
+.panel {
+  min-height: 0;
+  padding: 18px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  overflow: auto;
+}
+
+label {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+}
+
+input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.summary dt {
+  color: var(--muted);
+}
+
+.summary dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.tracker {
+  display: grid;
+  gap: 10px;
+}
+
+.demo-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.legend {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.role-panel {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 6px;
+  background: #f9fafb;
+  font-size: 13px;
+}
+
+.role-panel p {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.is-placement-mode #map {
+  cursor: crosshair;
+}
+
+.is-placement-mode .toolbar {
+  border-bottom-color: #86198f;
+}
+
+label.is-disabled {
+  color: #9aa4b2;
+}
+
+label.is-disabled input {
+  cursor: not-allowed;
+}
+
+.legend div {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.legend-swatch,
+.legend-dot {
+  flex: 0 0 auto;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.legend-line {
+  flex: 0 0 auto;
+  display: inline-block;
+  width: 30px;
+  height: 0;
+  border-top: 4px solid;
+}
+
+.risk-critical {
+  background: rgba(220, 38, 38, 0.28);
+  border: 2px solid #dc2626;
+}
+
+.risk-high {
+  background: rgba(249, 115, 22, 0.28);
+  border: 2px solid #f97316;
+}
+
+.route-active {
+  border-color: #7c3aed;
+  border-style: dashed;
+}
+
+.route-cleared {
+  border-color: #16a34a;
+}
+
+.route-pending {
+  border-color: #64748b;
+  border-style: dashed;
+}
+
+.report-dot {
+  border-radius: 3px;
+  background: #f97316;
+}
+
+.ovitrap-dot {
+  background: #14b8a6;
+  border: 2px solid #0f766e;
+}
+
+.mosquito-trap-dot {
+  background: #d946ef;
+  border: 2px dashed #86198f;
+}
+
+.task-dot {
+  background: #60a5fa;
+  border: 2px solid #1d4ed8;
+}
+
+.demo-card {
+  display: grid;
+  gap: 7px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #f9fafb;
+  font-size: 13px;
+}
+
+.demo-card.is-current-role {
+  border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.demo-card strong {
+  font-size: 14px;
+}
+
+.demo-card span {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.demo-card button {
+  min-height: 34px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 34px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.metric span {
+  color: var(--muted);
+}
+
+.metric strong {
+  text-align: right;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.button-grid button {
+  width: 100%;
+  min-width: 0;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+#resetRouteButton {
+  grid-column: 1 / -1;
+  background: #475569;
+}
+
+#resetRouteButton:hover {
+  background: #334155;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background: #eef5f3;
+  position: relative;
+}
+
+/* Critical Leaflet layout rules. These keep tiles positioned even if CDN CSS is blocked. */
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.leaflet-container {
+  overflow: hidden;
+}
+
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.leaflet-tile {
+  width: 256px;
+  height: 256px;
+}
+
+.leaflet-container img {
+  max-width: none !important;
+  max-height: none !important;
+}
+
+.leaflet-control {
+  position: relative;
+  z-index: 800;
+  pointer-events: auto;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  position: absolute;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.leaflet-top {
+  top: 0;
+}
+
+.leaflet-right {
+  right: 0;
+}
+
+.leaflet-bottom {
+  bottom: 0;
+}
+
+.leaflet-left {
+  left: 0;
+}
+
+.leaflet-control-container .leaflet-top,
+.leaflet-control-container .leaflet-bottom {
+  display: block;
+}
+
+#map {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.fallback-map {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(15, 118, 110, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(15, 118, 110, 0.08) 1px, transparent 1px),
+    #eef5f3;
+  background-size: 42px 42px;
+}
+
+.fallback-map svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.fallback-label {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.popup-title {
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.popup-row {
+  margin-top: 3px;
+}
+
+.active-route-line {
+  stroke-dasharray: 12 12;
+  animation: route-dash 0.9s linear infinite;
+}
+
+.cleared-route-line {
+  filter: drop-shadow(0 0 3px rgba(22, 163, 74, 0.45));
+}
+
+@keyframes route-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@media (max-width: 780px) {
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actions select,
+  .actions button {
+    flex: 1;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .panel {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  #map {
+    min-height: 68vh;
+    height: 68vh;
+  }
+}

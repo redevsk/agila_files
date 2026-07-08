@@ -1,5 +1,5 @@
 const express = require('express');
-const { addTrail, complete, list, pause, resume, show, start } = require('./routes.controller');
+const { addTrail, complete, list, pause, reset, resume, show, start } = require('./routes.controller');
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.post('/:id/start', start);
 router.post('/:id/pause', pause);
 router.post('/:id/resume', resume);
 router.post('/:id/complete', complete);
+router.post('/:id/reset', reset);
 router.post('/:id/trail', addTrail);
 
 module.exports = router;
