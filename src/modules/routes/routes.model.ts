@@ -22,7 +22,7 @@ const routes = [
     id: 2,
     assignedTo: 4,
     type: 'inspection',
-    status: 'completed',
+    status: 'scheduled',
     barangayId: 2,
     areaId: 3,
     trailJson: [
@@ -33,7 +33,6 @@ const routes = [
       { lat: 14.683543, lng: 120.974478, timestamp: '2026-07-08T09:36:00Z' },
       { lat: 14.684126, lng: 120.973945, timestamp: '2026-07-08T09:43:00Z' },
     ],
-    completedAt: '2026-07-08T09:43:00Z',
     createdAt: '2026-07-08T09:00:00Z',
   },
 ];

@@ -5,13 +5,17 @@ const VALENZUELA_BOUNDS = {
   minLng: 120.955,
   maxLng: 120.995,
 };
-const DEMO_ROUTE_ID = 1;
+const DEMO_AREA_ID = 3;
+const DEMO_BARANGAY_ID = 2;
+const DEMO_ROUTE_ID = 2;
 
 const state = {
   layers: null,
+  publicStatusAreas: [],
+  coverage: null,
   route: null,
   routePoints: [],
-  activeView: 'operations',
+  activeView: 'public',
   map: null,
   fallback: false,
   layerGroups: {},
@@ -22,6 +26,9 @@ const state = {
   activeDemoPath: null,
   patrolDemoRunning: false,
   pendingTrapType: null,
+  demoReportId: null,
+  demoTaskId: null,
+  treatmentRecorded: false,
 };
 
 const colors = {
@@ -40,146 +47,79 @@ const roleProfiles = {
     title: 'City Operations',
     sees: 'Sees all barangays, risk areas, reports, traps, tasks, and routes.',
     actions: 'Can generate preventive tasks and coordinate response.',
-    layers: ['areas', 'reports', 'sentinelDevices', 'tasks', 'routes'],
+    stepTitle: 'Step 3: City prioritizes the response',
+    stepText: 'The command center compares risk scores, sees coverage gaps, and generates preventive patrol tasks once per high-risk area.',
+    layers: ['areas', 'reports', 'sentinelDevices', 'tasks', 'routes', 'coverage'],
     actionsVisible: ['city'],
   },
   dambana: {
     title: 'Barangay Dambana Admin',
     sees: 'Sees Dambana risk areas, reports, traps, tasks, and local routes.',
     actions: 'Can update public status after validation.',
-    layers: ['areas', 'reports', 'sentinelDevices', 'tasks', 'routes'],
+    stepTitle: 'Step 2: Barangay validates local conditions',
+    stepText: 'Barangay staff focus only on their local reports, tasks, and area status before publishing a public update.',
+    layers: ['areas', 'reports', 'sentinelDevices', 'tasks', 'routes', 'coverage'],
     actionsVisible: ['barangay'],
   },
   marulas: {
     title: 'Barangay Marulas Admin',
     sees: 'Sees Marulas risk areas, reports, traps, tasks, and local routes.',
     actions: 'Can monitor local reports and coordinate barangay response.',
-    layers: ['areas', 'reports', 'sentinelDevices', 'tasks', 'routes'],
+    stepTitle: 'Step 2: Barangay triages the citizen report',
+    stepText: 'Barangay Marulas receives the citizen report and marks the same area as scheduled for inspection.',
+    layers: ['areas', 'reports', 'sentinelDevices', 'tasks', 'routes', 'coverage'],
     actionsVisible: ['barangay'],
   },
   public: {
     title: 'Citizen / Public',
     sees: 'Sees simplified public area status only.',
     actions: 'Can submit a location-based stagnant water report.',
+    stepTitle: 'Step 1: Citizen sees simple status and reports an issue',
+    stepText: 'The public map hides internal tasks, traps, routes, staff locations, and exact operational detail.',
     layers: ['areas'],
     actionsVisible: ['citizen'],
   },
   inspector: {
     title: 'Field Inspector',
-    sees: 'Sees assigned Dambana tasks, risk areas, reports, traps, and own route trail.',
-    actions: 'Can start patrol, record trail points, and place ovitrap or mosquito trap markers.',
-    layers: ['areas', 'reports', 'sentinelDevices', 'tasks', 'routes'],
+    sees: 'Sees the assigned Marulas task, report location, nearby traps, and own route trail.',
+    actions: 'Can start the Marulas patrol, record trail points, and validate the report.',
+    stepTitle: 'Step 4: Inspector records real field coverage',
+    stepText: 'The field view emphasizes assigned work, route status, route distance, and checked or missed areas.',
+    layers: ['areas', 'reports', 'sentinelDevices', 'tasks', 'routes', 'coverage'],
     actionsVisible: ['inspector'],
   },
   treatment: {
     title: 'Treatment Team',
     sees: 'Sees treatment-relevant risk areas, tasks, traps, and cleared inspection paths.',
     actions: 'Can focus on assigned treatment work after inspection clearance.',
-    layers: ['areas', 'sentinelDevices', 'tasks', 'routes'],
+    stepTitle: 'Step 5: Treatment closes the loop',
+    stepText: 'Treatment is recorded for the same Marulas area, then the public status moves into monitoring.',
+    layers: ['areas', 'sentinelDevices', 'tasks', 'routes', 'coverage'],
     actionsVisible: ['treatment'],
   },
 };
 
 const demoPaths = [
   {
-    name: 'Dambana Creekside to Serrano Street',
+    name: 'Marulas Market Drainage Validation',
     points: [
-      { lat: 14.700142, lng: 120.97723 },
-      { lat: 14.700057, lng: 120.977111 },
-      { lat: 14.700029, lng: 120.977015 },
-      { lat: 14.700107, lng: 120.976868 },
-      { lat: 14.700006, lng: 120.976553 },
-      { lat: 14.699892, lng: 120.976275 },
-      { lat: 14.699758, lng: 120.975966 },
-      { lat: 14.699639, lng: 120.975953 },
-      { lat: 14.699534, lng: 120.97568 },
-      { lat: 14.698764, lng: 120.976053 },
-      { lat: 14.698546, lng: 120.976279 },
-      { lat: 14.698099, lng: 120.976524 },
-      { lat: 14.698108, lng: 120.976606 },
-      { lat: 14.698228, lng: 120.976845 },
-      { lat: 14.698299, lng: 120.976985 },
-      { lat: 14.698408, lng: 120.977207 },
-      { lat: 14.698641, lng: 120.977693 },
-      { lat: 14.69879, lng: 120.978003 },
-      { lat: 14.698953, lng: 120.978334 },
-      { lat: 14.699057, lng: 120.97854 },
-      { lat: 14.699159, lng: 120.97874 },
-      { lat: 14.699287, lng: 120.978986 },
-      { lat: 14.69941, lng: 120.979224 },
-      { lat: 14.699571, lng: 120.979457 },
-      { lat: 14.699669, lng: 120.9796 },
-      { lat: 14.699815, lng: 120.979491 },
-      { lat: 14.699952, lng: 120.979348 },
-      { lat: 14.700186, lng: 120.979039 },
-      { lat: 14.700342, lng: 120.978842 },
-      { lat: 14.700419, lng: 120.978776 },
-      { lat: 14.700533, lng: 120.978822 },
-      { lat: 14.700619, lng: 120.97881 },
-      { lat: 14.700632, lng: 120.978794 },
-      { lat: 14.700689, lng: 120.978606 },
-      { lat: 14.701174, lng: 120.978603 },
-      { lat: 14.701246, lng: 120.978466 },
-      { lat: 14.701253, lng: 120.978277 },
-      { lat: 14.701199, lng: 120.977897 },
-      { lat: 14.701612, lng: 120.977633 },
-      { lat: 14.701881, lng: 120.978382 },
-      { lat: 14.702076, lng: 120.978928 },
-      { lat: 14.70217, lng: 120.979165 },
+      { lat: 14.681867, lng: 120.976292 },
+      { lat: 14.682079, lng: 120.975458 },
+      { lat: 14.682283, lng: 120.974226 },
+      { lat: 14.682877, lng: 120.974558 },
+      { lat: 14.683543, lng: 120.974478 },
+      { lat: 14.684126, lng: 120.973945 },
+      { lat: 14.6845, lng: 120.9738 },
     ],
   },
   {
-    name: 'Dambana Drainage Sweep',
+    name: 'Marulas Residential Access Check',
     points: [
-      { lat: 14.699758, lng: 120.975966 },
-      { lat: 14.699695, lng: 120.97598 },
-      { lat: 14.699639, lng: 120.975953 },
-      { lat: 14.699534, lng: 120.97568 },
-      { lat: 14.698764, lng: 120.976053 },
-      { lat: 14.698546, lng: 120.976279 },
-      { lat: 14.698099, lng: 120.976524 },
-      { lat: 14.698108, lng: 120.976606 },
-      { lat: 14.698228, lng: 120.976845 },
-      { lat: 14.698299, lng: 120.976985 },
-      { lat: 14.698408, lng: 120.977207 },
-      { lat: 14.698641, lng: 120.977693 },
-      { lat: 14.69879, lng: 120.978003 },
-      { lat: 14.698953, lng: 120.978334 },
-      { lat: 14.699057, lng: 120.97854 },
-      { lat: 14.699159, lng: 120.97874 },
-      { lat: 14.699287, lng: 120.978986 },
-      { lat: 14.69941, lng: 120.979224 },
-      { lat: 14.699571, lng: 120.979457 },
-      { lat: 14.699669, lng: 120.9796 },
-      { lat: 14.699815, lng: 120.979491 },
-      { lat: 14.699952, lng: 120.979348 },
-      { lat: 14.700186, lng: 120.979039 },
-      { lat: 14.700342, lng: 120.978842 },
-      { lat: 14.700419, lng: 120.978776 },
-      { lat: 14.700533, lng: 120.978822 },
-      { lat: 14.700619, lng: 120.97881 },
-      { lat: 14.700632, lng: 120.978794 },
-    ],
-  },
-  {
-    name: 'E. Cabral to Maysan Road',
-    points: [
-      { lat: 14.698764, lng: 120.976053 },
-      { lat: 14.698546, lng: 120.976279 },
-      { lat: 14.698099, lng: 120.976524 },
-      { lat: 14.698108, lng: 120.976606 },
-      { lat: 14.698228, lng: 120.976845 },
-      { lat: 14.698299, lng: 120.976985 },
-      { lat: 14.698408, lng: 120.977207 },
-      { lat: 14.698641, lng: 120.977693 },
-      { lat: 14.69879, lng: 120.978003 },
-      { lat: 14.698953, lng: 120.978334 },
-      { lat: 14.699057, lng: 120.97854 },
-      { lat: 14.699159, lng: 120.97874 },
-      { lat: 14.699287, lng: 120.978986 },
-      { lat: 14.69941, lng: 120.979224 },
-      { lat: 14.699571, lng: 120.979457 },
-      { lat: 14.699669, lng: 120.9796 },
+      { lat: 14.6818, lng: 120.9763 },
+      { lat: 14.682079, lng: 120.975458 },
+      { lat: 14.682877, lng: 120.974558 },
+      { lat: 14.683543, lng: 120.974478 },
+      { lat: 14.684126, lng: 120.973945 },
     ],
   },
 ];
@@ -246,15 +186,30 @@ function roleAllowsLayer(name) {
 }
 
 function visibleAreas() {
+  if (publicOnly()) {
+    return (state.publicStatusAreas || []).map((area) => ({
+      id: area.areaId,
+      name: area.areaName,
+      centerLat: area.centerLat,
+      centerLng: area.centerLng,
+      publicStatus: area.publicStatus,
+      lastCheckedAt: area.lastCheckedAt,
+    }));
+  }
+
   const areas = state.layers?.areas || [];
-  if (state.activeView === 'dambana' || state.activeView === 'inspector') return areas.filter((area) => area.barangayId === 1);
-  if (state.activeView === 'marulas' || state.activeView === 'treatment') return areas.filter((area) => area.barangayId === 2);
+  if (state.activeView === 'dambana') return areas.filter((area) => area.barangayId === 1);
+  if (state.activeView === 'marulas' || state.activeView === 'inspector' || state.activeView === 'treatment') {
+    return areas.filter((area) => area.barangayId === DEMO_BARANGAY_ID);
+  }
   return areas;
 }
 
 function visibleByBarangay(items) {
-  if (state.activeView === 'dambana' || state.activeView === 'inspector') return items.filter((item) => item.barangayId === 1);
-  if (state.activeView === 'marulas' || state.activeView === 'treatment') return items.filter((item) => item.barangayId === 2);
+  if (state.activeView === 'dambana') return items.filter((item) => item.barangayId === 1);
+  if (state.activeView === 'marulas' || state.activeView === 'inspector' || state.activeView === 'treatment') {
+    return items.filter((item) => item.barangayId === DEMO_BARANGAY_ID);
+  }
   return items;
 }
 
@@ -262,10 +217,58 @@ function publicOnly() {
   return state.activeView === 'public';
 }
 
+function visibleCoverageItems() {
+  const coverage = state.coverage || {};
+  const items = [
+    ...(coverage.checked || []),
+    ...(coverage.unchecked || []),
+    ...(coverage.scheduled || []),
+    ...(coverage.inProgress || []),
+    ...(coverage.skipped || []),
+    ...(coverage.needRevisit || []),
+  ];
+  return visibleByBarangay(items);
+}
+
 function switchRole(role) {
   state.activeView = role;
   document.getElementById('viewSelect').value = role;
   render();
+}
+
+function currentIncident() {
+  const reports = state.layers?.reports || [];
+  const tasks = state.layers?.tasks || [];
+  const publicArea = (state.publicStatusAreas || []).find((area) => area.areaId === DEMO_AREA_ID);
+  const report =
+    reports.find((item) => item.id === state.demoReportId) ||
+    [...reports].reverse().find((item) => item.areaId === DEMO_AREA_ID && item.description?.includes('Citizen report'));
+  const task =
+    tasks.find((item) => item.id === state.demoTaskId) ||
+    tasks.find((item) => item.areaId === DEMO_AREA_ID && ['scheduled', 'in_progress'].includes(item.status));
+
+  if (report && !state.demoReportId) state.demoReportId = report.id;
+  if (task && !state.demoTaskId) state.demoTaskId = task.id;
+
+  return {
+    areaName: publicArea?.areaName || 'Marulas Market Drainage',
+    publicStatus: publicArea?.publicStatus || 'red',
+    report,
+    task,
+    route: state.route,
+  };
+}
+
+function nextStepLabel() {
+  const labels = {
+    public: '1. Submit Marulas report',
+    marulas: '2. Schedule inspection',
+    operations: '3. Generate city task',
+    inspector: '4. Run Marulas patrol',
+    treatment: '5. Record treatment',
+    dambana: 'Back to Marulas flow',
+  };
+  return labels[state.activeView] || 'Run Current Step';
 }
 
 function routeStyle(route) {
@@ -306,7 +309,7 @@ function createLeafletMap() {
   state.baseLayer = createBaseLayer('osm');
   state.baseLayer.addTo(state.map);
 
-  ['areas', 'reports', 'sentinelDevices', 'tasks', 'routes'].forEach((name) => {
+  ['areas', 'reports', 'sentinelDevices', 'tasks', 'routes', 'coverage'].forEach((name) => {
     state.layerGroups[name] = L.layerGroup().addTo(state.map);
   });
 
@@ -411,7 +414,7 @@ function addAreaLayer(areas) {
     .addTo(state.layerGroups.areas);
 
   areas.forEach((area) => {
-    const color = colors[area.priority] || colors[area.publicStatus] || '#2563eb';
+    const color = publicOnly() ? colors[area.publicStatus] || colors.gray : colors[area.priority] || colors[area.publicStatus] || '#2563eb';
     L.circleMarker(areaLatLng(area), {
       radius: area.priority === 'critical' ? 19 : 15,
       color,
@@ -421,9 +424,10 @@ function addAreaLayer(areas) {
     })
       .bindPopup(
         popup(area.name, [
-          ['Barangay', area.barangayId === 1 ? 'Dambana' : 'Marulas'],
+          ['Barangay', publicOnly() ? undefined : area.barangayId === 1 ? 'Dambana' : 'Marulas'],
           ['Priority', publicOnly() ? undefined : area.priority],
           ['Risk score', publicOnly() ? undefined : area.riskScore],
+          ['Why', publicOnly() ? undefined : area.riskSummary],
           ['Public status', area.publicStatus],
           ['Last checked', area.lastCheckedAt],
         ]),
@@ -551,16 +555,54 @@ function addRouteLayer(routes) {
   });
 }
 
+function coverageStyle(status) {
+  const styles = {
+    checked: { color: '#16a34a', label: 'Checked' },
+    unchecked: { color: '#64748b', label: 'Unchecked' },
+    scheduled: { color: '#eab308', label: 'Scheduled' },
+    in_progress: { color: '#7c3aed', label: 'In progress' },
+    skipped: { color: '#f97316', label: 'Skipped' },
+    need_revisit: { color: '#f97316', label: 'Need revisit' },
+  };
+  return styles[status] || styles.unchecked;
+}
+
+function addCoverageLayer(items) {
+  if (!layerEnabled('coverage') || publicOnly()) return;
+
+  items.forEach((item) => {
+    const style = coverageStyle(item.status);
+    L.circleMarker([Number(item.centerLat), Number(item.centerLng)], {
+      radius: 24,
+      color: style.color,
+      weight: 2,
+      fillColor: style.color,
+      fillOpacity: 0.08,
+      dashArray: item.status === 'unchecked' || item.status === 'skipped' ? '4 6' : null,
+    })
+      .bindPopup(
+        popup(`${style.label}: ${item.areaName}`, [
+          ['Coverage status', style.label],
+          ['Route', item.routeId ? `#${item.routeId}` : undefined],
+          ['Reason', item.reason],
+        ]),
+      )
+      .addTo(state.layerGroups.coverage);
+  });
+}
+
 function renderLeaflet() {
   clearLeafletLayers();
 
   const areas = visibleAreas();
-  const reports = visibleByBarangay(state.layers.reports || []);
-  const devices = visibleByBarangay(state.layers.sentinelDevices || []);
-  const tasks = visibleByBarangay(state.layers.tasks || []);
-  const routes = visibleByBarangay(state.layers.routes || []);
+  const reports = publicOnly() ? [] : visibleByBarangay(state.layers.reports || []);
+  const devices = publicOnly() ? [] : visibleByBarangay(state.layers.sentinelDevices || []);
+  const tasks = publicOnly() ? [] : visibleByBarangay(state.layers.tasks || []);
+  const routes = publicOnly() ? [] : visibleByBarangay(state.layers.routes || []);
+  const coverage = visibleCoverageItems();
 
   addAreaLayer(areas);
+  addCoverageLayer(coverage);
   addReportLayer(reports);
   addDeviceLayer(devices);
   addTaskLayer(tasks, areas);
@@ -610,15 +652,17 @@ function renderSummary() {
   const reports = visibleByBarangay(state.layers?.reports || []);
   const devices = visibleByBarangay(state.layers?.sentinelDevices || []);
   const tasks = visibleByBarangay(state.layers?.tasks || []);
+  const coverage = visibleCoverageItems();
   const critical = areas.filter((area) => area.priority === 'critical').length;
   const distance = calculateDistanceKm(state.routePoints);
 
   document.getElementById('summary').innerHTML = [
-    ['Risk areas', areas.length],
-    ['Critical areas', critical],
+    [publicOnly() ? 'Public areas' : 'Risk areas', areas.length],
+    ['Critical areas', publicOnly() ? '-' : critical],
     ['Citizen reports', publicOnly() ? 0 : reports.length],
     ['Sentinel devices', publicOnly() ? 0 : devices.length],
     ['Open tasks', publicOnly() ? 0 : tasks.filter((task) => task.status !== 'completed').length],
+    ['Coverage notes', publicOnly() ? 0 : coverage.length],
     ['Route distance', `${distance.toFixed(2)} km`],
   ]
     .map(([label, value]) => `<dt>${label}</dt><dd>${value}</dd>`)
@@ -638,6 +682,7 @@ function renderFallback() {
   const devices = publicOnly() ? [] : visibleByBarangay(state.layers?.sentinelDevices || []);
   const tasks = publicOnly() ? [] : visibleByBarangay(state.layers?.tasks || []);
   const routes = publicOnly() ? [] : visibleByBarangay(state.layers?.routes || []);
+  const coverage = publicOnly() ? [] : visibleCoverageItems();
   const allPoints = [
     ...areas.map((area) => ({ lat: area.centerLat, lng: area.centerLng })),
     ...reports,
@@ -656,7 +701,7 @@ function renderFallback() {
     ? areas
         .map((area) => {
           const point = project({ lat: area.centerLat, lng: area.centerLng });
-          const color = colors[area.priority] || colors[area.publicStatus] || '#2563eb';
+          const color = publicOnly() ? colors[area.publicStatus] || colors.gray : colors[area.priority] || colors[area.publicStatus] || '#2563eb';
           return `<circle cx="${point.x}" cy="${point.y}" r="22" fill="${color}" fill-opacity="0.25" stroke="${color}" stroke-width="3"></circle><text x="${point.x + 28}" y="${point.y + 4}" font-size="15" fill="#1f2933">${escapeHtml(area.name)}</text>`;
         })
         .join('')
@@ -714,6 +759,13 @@ function renderFallback() {
       <text x="70" y="88" font-size="15" fill="#667085">Barangay Dambana and Barangay Marulas</text>
       ${routeSvg}
       ${areaSvg}
+      ${coverage
+        .map((item) => {
+          const point = project({ lat: item.centerLat, lng: item.centerLng });
+          const style = coverageStyle(item.status);
+          return `<circle cx="${point.x}" cy="${point.y}" r="34" fill="none" stroke="${style.color}" stroke-width="3" stroke-dasharray="5 6"></circle>`;
+        })
+        .join('')}
       ${reportSvg}
       ${deviceSvg}
       ${taskSvg}
@@ -742,6 +794,7 @@ function render() {
   if (!state.layers) return;
   applyRoleUi();
   renderSummary();
+  renderIncidentThread();
   if (state.fallback) {
     renderFallback();
   } else {
@@ -754,6 +807,14 @@ function applyRoleUi() {
   document.getElementById('roleTitle').textContent = profile.title;
   document.getElementById('roleSees').textContent = profile.sees;
   document.getElementById('roleActions').textContent = profile.actions;
+  document.getElementById('demoStepTitle').textContent = profile.stepTitle;
+  document.getElementById('demoStepText').textContent = profile.stepText;
+  document.getElementById('guideActionButton').textContent = nextStepLabel();
+
+  document.querySelectorAll('[data-flow-step]').forEach((step) => {
+    const active = step.dataset.flowStep === state.activeView || (state.activeView === 'dambana' && step.dataset.flowStep === 'marulas');
+    step.classList.toggle('is-active', active);
+  });
 
   document.querySelectorAll('[data-layer]').forEach((checkbox) => {
     const allowed = profile.layers.includes(checkbox.dataset.layer);
@@ -765,23 +826,55 @@ function applyRoleUi() {
   });
 
   document.querySelectorAll('[data-role-action]').forEach((card) => {
-    card.classList.toggle('is-current-role', profile.actionsVisible.includes(card.dataset.roleAction));
+    const visible = profile.actionsVisible.includes(card.dataset.roleAction);
+    card.classList.toggle('is-current-role', visible);
+    card.classList.toggle('is-hidden', !visible);
   });
+
+  document.querySelectorAll('[data-role-section="route"]').forEach((section) => {
+    section.classList.toggle('is-hidden', !['inspector', 'treatment'].includes(state.activeView));
+  });
+}
+
+function renderIncidentThread() {
+  const incident = currentIncident();
+  document.getElementById('incidentThread').innerHTML = [
+    ['Area', incident.areaName],
+    ['Citizen report', incident.report ? `#${incident.report.id} ${incident.report.status}` : 'Not submitted yet'],
+    ['Public status', incident.publicStatus],
+    ['City task', incident.task ? `#${incident.task.id} ${incident.task.status}` : 'Not generated yet'],
+    ['Inspector route', incident.route ? `#${incident.route.id} ${incident.route.status}` : 'Not started yet'],
+    ['Treatment', state.treatmentRecorded ? 'Recorded, monitoring active' : 'Waiting for treatment team'],
+  ]
+    .map(([label, value]) => `<dt>${label}</dt><dd>${escapeHtml(value)}</dd>`)
+    .join('');
 }
 
 async function loadLayers() {
   setStatus('Loading Dambana and Marulas map layers...');
 
   try {
-    const response = await fetch('/api/v1/maps/layers');
-    if (!response.ok) throw new Error(`Request failed with ${response.status}`);
+    const [layersResponse, publicResponse, coverageResponse] = await Promise.all([
+      fetch('/api/v1/maps/layers'),
+      fetch('/api/v1/public-status/areas'),
+      fetch('/api/v1/maps/coverage'),
+    ]);
+    if (!layersResponse.ok) throw new Error(`Map layers failed with ${layersResponse.status}`);
+    if (!publicResponse.ok) throw new Error(`Public status failed with ${publicResponse.status}`);
+    if (!coverageResponse.ok) throw new Error(`Coverage failed with ${coverageResponse.status}`);
 
-    const payload = await response.json();
-    state.layers = payload.data;
+    const [layersPayload, publicPayload, coveragePayload] = await Promise.all([
+      layersResponse.json(),
+      publicResponse.json(),
+      coverageResponse.json(),
+    ]);
+    state.layers = layersPayload.data;
+    state.publicStatusAreas = publicPayload.data;
+    state.coverage = coveragePayload.data;
     state.route = (state.layers.routes || []).find((route) => route.id === DEMO_ROUTE_ID) || null;
     state.routePoints = normalizeDemoTrail(state.route?.trailJson || []);
     render();
-    setStatus(state.fallback ? 'Offline demo mode loaded with local data layers.' : 'Loaded Valenzuela map layers from /api/v1/maps/layers.');
+    setStatus(state.fallback ? 'Offline demo mode loaded with local data layers.' : 'Loaded demo-ready map, public status, and coverage layers.');
   } catch (error) {
     setStatus(`Could not load map layers: ${error.message}`);
   }
@@ -872,8 +965,8 @@ async function submitCitizenReportDemo() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         submittedBy: null,
-        barangayId: 2,
-        areaId: 3,
+        barangayId: DEMO_BARANGAY_ID,
+        areaId: DEMO_AREA_ID,
         lat: 14.6837,
         lng: 120.9749,
         description: 'Citizen report: stagnant water near Marulas walkway',
@@ -881,26 +974,29 @@ async function submitCitizenReportDemo() {
       }),
     });
     if (!response.ok) throw new Error(`Citizen report failed with ${response.status}`);
+    const payload = await response.json();
+    state.demoReportId = payload.data.id;
     switchRole('marulas');
     await loadLayers();
-    setStatus('Citizen submitted a Marulas report. Barangay Marulas can now see it in their operational view.');
+    setStatus(`Step 1 complete: report #${state.demoReportId} is now in Barangay Marulas triage.`);
   } catch (error) {
     setStatus(error.message);
   }
 }
 
 async function updateBarangayStatusDemo() {
-  switchRole('dambana');
+  switchRole('marulas');
 
   try {
-    const response = await fetch('/api/v1/public-status/1', {
+    const response = await fetch(`/api/v1/public-status/${DEMO_AREA_ID}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ publicStatus: 'red' }),
+      body: JSON.stringify({ publicStatus: 'yellow' }),
     });
     if (!response.ok) throw new Error(`Status update failed with ${response.status}`);
     await loadLayers();
-    setStatus('Barangay admin marked Dambana Creekside Block as red public status.');
+    switchRole('operations');
+    setStatus('Step 2 complete: Barangay Marulas marked the reported area yellow and scheduled it for city prioritization.');
   } catch (error) {
     setStatus(error.message);
   }
@@ -912,8 +1008,12 @@ async function generateCityTasksDemo() {
   try {
     const response = await fetch('/api/v1/tasks/generate-preventive', { method: 'POST' });
     if (!response.ok) throw new Error(`Task generation failed with ${response.status}`);
+    const payload = await response.json();
+    const demoTask = (payload.data || []).find((task) => task.areaId === DEMO_AREA_ID);
+    if (demoTask) state.demoTaskId = demoTask.id;
     await loadLayers();
-    setStatus('City admin generated preventive patrol tasks for critical and high-risk areas.');
+    switchRole('inspector');
+    setStatus(`Step 3 complete: city generated task #${state.demoTaskId || 'for Marulas'} and handed it to the inspector view.`);
   } catch (error) {
     setStatus(error.message);
   }
@@ -922,7 +1022,7 @@ async function generateCityTasksDemo() {
 function latestInspectorPoint() {
   const latest = state.routePoints[state.routePoints.length - 1];
   if (latest && withinValenzuelaDemo(latest)) return latest;
-  return { lat: 14.7017, lng: 120.9789 };
+  return { lat: 14.6841, lng: 120.9739 };
 }
 
 function beginTrapPlacement(type) {
@@ -956,8 +1056,8 @@ async function placeTrapAt(type, point) {
       body: JSON.stringify({
         deviceCode: `${devicePrefix}-INSPECT-${Date.now().toString().slice(-5)}`,
         type,
-        barangayId: 1,
-        areaId: 1,
+        barangayId: DEMO_BARANGAY_ID,
+        areaId: DEMO_AREA_ID,
         lat: Number(normalizedPoint.lat.toFixed(6)),
         lng: Number(normalizedPoint.lng.toFixed(6)),
         status: 'active',
@@ -972,9 +1072,50 @@ async function placeTrapAt(type, point) {
   }
 }
 
-function focusTreatmentWork() {
+async function focusTreatmentWork() {
   switchRole('treatment');
-  setStatus('Treatment team view: showing Marulas risk areas, traps, tasks, and cleared inspection path.');
+
+  try {
+    const treatmentResponse = await fetch('/api/v1/treatments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        areaId: DEMO_AREA_ID,
+        barangayId: DEMO_BARANGAY_ID,
+        status: 'monitoring',
+        actionTaken: 'Source cleanup and larvicide applied',
+        completedAt: new Date().toISOString(),
+      }),
+    });
+    if (!treatmentResponse.ok) throw new Error(`Treatment save failed with ${treatmentResponse.status}`);
+
+    const statusResponse = await fetch(`/api/v1/public-status/${DEMO_AREA_ID}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ publicStatus: 'orange' }),
+    });
+    if (!statusResponse.ok) throw new Error(`Monitoring status failed with ${statusResponse.status}`);
+
+    state.treatmentRecorded = true;
+    await loadLayers();
+    switchRole('public');
+    setStatus('Step 5 complete: treatment recorded. Public map now shows Marulas Market Drainage in orange monitoring.');
+  } catch (error) {
+    setStatus(error.message);
+  }
+}
+
+function runCurrentStep() {
+  const actions = {
+    public: submitCitizenReportDemo,
+    marulas: updateBarangayStatusDemo,
+    operations: generateCityTasksDemo,
+    inspector: runInspectorPatrolDemo,
+    treatment: focusTreatmentWork,
+    dambana: () => switchRole('marulas'),
+  };
+
+  return (actions[state.activeView] || submitCitizenReportDemo)();
 }
 
 async function runInspectorPatrolDemo() {
@@ -986,7 +1127,7 @@ async function runInspectorPatrolDemo() {
     await clearRouteForPatrolDemo();
     await routeAction('start');
 
-    const selectedPath = demoPaths[Math.floor(Math.random() * demoPaths.length)];
+    const selectedPath = demoPaths[0];
     state.activeDemoPath = selectedPath;
     const points = selectedPath.points;
 
@@ -997,7 +1138,10 @@ async function runInspectorPatrolDemo() {
       setStatus(`Inspection ongoing on ${selectedPath.name}: recorded GPS point ${index + 1} of ${points.length}.`);
     }
 
-    setStatus(`Field inspector demo complete: ${selectedPath.name} cleared and distance recalculated.`);
+    await routeAction('complete');
+    await loadLayers();
+    switchRole('treatment');
+    setStatus(`Step 4 complete: ${selectedPath.name} validated. Treatment team now receives the same Marulas case.`);
   } catch (error) {
     setStatus(error.message);
   } finally {
@@ -1011,7 +1155,7 @@ function wait(ms) {
 
 function addDemoPoint() {
   if (!state.activeDemoPath) {
-    state.activeDemoPath = demoPaths[Math.floor(Math.random() * demoPaths.length)];
+    state.activeDemoPath = demoPaths[0];
     state.demoPointIndex = 0;
     setStatus(`Manual demo path selected: ${state.activeDemoPath.name}.`);
   }
@@ -1061,6 +1205,19 @@ document.getElementById('viewSelect').addEventListener('change', (event) => {
 
 document.querySelectorAll('[data-layer]').forEach((checkbox) => {
   checkbox.addEventListener('change', render);
+});
+
+document.getElementById('guideActionButton').addEventListener('click', runCurrentStep);
+
+document.querySelectorAll('[data-flow-step]').forEach((step) => {
+  const activate = () => switchRole(step.dataset.flowStep);
+  step.addEventListener('click', activate);
+  step.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      activate();
+    }
+  });
 });
 
 document.getElementById('startRouteButton').addEventListener('click', () => routeAction('start'));

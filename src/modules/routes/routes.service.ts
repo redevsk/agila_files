@@ -84,7 +84,7 @@ async function appendTrail(id, points) {
   return updateRoute(id, { trailJson });
 }
 
-async function resetRoute(id, options = {}) {
+async function resetRoute(id, options: { clearTrail?: boolean } = {}) {
   const route = await findRouteById(id);
   if (!route) return null;
   return updateRoute(id, {

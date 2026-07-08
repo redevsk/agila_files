@@ -22,7 +22,7 @@
             <option value="operations">City Operations</option>
             <option value="dambana">Barangay Dambana</option>
             <option value="marulas">Barangay Marulas</option>
-            <option value="public">Public Status</option>
+            <option value="public" selected>Public Status</option>
             <option value="inspector">Inspector Route</option>
             <option value="treatment">Treatment Team</option>
           </select>
@@ -38,12 +38,46 @@
 
       <section class="workspace">
         <aside class="panel" aria-label="Layer toggles">
-          <h2>Layers</h2>
+          <h2>Demo Flow</h2>
+          <ol class="demo-flow" aria-label="Guided demo steps">
+            <li data-flow-step="public" role="button" tabindex="0">
+              <span>1</span>
+              <strong>Citizen reports</strong>
+            </li>
+            <li data-flow-step="marulas" role="button" tabindex="0">
+              <span>2</span>
+              <strong>Barangay triages</strong>
+            </li>
+            <li data-flow-step="operations" role="button" tabindex="0">
+              <span>3</span>
+              <strong>City prioritizes</strong>
+            </li>
+            <li data-flow-step="inspector" role="button" tabindex="0">
+              <span>4</span>
+              <strong>Inspector patrols</strong>
+            </li>
+            <li data-flow-step="treatment" role="button" tabindex="0">
+              <span>5</span>
+              <strong>Treatment monitors</strong>
+            </li>
+          </ol>
+
+          <div class="story-panel">
+            <strong id="demoStepTitle">City command center</strong>
+            <p id="demoStepText">Review citywide risk, reports, tasks, devices, and route coverage.</p>
+            <button id="guideActionButton" type="button">Run Current Step</button>
+          </div>
+
+          <h2>Incident Thread</h2>
+          <dl class="incident-thread" id="incidentThread"></dl>
+
+          <h2>Visible Layers</h2>
           <label><input type="checkbox" data-layer="areas" checked /> Risk areas</label>
           <label><input type="checkbox" data-layer="reports" checked /> Citizen reports</label>
           <label><input type="checkbox" data-layer="sentinelDevices" checked /> Sentinel devices</label>
           <label><input type="checkbox" data-layer="tasks" checked /> Tasks</label>
           <label><input type="checkbox" data-layer="routes" checked /> Routes</label>
+          <label><input type="checkbox" data-layer="coverage" checked /> Coverage status</label>
 
           <h2>Role Access</h2>
           <div class="role-panel">
@@ -59,6 +93,7 @@
             <div><span class="legend-line route-active"></span> Ongoing inspection trail</div>
             <div><span class="legend-line route-cleared"></span> Cleared / inspected path</div>
             <div><span class="legend-line route-pending"></span> Scheduled path</div>
+            <div><span class="legend-swatch coverage-swatch"></span> Coverage status</div>
             <div><span class="legend-dot report-dot"></span> Citizen report</div>
             <div><span class="legend-dot ovitrap-dot"></span> Smart ovitrap</div>
             <div><span class="legend-dot mosquito-trap-dot"></span> Mosquito trap</div>
@@ -66,7 +101,7 @@
           </div>
 
           <h2>Role Demo</h2>
-          <p class="section-note">Simulation actions switch into the acting user's role, then update the shared map data.</p>
+          <p class="section-note">Use the highlighted action to move the demonstration forward.</p>
           <div class="demo-panel">
             <div class="demo-card" data-role-action="citizen">
               <strong>Citizen</strong>
@@ -75,33 +110,34 @@
             </div>
             <div class="demo-card" data-role-action="barangay">
               <strong>Barangay Admin</strong>
-              <span>Updates Dambana public status after validation.</span>
-              <button id="barangayStatusButton" type="button">Mark Dambana Red</button>
+              <span>Schedules the reported Marulas drainage area for inspection.</span>
+              <button id="barangayStatusButton" type="button">Schedule Inspection</button>
             </div>
             <div class="demo-card" data-role-action="city">
               <strong>City Admin</strong>
-              <span>Generates preventive tasks for high-risk areas.</span>
+              <span>Creates deduped preventive tasks for critical and high-risk areas.</span>
               <button id="cityTasksButton" type="button">Generate Tasks</button>
             </div>
             <div class="demo-card" data-role-action="inspector">
               <strong>Field Inspector</strong>
-              <span>Starts a randomized street-following patrol, records a trail, and places trap markers in the field.</span>
+              <span>Patrols the same Marulas area, records a trail, and validates the report.</span>
               <button id="inspectorDemoButton" type="button">Run Patrol Demo</button>
               <button id="placeOvitrapButton" type="button">Place Ovitrap on Map</button>
               <button id="placeMosquitoTrapButton" type="button">Place Mosquito Trap on Map</button>
             </div>
             <div class="demo-card" data-role-action="treatment">
               <strong>Treatment Team</strong>
-              <span>Reviews assigned treatment areas and cleared inspection paths.</span>
-              <button id="treatmentFocusButton" type="button">Focus Treatment Work</button>
+              <span>Documents treatment and moves the area into monitoring.</span>
+              <button id="treatmentFocusButton" type="button">Record Treatment</button>
             </div>
           </div>
 
-          <h2>Route Tracker</h2>
-          <div class="tracker">
+          <div data-role-section="route">
+            <h2>Route Tracker</h2>
+            <div class="tracker">
             <div class="metric">
               <span>Selected route</span>
-              <strong id="routeName">Route #1</strong>
+              <strong id="routeName">Route #2</strong>
             </div>
             <div class="metric">
               <span>Distance</span>
@@ -119,6 +155,7 @@
               <button id="addPointButton" type="button">Add Demo Point</button>
               <button id="gpsButton" type="button">Use GPS</button>
               <button id="resetRouteButton" type="button">Reset Route</button>
+            </div>
             </div>
           </div>
 

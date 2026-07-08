@@ -7,23 +7,42 @@ function getPriority(score) {
   return 'low';
 }
 
+function getRiskFactors(area) {
+  const factors = [];
+  if (area.historicalHotspot) factors.push({ label: 'Historical hotspot', points: 30 });
+  if (area.publicStatus === 'green') factors.push({ label: 'Green status expiring soon', points: 20 });
+  if (area.hasDrainage) factors.push({ label: 'Drainage or canal risk', points: 10 });
+  if (area.densityLevel === 'high') factors.push({ label: 'Dense residential activity', points: 10 });
+  if (area.publicStatus === 'red') factors.push({ label: 'Public status is high concern', points: 20 });
+  if (area.publicStatus === 'yellow') factors.push({ label: 'Scheduled or caution status', points: 10 });
+  return factors;
+}
+
 function calculateAreaScore(area) {
   let score = 0;
-  if (area.historicalHotspot) score += 30;
-  if (area.publicStatus === 'green') score += 20;
-  if (area.hasDrainage) score += 10;
-  if (area.densityLevel === 'high') score += 10;
-  if (area.publicStatus === 'red') score += 20;
-  if (area.publicStatus === 'yellow') score += 10;
+  getRiskFactors(area).forEach((factor) => {
+    score += factor.points;
+  });
   return Math.min(score, 100);
 }
 
+function enrichArea(area) {
+  const riskFactors = getRiskFactors(area);
+  return {
+    ...area,
+    riskFactors,
+    riskSummary: riskFactors.map((factor) => `${factor.label} +${factor.points}`).join(', ') || 'No active risk factors',
+  };
+}
+
 async function listAreas() {
-  return findAllAreas();
+  const areas = await findAllAreas();
+  return areas.map(enrichArea);
 }
 
 async function getArea(id) {
-  return findAreaById(id);
+  const area = await findAreaById(id);
+  return area ? enrichArea(area) : null;
 }
 
 async function updateAreaStatus(id, publicStatus) {
@@ -45,7 +64,7 @@ async function recalculateAreaPriorities() {
 
 async function getAreaPriorityRanking() {
   const areas = await findAllAreas();
-  return [...areas].sort((a, b) => b.riskScore - a.riskScore);
+  return [...areas].sort((a, b) => b.riskScore - a.riskScore).map(enrichArea);
 }
 
 module.exports = {

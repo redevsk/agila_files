@@ -15,10 +15,20 @@ async function setTaskStatus(id, status) {
 
 async function generatePreventiveTasks() {
   const rankedAreas = await getAreaPriorityRanking();
+  const existingTasks = await findAllTasks();
   const candidates = rankedAreas.filter((area) => ['critical', 'high'].includes(area.priority));
   return Promise.all(
-    candidates.map((area) =>
-      createTask({
+    candidates.map((area) => {
+      const existing = existingTasks.find(
+        (task) =>
+          task.areaId === area.id &&
+          task.type === 'preventive_patrol' &&
+          ['scheduled', 'in_progress'].includes(task.status),
+      );
+
+      if (existing) return existing;
+
+      return createTask({
         type: 'preventive_patrol',
         status: 'scheduled',
         priority: area.priority,
@@ -26,8 +36,8 @@ async function generatePreventiveTasks() {
         barangayId: area.barangayId,
         areaId: area.id,
         dueAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      }),
-    ),
+      });
+    }),
   );
 }
 

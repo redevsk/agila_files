@@ -66,6 +66,108 @@ h2 {
   line-height: 1.35;
 }
 
+.demo-flow {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.demo-flow li {
+  min-height: 36px;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  background: #ffffff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.demo-flow li:hover,
+.demo-flow li:focus-visible {
+  border-color: var(--accent);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+}
+
+.demo-flow span {
+  width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e5e7eb;
+  color: #344054;
+  font-weight: 700;
+}
+
+.demo-flow strong {
+  font-size: 13px;
+}
+
+.demo-flow li.is-active {
+  border-color: var(--accent);
+  color: var(--ink);
+  background: #ecfdf5;
+}
+
+.demo-flow li.is-active span {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.story-panel {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid #b7e4dc;
+  border-radius: 6px;
+  background: #f0fdfa;
+}
+
+.story-panel strong {
+  font-size: 14px;
+}
+
+.story-panel p {
+  color: #475467;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.story-panel button {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.incident-thread {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 8px 10px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  font-size: 13px;
+}
+
+.incident-thread dt {
+  color: var(--muted);
+}
+
+.incident-thread dd {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
 #status {
   margin-top: 4px;
   color: var(--muted);
@@ -237,6 +339,11 @@ label.is-disabled input {
   border: 2px solid #f97316;
 }
 
+.coverage-swatch {
+  background: rgba(124, 58, 237, 0.1);
+  border: 2px dashed #7c3aed;
+}
+
 .route-active {
   border-color: #7c3aed;
   border-style: dashed;
@@ -283,6 +390,7 @@ label.is-disabled input {
 
 .demo-card.is-current-role {
   border-color: var(--accent);
+  background: #f0fdfa;
   box-shadow: inset 3px 0 0 var(--accent);
 }
 
