@@ -1,5 +1,10 @@
+const prisma = require('../../config/database');
+
 async function findAllItems() {
-  return [];
+  const areas = await prisma.area.findMany({
+    include: { barangay: true },
+  });
+  return areas;
 }
 
 module.exports = { findAllItems };

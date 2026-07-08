@@ -1,0 +1,277 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model CityUser {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  auditLogs AuditLog[]
+}
+
+model BarangayUser {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  role       String
+  barangayId Int
+  createdAt  DateTime @default(now())
+
+  barangay    Barangay     @relation(fields: [barangayId], references: [id])
+  assignedTasks Task[]     @relation("TaskAssignee")
+  inspections  Inspection[]
+  treatments   Treatment[]
+  routes       Route[]
+  auditLogs    AuditLog[]
+}
+
+model HospitalUser {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  auditLogs AuditLog[]
+}
+
+model CitizenUser {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  barangayId Int?
+  createdAt  DateTime @default(now())
+
+  barangay  Barangay? @relation(fields: [barangayId], references: [id])
+  reports   Report[]
+  auditLogs AuditLog[]
+}
+
+model Barangay {
+  id             Int      @id @default(autoincrement())
+  name           String
+  boundaryGeojson String?
+  createdAt       DateTime @default(now())
+
+  barangayUsers   BarangayUser[]
+  citizenUsers    CitizenUser[]
+  areas           Area[]
+  reports         Report[]
+  tasks           Task[]
+  sentinelDevices SentinelDevice[]
+}
+
+model Area {
+  id              Int      @id @default(autoincrement())
+  barangayId      Int
+  name            String
+  type            String
+  boundaryGeojson  String?
+  centerLat       Float
+  centerLng       Float
+  lastCheckedAt   DateTime?
+  publicStatus    String   @default("gray")
+  historicalHotspot Boolean @default(false)
+  hasDrainage     Boolean  @default(false)
+  densityLevel    String?
+  riskScore       Int      @default(0)
+  priority        String?
+  createdAt       DateTime @default(now())
+
+  barangay        Barangay        @relation(fields: [barangayId], references: [id])
+  reports         Report[]
+  tasks           Task[]
+  publicStatuses  PublicStatus[]
+  sentinelDevices SentinelDevice[]
+}
+
+model Report {
+  id          Int      @id @default(autoincrement())
+  submittedBy Int
+  barangayId  Int
+  areaId      Int?
+  lat         Float
+  lng         Float
+  description String
+  photoUrl    String?
+  status      String   @default("submitted")
+  riskLevel   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  submitter   CitizenUser @relation(fields: [submittedBy], references: [id])
+  barangay    Barangay    @relation(fields: [barangayId], references: [id])
+  area        Area?       @relation(fields: [areaId], references: [id])
+  tasks       Task[]
+  inspections Inspection[]
+}
+
+model Task {
+  id              Int      @id @default(autoincrement())
+  type            String
+  status          String   @default("scheduled")
+  priority        String?
+  assignedTo      Int?
+  barangayId      Int?
+  areaId          Int?
+  reportId        Int?
+  sentinelDeviceId Int?
+  dueAt           DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  assignee         BarangayUser?   @relation("TaskAssignee", fields: [assignedTo], references: [id])
+  barangay         Barangay?       @relation(fields: [barangayId], references: [id])
+  area             Area?           @relation(fields: [areaId], references: [id])
+  report           Report?         @relation(fields: [reportId], references: [id])
+  sentinelDevice   SentinelDevice? @relation(fields: [sentinelDeviceId], references: [id])
+  inspections       Inspection[]
+  treatments        Treatment[]
+  routePoints       RoutePoint[]
+}
+
+model Inspection {
+  id           Int      @id @default(autoincrement())
+  taskId       Int?
+  inspectorId  Int
+  reportId     Int?
+  lat          Float
+  lng          Float
+  result       String
+  containerType String?
+  waterPresent  Boolean?
+  larvaeSeen   Boolean?
+  notes        String?
+  photoUrl     String?
+  createdAt    DateTime @default(now())
+
+  task       Task?      @relation(fields: [taskId], references: [id])
+  inspector  BarangayUser @relation(fields: [inspectorId], references: [id])
+  report     Report?    @relation(fields: [reportId], references: [id])
+  treatments Treatment[]
+}
+
+model Treatment {
+  id            Int      @id @default(autoincrement())
+  taskId        Int?
+  teamId        Int
+  inspectionId  Int?
+  actionTaken   String?
+  suppliesUsed  String?
+  beforePhotoUrl String?
+  afterPhotoUrl  String?
+  result        String
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  task       Task?       @relation(fields: [taskId], references: [id])
+  team       BarangayUser @relation(fields: [teamId], references: [id])
+  inspection Inspection? @relation(fields: [inspectionId], references: [id])
+}
+
+model Route {
+  id          Int      @id @default(autoincrement())
+  assignedTo  Int
+  type        String
+  status      String   @default("scheduled")
+  startedAt   DateTime?
+  pausedAt    DateTime?
+  completedAt DateTime?
+  trailJson   String?
+  createdAt   DateTime @default(now())
+
+  assignee    BarangayUser @relation(fields: [assignedTo], references: [id])
+  routePoints RoutePoint[]
+}
+
+model RoutePoint {
+  id        Int       @id @default(autoincrement())
+  routeId   Int
+  taskId    Int?
+  lat       Float
+  lng       Float
+  status    String    @default("scheduled")
+  notes     String?
+  checkedAt DateTime?
+
+  route Route @relation(fields: [routeId], references: [id])
+  task  Task? @relation(fields: [taskId], references: [id])
+}
+
+model PublicStatus {
+  id           Int      @id @default(autoincrement())
+  areaId       Int
+  status       String   @default("gray")
+  sourceType   String?
+  sourceId     Int?
+  lastCheckedAt DateTime?
+  expiresAt    DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  area Area @relation(fields: [areaId], references: [id])
+}
+
+model SentinelDevice {
+  id               Int      @id @default(autoincrement())
+  deviceCode       String   @unique
+  type             String
+  barangayId       Int
+  areaId           Int?
+  lat              Float
+  lng              Float
+  status           String   @default("planned")
+  batteryLevel     Int?
+  lastSeenAt       DateTime?
+  lastMaintenanceAt DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  barangay    Barangay         @relation(fields: [barangayId], references: [id])
+  area        Area?            @relation(fields: [areaId], references: [id])
+  tasks       Task[]
+  readings    SentinelReading[]
+}
+
+model SentinelReading {
+  id                Int      @id @default(autoincrement())
+  deviceId          Int
+  batteryLevel      Int?
+  waterLevel        Int?
+  temperature       Float?
+  humidity          Float?
+  insectEntryEvents Int?
+  signalStrength    Int?
+  recordedAt        DateTime
+  createdAt         DateTime @default(now())
+
+  device SentinelDevice @relation(fields: [deviceId], references: [id])
+}
+
+model AuditLog {
+  id            Int      @id @default(autoincrement())
+  cityUserId    Int?
+  barangayUserId Int?
+  hospitalUserId Int?
+  citizenUserId  Int?
+  action        String
+  entityType    String
+  entityId      Int?
+  metadataJson  String?
+  createdAt     DateTime @default(now())
+
+  cityUser     CityUser?     @relation(fields: [cityUserId], references: [id])
+  barangayUser BarangayUser? @relation(fields: [barangayUserId], references: [id])
+  hospitalUser HospitalUser? @relation(fields: [hospitalUserId], references: [id])
+  citizenUser  CitizenUser?  @relation(fields: [citizenUserId], references: [id])
+}
