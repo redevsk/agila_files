@@ -1,7 +1,7 @@
 # MVP Core Concept: Vector Surveillance Operations Platform with Sentinel Network
 
 ## Positioning
-This platform should be presented first as a proactive prevention and operations system for Local Government Units (LGUs): a GIS-based tool that turns scheduled surveillance, historical hotspots, route coverage, sentinel-device signals, inspections, treatment actions, and citizen reports into prioritized field tasks.
+This platform should be presented first as a proactive prevention and operations system for Local Government Units (LGUs): a GIS-based tool that turns scheduled surveillance, historical hotspots, route coverage, smart-ovitrap signals, inspections, treatment actions, and citizen reports into prioritized field tasks.
 
 The Sentinel Network is a powerful differentiator, but the MVP should not depend on full hardware deployment to prove value. The first version should prove that better surveillance planning, map-based prioritization, and closed-loop field workflows help LGUs inspect before issues escalate, treat confirmed sites, and monitor recurrence.
 
@@ -12,14 +12,27 @@ The proposed platform provides a centralized GIS-based (Geographic Information S
 
 ## 2. The Core MVP Loop & Workflow
 To create a Minimum Viable Product (MVP), we focus on a streamlined workflow:
-**Plan** (Routine Coverage & Hotspots) -> **Detect** (Inspections, Sentinel Signals, Reports) -> **Prioritize** (Risk Map) -> **Act** (Field App) -> **Monitor** (Follow-up Status)
+**Plan** (Routine Coverage & Hotspots) -> **Detect** (Inspections, Ovitrap Signals, Reports) -> **Prioritize** (Risk Map) -> **Act** (Field App) -> **Monitor** (Follow-up Status)
+
+### Workflow Start and End
+The workflow starts when one of these creates or updates a surveillance need:
+*   A routine surveillance schedule becomes due.
+*   A historical hotspot, drainage corridor, school, market, or dense residential zone is due for preventive checking.
+*   A citizen report is submitted and accepted for review.
+*   A smart ovitrap reports maintenance uncertainty or a signal that needs human validation.
+*   A previous route leaves unchecked, skipped, unable-to-access, or need-revisit locations.
+
+The workflow ends only when the area has a clear operational outcome:
+*   **Closed:** Inspection finds no breeding issue, evidence is recorded, and public status is set to Green with an expiration date or Gray if no public update is needed.
+*   **Cleared:** Treatment is completed, the monitoring period finishes, no recurrence is found, and the public status expires or returns to Green/Gray by rule.
+*   **Reopened:** A new report, recurrence, skipped route point, or ovitrap issue creates a fresh task and the loop starts again.
 
 ### Core Operations Workflow
-1. **Plan:** City and barangay staff define routine surveillance areas, historical hotspots, sentinel trap locations, and scheduled coverage routes.
-2. **Transmit:** Inspectors, optional Smart Devices (Ovitraps/Mosquito Traps), and citizens submit inspection results, environmental/activity data, and reports.
+1. **Plan:** City and barangay staff define routine surveillance areas, historical hotspots, optional smart-ovitrap locations, and scheduled coverage routes.
+2. **Transmit:** Inspectors, optional smart ovitraps, and citizens submit inspection results, device condition/activity signals, and reports.
 3. **Ingest:** GIS Command Center receives data.
 4. **Assess:** Risk Assessment Engine analyzes data to generate proactive inspection recommendations and priority levels.
-5. **Validate:** Field Inspectors visit scheduled areas, hotspots, sentinel-alert areas, and citizen-report locations to validate findings.
+5. **Validate:** Field Inspectors visit scheduled areas, hotspots, ovitrap-alert areas, and citizen-report locations to validate findings.
    * *If No Breeding Found:* Close Alert.
    * *If Breeding Confirmed:* Trigger Treatment Team.
 6. **Treat & Monitor:** Treatment Team resolves the issue, and the area enters a Monitoring Period. The GIS is updated throughout this lifecycle.
@@ -84,16 +97,14 @@ The barangay-level role manages local validation, task coordination, and ground-
 The central map interface. It displays multiple layers:
 *   **Operational Layers:** Scheduled Surveillance Areas, Citizen Reports, Confirmed Breeding Sites, Inspection Routes, Treatment Routes, Treatment Status, Cleared Areas.
 *   **Coverage Layers:** Checked Areas, Unchecked Areas, Scheduled Areas, Skipped Areas, Need Revisit Areas, and Completed Route Trails.
-*   **Sentinel Layers:** Smart Ovitraps and Smart Mosquito Traps, if enabled during a pilot.
+*   **Sentinel Layers:** Smart Ovitraps, if enabled during a pilot.
 *   **Analytics Layers:** Risk Heatmap, Historical Hotspots, Environmental Trends, and Recurrence Areas.
 *   **Reporting Tools:** Exportable summaries for inspections completed, treatments completed, unresolved alerts, and recurring hotspots.
 
 ### Module 2: Sentinel Network
 Functions as an early warning system to prioritize inspections, rather than replacing inspectors. For the MVP, this module should be treated as an optional pilot layer or simulated data source until the operations workflow is proven.
 
-The network uses two distinct types of devices to capture different vector-activity signals:
-*   **Smart Ovitrap (Focus: Breeding):** Targeted at the mosquito's reproductive cycle. It monitors operational status (Water Level, Temp, Humidity, Battery, Maintenance Dates) to detect maintenance needs, ensure traps remain viable for egg-laying, and maintain inspection history.
-*   **Smart Mosquito Trap (Focus: Adult Movement):** Targeted at active, flying mosquitoes. It monitors relative adult mosquito activity (Insect Entry Events via IR, Temp, Humidity, Battery) to identify movement spikes, map hotspots, and trigger early inspections. *(Note: Reports relative activity, not laboratory-accurate counts).*
+The network uses smart ovitraps focused on breeding-site surveillance. A smart ovitrap monitors operational status such as water level, temperature, humidity, battery, and maintenance dates to detect maintenance needs, ensure traps remain viable for egg-laying, and maintain inspection history.
 
 Important limitation: Sentinel devices provide operational signals and relative activity trends. They do not confirm dengue presence, replace human validation, or provide exact mosquito population counts.
 
@@ -106,7 +117,7 @@ Initial factors include:
 *   Inspection results, especially confirmed breeding sites.
 *   Historical breeding sites and recurring hotspot areas.
 *   Treatment history and recurrence after treatment.
-*   Smart Mosquito Trap activity and Smart Ovitrap maintenance status, if available.
+*   Smart Ovitrap maintenance status or activity signal, if available.
 *   Temperature and humidity, with rainfall/weather APIs reserved for V2+.
 
 The score must be explainable so LGU staff can see why a location was marked Low, Medium, High, or Critical Risk.
@@ -137,7 +148,7 @@ Example lightweight scoring:
 *   `+25` if not checked in 14 days.
 *   `+20` if Green status expires soon.
 *   `+20` if citizen report nearby or assigned to the zone.
-*   `+15` if sentinel trap activity spikes.
+*   `+15` if smart ovitrap signal or maintenance uncertainty needs validation.
 *   `+10` if dense residential area.
 *   `+10` if drainage/canal area.
 *   `+10` if skipped or unchecked in the last route.
@@ -215,3 +226,4 @@ Once the core MVP loop is proven, the system can be scaled with these advanced f
 *   **Public GIS Portal:** Open a version of the dashboard to the public showing neighborhood risk heatmaps, cleared areas, and health alerts.
 *   **Hardware Scaling:** Deploy fully integrated, solar-powered "smart" ovitraps with NB-IoT/LTE-M connectivity.
 *   **Advanced Hierarchical Management:** Expand role-based access for provincial, regional, or multi-city coordination beyond the city/barangay MVP structure.
+

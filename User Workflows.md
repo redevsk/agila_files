@@ -22,8 +22,8 @@ Manage the citywide dengue surveillance and response program across all barangay
 
 4. **Allocate Resources**
    * Assign or rebalance Field Inspectors, Treatment Teams, supplies, larvicide, equipment, and transport.
-   * Assign trained Field Inspectors to deploy, retrieve, clean, refill, repair, or replace sentinel traps.
-   * Assign preventive inspection routes to areas with expiring Green status, historical hotspots, overdue checks, or sentinel activity signals.
+   * Assign trained Field Inspectors to deploy, retrieve, clean, refill, repair, or replace smart ovitraps.
+   * Assign preventive inspection routes to areas with expiring Green status, historical hotspots, overdue checks, or smart-ovitrap signals.
    * Send city-level support to barangays with high workload or urgent hotspots.
 
 5. **Monitor Field Progress**
@@ -44,7 +44,7 @@ Manage the citywide dengue surveillance and response program across all barangay
 * Which hotspots should be escalated?
 * Which areas need additional monitoring?
 * Which areas should be inspected before a citizen report appears?
-* Which sentinel traps need maintenance, relocation, or replacement?
+* Which smart ovitraps need maintenance, relocation, or replacement?
 * Are current risk-scoring rules and monitoring periods working?
 
 ### Key Outputs
@@ -60,7 +60,7 @@ Coordinate local dengue surveillance, validation, treatment follow-through, and 
 
 ### Daily Workflow
 1. **Open Barangay GIS View**
-   * Review reports, scheduled inspections, confirmed sites, treatment tasks, sentinel trap locations, monitoring areas, and cleared locations within the barangay.
+   * Review reports, scheduled inspections, confirmed sites, treatment tasks, smart ovitrap locations, monitoring areas, and cleared locations within the barangay.
 
 2. **Triage Citizen Reports**
    * Check new citizen submissions.
@@ -103,7 +103,7 @@ Coordinate local dengue surveillance, validation, treatment follow-through, and 
 * Which reports are urgent?
 * Which areas should be checked today?
 * Which high-risk or overdue areas should be checked even without a report?
-* Which sentinel traps need local maintenance or city-level technical support?
+* Which smart ovitraps need local maintenance or city-level technical support?
 * Which sites need treatment or follow-up?
 * Which locations should be marked public Red, Yellow, Orange, Green, or Gray?
 
@@ -117,15 +117,15 @@ Coordinate local dengue surveillance, validation, treatment follow-through, and 
 ## 3. Field Inspector Workflow
 
 ### Purpose
-Validate reports, inspect assigned locations, document findings, update coverage status in the field, and handle assigned sentinel trap checks or maintenance tasks.
+Validate reports, inspect assigned locations, document findings, update coverage status in the field, and handle assigned smart ovitrap checks or maintenance tasks.
 
 ### Field Workflow
 1. **Receive Assigned Route**
    * Open the mobile-friendly field view.
    * Review scheduled inspection points, route order, priority level, and notes.
    * Check which locations are Scheduled, Unchecked, Need Revisit, or Urgent.
-   * Review preventive patrol points created from historical hotspots, coverage gaps, expiring Green status, and sentinel signals.
-   * Review any assigned sentinel trap stops, including deployment, inspection, cleaning, refill, battery replacement, retrieval, or relocation tasks.
+   * Review preventive patrol points created from historical hotspots, coverage gaps, expiring Green status, and smart-ovitrap signals.
+   * Review any assigned smart ovitrap stops, including deployment, inspection, cleaning, refill, battery replacement, retrieval, or relocation tasks.
 
 2. **Start Inspection Activity**
    * Tap Start Route.
@@ -139,7 +139,7 @@ Validate reports, inspect assigned locations, document findings, update coverage
 4. **Validate Findings and Trap Conditions**
    * Record whether breeding was found.
    * Add notes, photos, container type, water presence, larvae/pupae observation, and site condition.
-   * For sentinel trap stops, record trap condition, water level, battery status, damage, missing device, obstruction, or maintenance needs.
+   * For smart ovitrap stops, record trap condition, water level, battery status, damage, missing device, obstruction, or maintenance needs.
    * If no breeding is found, mark the report as No Breeding Found or Cleared for now.
    * If breeding is confirmed, mark the site as Confirmed and trigger treatment.
 
@@ -158,12 +158,12 @@ Validate reports, inspect assigned locations, document findings, update coverage
 7. **Complete Route**
    * End the activity when all reachable locations are checked.
    * Review remaining unchecked, skipped, or need-revisit locations.
-   * Review remaining sentinel trap tasks that could not be completed.
+   * Review remaining smart ovitrap tasks that could not be completed.
    * Submit route summary.
 
 8. **Sync Data**
    * Upload GPS trail, inspection results, photos, and status updates.
-   * Upload sentinel trap condition updates, maintenance actions, device status changes, and follow-up needs.
+   * Upload smart ovitrap condition updates, maintenance actions, device status changes, and follow-up needs.
    * If offline, save locally and sync when connectivity returns.
 
 ### Key Decisions
@@ -172,8 +172,8 @@ Validate reports, inspect assigned locations, document findings, update coverage
 * Was the assigned area fully covered?
 * Which locations need a revisit?
 * Did preventive patrol find an issue before a citizen report was submitted?
-* Does any sentinel trap need repair, cleaning, refill, retrieval, or replacement?
-* Is a sentinel trap signal reliable enough to influence inspection priority?
+* Does any smart ovitrap need repair, cleaning, refill, retrieval, or replacement?
+* Is a smart ovitrap signal reliable enough to influence inspection priority?
 
 ### Key Outputs
 * Inspection result.
@@ -181,7 +181,7 @@ Validate reports, inspect assigned locations, document findings, update coverage
 * Checked/unchecked route status.
 * Photos and field notes.
 * Confirmed breeding site alerts.
-* Sentinel trap condition updates when assigned.
+* Smart ovitrap condition updates when assigned.
 
 ## 4. Treatment Team / Sanitation Personnel Workflow
 
@@ -322,3 +322,4 @@ Allow residents to report potential breeding sites and understand the simplified
 *   **Orange:** Monitoring period or recently flagged area.
 *   **Red:** Danger, high risk, confirmed issue, or unresolved urgent alert.
 *   **Green:** Recently checked or cleared, with expiration date.
+

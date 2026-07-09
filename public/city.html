@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HEXA City View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/role-pages.css" />
+  </head>
+  <body data-role-page="city" class="min-h-screen bg-slate-100 text-slate-950">
+    <main class="grid min-h-screen xl:grid-cols-[360px_1fr]">
+      <aside class="border-r border-slate-200 bg-white p-5">
+        <a class="flex items-center gap-3" href="/map">
+          <span class="grid h-10 w-10 place-items-center rounded-lg bg-[#0f766e] font-black text-white">HX</span>
+          <span>
+            <strong class="block text-2xl tracking-wide">HEXA</strong>
+            <small class="block text-xs uppercase tracking-[0.22em] text-slate-500">City Oversight</small>
+          </span>
+        </a>
+
+        <nav class="mt-6 grid grid-cols-3 gap-2 text-sm font-black" aria-label="Role dashboards">
+          <a class="rounded-xl border border-slate-200 px-3 py-2 text-center text-slate-600 hover:bg-slate-50" href="/citizen">Citizen</a>
+          <a class="rounded-xl border border-slate-200 px-3 py-2 text-center text-slate-600 hover:bg-slate-50" href="/barangay">Barangay</a>
+          <a class="rounded-xl bg-slate-950 px-3 py-2 text-center text-white" href="/city">City</a>
+        </nav>
+
+        <section class="mt-8 rounded-2xl border border-slate-200 bg-slate-950 p-5 text-white">
+          <p class="text-xs font-black uppercase tracking-[0.22em] text-teal-100">LGU Supervisor</p>
+          <h1 class="mt-2 text-3xl font-black leading-tight">Compare hotspots across barangays.</h1>
+          <p class="mt-3 text-sm leading-6 text-slate-200">
+            Monitor trends, unresolved risks, overdue inspections, and weekly summaries for planning and coordination.
+          </p>
+        </section>
+
+        <section class="mt-5 rounded-2xl border border-slate-200 bg-white p-4">
+          <h2 class="text-lg font-black">Barangay Ranking</h2>
+          <div class="mt-3" id="priorityQueue"></div>
+        </section>
+      </aside>
+
+      <section class="min-w-0">
+        <header class="flex flex-col gap-3 border-b border-slate-200 bg-white px-5 py-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-[#0f766e]">City View</p>
+            <h2 class="text-3xl font-black tracking-tight">Environmental risk command board</h2>
+          </div>
+          <a class="inline-flex min-h-10 items-center rounded-xl border border-slate-200 px-4 text-sm font-black hover:bg-slate-50" href="/map">Workflow overview</a>
+        </header>
+
+        <div class="grid gap-5 p-5 2xl:grid-cols-[minmax(0,1fr)_460px]">
+          <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="flex flex-col gap-1 border-b border-slate-200 px-4 py-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p class="text-xs font-black uppercase tracking-[0.18em] text-slate-500">Multi-Barangay Map</p>
+                <h3 class="font-black">Risk areas, sentinel network, and unresolved hotspot trend</h3>
+              </div>
+              <span class="w-fit rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-700">Weekly export ready</span>
+            </div>
+            <div id="roleMap" class="min-h-[650px]"></div>
+          </section>
+
+          <aside class="grid content-start gap-5">
+            <div class="metric-row" id="metrics"></div>
+            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h3 class="text-xl font-black">Weekly Summary</h3>
+              <div class="ops-grid mt-4" id="opsGrid"></div>
+            </article>
+            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h3 class="text-xl font-black">Unresolved Hotspots</h3>
+              <ul class="mt-4 grid gap-2" id="featureList"></ul>
+            </article>
+          </aside>
+        </div>
+      </section>
+    </main>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/role-pages.js"></script>
+  </body>
+</html>

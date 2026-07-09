@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HEXA Citizen View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/role-pages.css" />
+  </head>
+  <body data-role-page="citizen" class="min-h-screen bg-slate-950 text-slate-900">
+    <main>
+      <section class="relative min-h-[78vh] overflow-hidden bg-slate-950">
+        <div id="roleMap" class="absolute inset-0 z-0 min-h-[78vh] opacity-75"></div>
+        <div class="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/75 via-slate-950/35 to-slate-950/85"></div>
+
+        <header class="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-5 py-5 text-white lg:px-8">
+          <a href="/map" class="flex items-center gap-3">
+            <span class="grid h-10 w-10 place-items-center rounded-lg bg-[#0f766e] font-black">HX</span>
+            <span>
+              <strong class="block text-2xl tracking-wide">HEXA</strong>
+              <small class="block text-xs uppercase tracking-[0.24em] text-teal-100/80">Citizen Risk View</small>
+            </span>
+          </a>
+          <nav class="flex rounded-full border border-white/20 bg-white/10 p-1 text-sm font-bold backdrop-blur" aria-label="Role dashboards">
+            <a class="rounded-full bg-white px-4 py-2 text-slate-950" href="/citizen">Citizen</a>
+            <a class="rounded-full px-4 py-2 text-white/85 hover:bg-white/10" href="/barangay">Barangay</a>
+            <a class="rounded-full px-4 py-2 text-white/85 hover:bg-white/10" href="/city">City</a>
+          </nav>
+        </header>
+
+        <div class="relative z-20 mx-auto grid min-h-[58vh] w-full max-w-7xl items-center px-5 pb-12 pt-10 lg:px-8">
+          <div class="max-w-3xl text-white">
+            <p class="mb-3 text-xs font-black uppercase tracking-[0.28em] text-teal-100">Environmental dengue risk only</p>
+            <h1 class="max-w-2xl text-5xl font-black leading-none tracking-tight md:text-7xl">
+              Know your local vector-risk surroundings.
+            </h1>
+            <p class="mt-5 max-w-xl text-lg leading-8 text-slate-100/90">
+              Search a barangay, street, or landmark to see public prevention advisories and submit environmental concerns.
+              Clinical dengue case reporting remains under PIDSR.
+            </p>
+
+            <form class="mt-8 flex max-w-2xl flex-col gap-3 rounded-2xl border border-white/20 bg-white p-2 shadow-2xl md:flex-row" action="#" onsubmit="return false;">
+              <label class="sr-only" for="locationSearch">Search location</label>
+              <input
+                id="locationSearch"
+                class="min-h-14 flex-1 rounded-xl border-0 px-4 text-base text-slate-900 outline-none ring-0"
+                value="Karuhatan Elementary School"
+                aria-describedby="locationStatus"
+              />
+              <button id="locateButton" class="min-h-14 rounded-xl bg-[#0f766e] px-6 font-black text-white hover:bg-teal-800" type="button">
+                Check area
+              </button>
+            </form>
+            <p id="locationStatus" class="mt-3 text-sm font-semibold text-teal-50">Showing public monitoring area near Karuhatan.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-[#eef3f7] px-5 py-8 lg:px-8">
+        <div class="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1fr_420px]">
+          <div class="grid gap-6">
+            <div class="metric-row" id="metrics"></div>
+            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p class="text-xs font-black uppercase tracking-[0.2em] text-[#0f766e]">Public advisory</p>
+              <h2 class="mt-2 text-3xl font-black tracking-tight text-slate-950">Report mosquito-prone conditions early.</h2>
+              <ul class="mt-5 grid gap-3 text-slate-700" id="featureList"></ul>
+            </article>
+          </div>
+
+          <aside class="grid gap-6">
+            <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h2 class="text-xl font-black text-slate-950">Submit Environmental Report</h2>
+              <div class="mt-4 grid gap-3">
+                <label class="grid gap-1 text-sm font-bold text-slate-600">Concern type
+                  <select id="concernType" class="min-h-11 rounded-xl border border-slate-200 bg-white px-3 text-slate-900">
+                    <option>Stagnant water</option>
+                    <option>Clogged canal</option>
+                    <option>Larvae sighting</option>
+                    <option>Garbage buildup</option>
+                    <option>Abandoned tires</option>
+                  </select>
+                </label>
+                <label class="grid gap-1 text-sm font-bold text-slate-600">Description
+                  <textarea id="reportDescription" class="rounded-xl border border-slate-200 p-3 text-slate-900" rows="4">Water pooling beside the canal after rain.</textarea>
+                </label>
+                <button id="submitReportButton" class="min-h-11 rounded-xl bg-[#0b63ce] font-black text-white hover:bg-blue-800" type="button">Submit report</button>
+                <p class="text-sm font-semibold text-slate-500" id="reportStatus">No report submitted in this session.</p>
+              </div>
+            </section>
+
+            <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h2 class="text-xl font-black text-slate-950">My Report Status</h2>
+              <ol class="status-flow mt-4" id="statusFlow"></ol>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </main>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/role-pages.js"></script>
+  </body>
+</html>
