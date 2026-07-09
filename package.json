@@ -6,11 +6,11 @@
   "main": "src/server.ts",
   "scripts": {
     "start": "tsx src/server.ts",
-    "dev": "node --watch src/server.js",
+    "dev": "tsx watch src/server.ts",
     "check": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:seed": "node prisma/seed.js"
+    "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "express": "^4.21.0",
@@ -24,6 +24,6 @@
     "typescript": "^5.4.2"
   },
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "tsx prisma/seed.ts"
   }
 }

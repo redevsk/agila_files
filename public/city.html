@@ -3,72 +3,138 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>HEXA City View</title>
+    <title>HEXA · City Oversight</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="/role-pages.css" />
   </head>
-  <body data-role-page="city" class="min-h-screen bg-slate-100 text-slate-950">
+  <body data-role-page="city" class="min-h-screen bg-[#f1f5f9] text-slate-900 antialiased">
     <main class="grid min-h-screen xl:grid-cols-[360px_1fr]">
-      <aside class="border-r border-slate-200 bg-white p-5">
-        <a class="flex items-center gap-3" href="/map">
-          <span class="grid h-10 w-10 place-items-center rounded-lg bg-[#0f766e] font-black text-white">HX</span>
-          <span>
-            <strong class="block text-2xl tracking-wide">HEXA</strong>
-            <small class="block text-xs uppercase tracking-[0.22em] text-slate-500">City Oversight</small>
-          </span>
-        </a>
+      <aside class="flex flex-col border-r border-white/5 bg-gradient-to-b from-[#0c1a2e] via-[#0f1f36] to-[#0a1628] p-0 text-white">
+        <div class="border-b border-white/5 px-5 py-5">
+          <a class="flex items-center gap-3" href="/map">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-teal-500 to-teal-700 font-black text-sm shadow-lg shadow-teal-900/30">HX</span>
+            <span>
+              <span class="block text-2xl font-display font-bold tracking-wide">HEXA</span>
+              <small class="block text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-teal-300/70">City Oversight</small>
+            </span>
+          </a>
+        </div>
 
-        <nav class="mt-6 grid grid-cols-3 gap-2 text-sm font-black" aria-label="Role dashboards">
-          <a class="rounded-xl border border-slate-200 px-3 py-2 text-center text-slate-600 hover:bg-slate-50" href="/citizen">Citizen</a>
-          <a class="rounded-xl border border-slate-200 px-3 py-2 text-center text-slate-600 hover:bg-slate-50" href="/barangay">Barangay</a>
-          <a class="rounded-xl bg-slate-950 px-3 py-2 text-center text-white" href="/city">City</a>
+        <nav class="grid grid-cols-3 gap-1.5 px-5 py-4 text-sm font-semibold" aria-label="Role dashboards">
+          <a class="rounded-lg border border-white/10 px-3 py-2 text-center text-white/60 transition-all duration-150 hover:border-white/20 hover:bg-white/5 hover:text-white" href="/citizen">Citizen</a>
+          <a class="rounded-lg border border-white/10 px-3 py-2 text-center text-white/60 transition-all duration-150 hover:border-white/20 hover:bg-white/5 hover:text-white" href="/barangay">Barangay</a>
+          <a class="rounded-lg bg-white px-3 py-2 text-center text-slate-900 shadow-sm transition-all duration-150" href="/city">City</a>
         </nav>
 
-        <section class="mt-8 rounded-2xl border border-slate-200 bg-slate-950 p-5 text-white">
-          <p class="text-xs font-black uppercase tracking-[0.22em] text-teal-100">LGU Supervisor</p>
-          <h1 class="mt-2 text-3xl font-black leading-tight">Compare hotspots across barangays.</h1>
-          <p class="mt-3 text-sm leading-6 text-slate-200">
-            Monitor trends, unresolved risks, overdue inspections, and weekly summaries for planning and coordination.
-          </p>
-        </section>
+        <div class="flex-1 overflow-y-auto px-5 pb-5">
+          <section class="mt-2 rounded-xl bg-gradient-to-br from-white/[0.07] to-white/[0.03] p-5 ring-1 ring-inset ring-white/10">
+            <p class="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-teal-400/80">LGU Supervisor</p>
+            <h1 class="mt-2 text-2xl font-display font-bold leading-tight">Compare hotspots across barangays.</h1>
+            <p class="mt-2 text-sm leading-relaxed text-slate-300/80">
+              Monitor trends, unresolved risks, overdue inspections, and weekly summaries for planning and coordination.
+            </p>
+          </section>
 
-        <section class="mt-5 rounded-2xl border border-slate-200 bg-white p-4">
-          <h2 class="text-lg font-black">Barangay Ranking</h2>
-          <div class="mt-3" id="priorityQueue"></div>
-        </section>
+          <section class="mt-5">
+            <div class="flex items-center gap-2 px-1">
+              <div class="h-3.5 w-1 rounded-full bg-teal-500"></div>
+              <h2 class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-teal-300/60">Barangay Ranking</h2>
+            </div>
+            <div class="mt-3" id="priorityQueue"></div>
+          </section>
+        </div>
       </aside>
 
-      <section class="min-w-0">
-        <header class="flex flex-col gap-3 border-b border-slate-200 bg-white px-5 py-4 md:flex-row md:items-center md:justify-between">
+      <section class="flex min-h-0 flex-col">
+        <header class="flex flex-col gap-3 border-b border-slate-200 bg-white px-6 py-4 shadow-sm md:flex-row md:items-center md:justify-between">
           <div>
-            <p class="text-xs font-black uppercase tracking-[0.2em] text-[#0f766e]">City View</p>
-            <h2 class="text-3xl font-black tracking-tight">Environmental risk command board</h2>
+            <p class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-teal-600">City View</p>
+            <h2 class="mt-0.5 text-2xl font-display font-bold tracking-tight text-slate-900">Environmental Risk Command Board</h2>
           </div>
-          <a class="inline-flex min-h-10 items-center rounded-xl border border-slate-200 px-4 text-sm font-black hover:bg-slate-50" href="/map">Workflow overview</a>
+          <a class="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-600 shadow-sm transition-all duration-150 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900" href="/map">Workflow overview</a>
         </header>
 
-        <div class="grid gap-5 p-5 2xl:grid-cols-[minmax(0,1fr)_460px]">
-          <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div class="flex flex-col gap-1 border-b border-slate-200 px-4 py-3 md:flex-row md:items-center md:justify-between">
+        <div class="grid flex-1 gap-5 overflow-y-auto p-6 2xl:grid-cols-[minmax(0,1fr)_460px]">
+          <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div class="flex flex-col gap-1 border-b border-slate-100 px-5 py-3.5 md:flex-row md:items-center md:justify-between">
               <div>
-                <p class="text-xs font-black uppercase tracking-[0.18em] text-slate-500">Multi-Barangay Map</p>
-                <h3 class="font-black">Risk areas, sentinel network, and unresolved hotspot trend</h3>
+                <p class="text-[0.6rem] font-semibold uppercase tracking-[0.15em] text-slate-400">Multi-Barangay Map</p>
+                <h3 class="mt-px font-display text-sm font-semibold text-slate-800">Risk areas, sentinel network, and unresolved hotspot trend</h3>
               </div>
-              <span class="w-fit rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-700">Weekly export ready</span>
+              <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-[0.65rem] font-bold text-amber-700 ring-1 ring-inset ring-amber-200">
+                <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                Weekly export ready
+              </span>
             </div>
-            <div id="roleMap" class="min-h-[650px]"></div>
+            <div id="roleMap" class="min-h-[580px]"></div>
           </section>
 
           <aside class="grid content-start gap-5">
             <div class="metric-row" id="metrics"></div>
-            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <h3 class="text-xl font-black">Weekly Summary</h3>
-              <div class="ops-grid mt-4" id="opsGrid"></div>
+
+            <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div class="flex items-center justify-between gap-2.5">
+                <div class="flex items-center gap-2.5">
+                  <div class="h-8 w-1 rounded-full bg-gradient-to-b from-teal-500 to-teal-600"></div>
+                  <div>
+                    <h3 class="font-display text-base font-bold text-slate-900">Weekly Summary</h3>
+                    <p class="text-xs text-slate-400">This week's operational metrics</p>
+                  </div>
+                </div>
+                <button class="collapse-btn" onclick="toggleCollapse(this)">See more</button>
+              </div>
+              <div class="collapse-body">
+                <div class="ops-grid mt-4" id="opsGrid"></div>
+              </div>
             </article>
-            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <h3 class="text-xl font-black">Unresolved Hotspots</h3>
-              <ul class="mt-4 grid gap-2" id="featureList"></ul>
+
+            <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div class="flex items-center justify-between gap-2.5">
+                <div class="flex items-center gap-2.5">
+                  <div class="h-8 w-1 rounded-full bg-gradient-to-b from-amber-500 to-amber-600"></div>
+                  <div>
+                    <h3 class="font-display text-base font-bold text-slate-900">Unresolved Hotspots</h3>
+                    <p class="text-xs text-slate-400">Areas requiring attention</p>
+                  </div>
+                </div>
+                <button class="collapse-btn" onclick="toggleCollapse(this)">See more</button>
+              </div>
+              <div class="collapse-body">
+                <ul class="mt-4 grid gap-1.5" id="featureList"></ul>
+              </div>
+            </article>
+
+            <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div class="flex items-center justify-between gap-2.5">
+                <div class="flex items-center gap-2.5">
+                  <div class="h-8 w-1 rounded-full bg-gradient-to-b from-violet-500 to-violet-600"></div>
+                  <div>
+                    <h3 class="font-display text-base font-bold text-slate-900">Barangay Comparison</h3>
+                    <p class="text-xs text-slate-400">Risk scores &amp; status across barangays</p>
+                  </div>
+                </div>
+                <button class="collapse-btn" onclick="toggleCollapse(this)">See more</button>
+              </div>
+              <div class="collapse-body">
+                <div class="mt-4" id="comparisonTable"></div>
+              </div>
+            </article>
+
+            <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div class="flex items-center justify-between gap-2.5">
+                <div class="flex items-center gap-2.5">
+                  <div class="h-8 w-1 rounded-full bg-gradient-to-b from-rose-500 to-rose-600"></div>
+                  <div>
+                    <h3 class="font-display text-base font-bold text-slate-900">Alert Feed</h3>
+                    <p class="text-xs text-slate-400">System alerts &amp; threshold breaches</p>
+                  </div>
+                </div>
+                <button class="collapse-btn" onclick="toggleCollapse(this)">See more</button>
+              </div>
+              <div class="collapse-body">
+                <div class="mt-4" id="alertFeed"></div>
+              </div>
             </article>
           </aside>
         </div>

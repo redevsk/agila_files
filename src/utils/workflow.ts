@@ -1,8 +1,8 @@
-const db = require('../config/database');
+const db: any = require('../config/database');
 const { addDaysIso, nowIso } = require('./date');
 const { nextId } = require('./ids');
 
-function logAudit(actorId, action, entityType, entityId, metadata = {}) {
+function logAudit(actorId: any, action: any, entityType: any, entityId: any, metadata: any = {}) {
   db.auditLogs.push({
     id: nextId('audit'),
     actorId: actorId || null,
@@ -14,15 +14,15 @@ function logAudit(actorId, action, entityType, entityId, metadata = {}) {
   });
 }
 
-function priorityFromScore(score) {
+function priorityFromScore(score: any) {
   if (score >= 75) return 'critical';
   if (score >= 50) return 'high';
   if (score >= 25) return 'medium';
   return 'low';
 }
 
-function setAreaPublicStatus(areaId, status, sourceType, sourceId, options = {}) {
-  const area = db.areas.find((item) => item.id === areaId);
+function setAreaPublicStatus(areaId: any, status: any, sourceType: any, sourceId: any, options: any = {}) {
+  const area = (db.areas as any[]).find((item: any) => item.id === areaId);
   if (area) {
     area.publicStatus = status;
     if (status === 'green') {
@@ -30,7 +30,7 @@ function setAreaPublicStatus(areaId, status, sourceType, sourceId, options = {})
     }
   }
 
-  const existing = db.publicStatuses.find((item) => item.areaId === areaId);
+  const existing = (db.publicStatuses as any[]).find((item: any) => item.areaId === areaId);
   const expiresAt = options.expiresAt === undefined ? null : options.expiresAt;
 
   if (existing) {
@@ -60,7 +60,7 @@ function setAreaPublicStatus(areaId, status, sourceType, sourceId, options = {})
   return statusRecord;
 }
 
-function createTask(payload) {
+function createTask(payload: any) {
   const timestamp = nowIso();
   const task = {
     id: nextId('task'),
@@ -80,10 +80,10 @@ function createTask(payload) {
   return task;
 }
 
-function handleInspectionResult(inspection) {
-  const task = db.tasks.find((item) => item.id === inspection.taskId);
+function handleInspectionResult(inspection: any) {
+  const task = (db.tasks as any[]).find((item: any) => item.id === inspection.taskId);
   const report = inspection.reportId
-    ? db.reports.find((item) => item.id === inspection.reportId)
+    ? (db.reports as any[]).find((item: any) => item.id === inspection.reportId)
     : null;
   const areaId = task?.areaId || report?.areaId;
 
@@ -144,8 +144,8 @@ function handleInspectionResult(inspection) {
   return { createdTasks: [] };
 }
 
-function handleTreatmentResult(treatment) {
-  const task = db.tasks.find((item) => item.id === treatment.taskId);
+function handleTreatmentResult(treatment: any) {
+  const task = (db.tasks as any[]).find((item: any) => item.id === treatment.taskId);
   const areaId = task?.areaId;
 
   if (task) {
