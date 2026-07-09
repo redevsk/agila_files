@@ -1,4 +1,4 @@
-const devices = [
+const initialDevices = [
   {
     id: 1,
     deviceCode: 'OVI-DAMBANA-001',
@@ -23,32 +23,9 @@ const devices = [
     batteryLevel: 84,
     lastSeenAt: '2026-07-08T08:45:00Z',
   },
-  {
-    id: 3,
-    deviceCode: 'MOSQ-DAMBANA-001',
-    type: 'mosquito_trap',
-    barangayId: 1,
-    areaId: 1,
-    lat: 14.7017,
-    lng: 120.9789,
-    status: 'active',
-    batteryLevel: 91,
-    lastSeenAt: '2026-07-08T09:05:00Z',
-  },
-  {
-    id: 4,
-    deviceCode: 'MOSQ-MARULAS-001',
-    type: 'mosquito_trap',
-    barangayId: 2,
-    areaId: 4,
-    lat: 14.6819,
-    lng: 120.976,
-    status: 'active',
-    batteryLevel: 76,
-    lastSeenAt: '2026-07-08T09:15:00Z',
-  },
 ];
 
+const devices = initialDevices.map((device) => ({ ...device }));
 const readings = [];
 
 async function findAllDevices() {
@@ -74,6 +51,12 @@ async function updateDevice(id, changes) {
   return device;
 }
 
+async function resetDevices() {
+  devices.splice(0, devices.length, ...initialDevices.map((device) => ({ ...device })));
+  readings.splice(0, readings.length);
+  return devices;
+}
+
 async function createReading(payload) {
   const reading = {
     id: readings.length + 1,
@@ -88,5 +71,7 @@ module.exports = {
   createDevice,
   createReading,
   findAllDevices,
+  resetDevices,
   updateDevice,
 };
+

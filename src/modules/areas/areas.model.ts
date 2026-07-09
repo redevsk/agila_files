@@ -1,6 +1,6 @@
 const { PRIORITIES, PUBLIC_STATUSES } = require('../../constants/statuses');
 
-const areas = [
+const initialAreas = [
   {
     id: 1,
     barangayId: 1,
@@ -67,6 +67,8 @@ const areas = [
   },
 ];
 
+const areas = initialAreas.map((area) => ({ ...area }));
+
 async function findAllAreas() {
   return areas;
 }
@@ -82,8 +84,14 @@ async function updateArea(id, changes) {
   return area;
 }
 
+async function resetAreas() {
+  areas.splice(0, areas.length, ...initialAreas.map((area) => ({ ...area })));
+  return areas;
+}
+
 module.exports = {
   findAllAreas,
   findAreaById,
+  resetAreas,
   updateArea,
 };

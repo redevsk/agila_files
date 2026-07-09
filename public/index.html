@@ -3,174 +3,86 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Agila Valenzuela MVP Map</title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
+    <title>HEXA Environmental Risk Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <main class="shell">
-      <section class="toolbar" aria-label="Map controls">
-        <div>
-          <h1>Agila Valenzuela MVP Map</h1>
-          <p id="status">Loading Dambana and Marulas map layers...</p>
-        </div>
-        <div class="actions">
-          <select id="viewSelect" aria-label="Map view">
-            <option value="operations">City Operations</option>
-            <option value="dambana">Barangay Dambana</option>
-            <option value="marulas">Barangay Marulas</option>
-            <option value="public" selected>Public Status</option>
-            <option value="inspector">Inspector Route</option>
-            <option value="treatment">Treatment Team</option>
-          </select>
-          <select id="baseMapSelect" aria-label="Map style">
-            <option value="osm">Street Map</option>
-            <option value="carto">Light Map</option>
-            <option value="satellite">Satellite</option>
-            <option value="topo">Topographic</option>
-          </select>
-          <button id="refreshButton" type="button">Refresh</button>
-        </div>
-      </section>
-
-      <section class="workspace">
-        <aside class="panel" aria-label="Layer toggles">
-          <h2>Demo Flow</h2>
-          <ol class="demo-flow" aria-label="Guided demo steps">
-            <li data-flow-step="public" role="button" tabindex="0">
-              <span>1</span>
-              <strong>Citizen reports</strong>
-            </li>
-            <li data-flow-step="marulas" role="button" tabindex="0">
-              <span>2</span>
-              <strong>Barangay triages</strong>
-            </li>
-            <li data-flow-step="operations" role="button" tabindex="0">
-              <span>3</span>
-              <strong>City prioritizes</strong>
-            </li>
-            <li data-flow-step="inspector" role="button" tabindex="0">
-              <span>4</span>
-              <strong>Inspector patrols</strong>
-            </li>
-            <li data-flow-step="treatment" role="button" tabindex="0">
-              <span>5</span>
-              <strong>Treatment monitors</strong>
-            </li>
-          </ol>
-
-          <div class="story-panel">
-            <strong id="demoStepTitle">City command center</strong>
-            <p id="demoStepText">Review citywide risk, reports, tasks, devices, and route coverage.</p>
-            <button id="guideActionButton" type="button">Run Current Step</button>
+      <aside class="panel" aria-label="Demo workflow">
+        <div class="brand">
+          <span class="brand-mark">HX</span>
+          <div>
+            <h1>HEXA Risk Map</h1>
+            <p id="status">Blank map ready. Select Step 1 to begin.</p>
           </div>
+        </div>
 
-          <h2>Incident Thread</h2>
-          <dl class="incident-thread" id="incidentThread"></dl>
+        <section>
+          <h2>Role Views</h2>
+          <nav class="view-links" aria-label="Separated user dashboards">
+            <a href="/citizen">Citizen</a>
+            <a href="/barangay">Barangay</a>
+            <a href="/city">City</a>
+          </nav>
+        </section>
 
+        <section>
+          <h2>Workflow</h2>
+          <ol class="demo-flow" id="stepRail" aria-label="Environmental risk workflow"></ol>
+        </section>
+
+        <section class="story-panel">
+          <span id="stepBadge">Blank</span>
+          <strong id="stepTitle">Start with a blank barangay map</strong>
+          <p id="stepText">Nothing is assumed yet. The app first maps operational risk areas before scoring or assigning work.</p>
+          <div class="step-metrics" id="stepMetrics"></div>
+        </section>
+
+        <section>
           <h2>Visible Layers</h2>
-          <label><input type="checkbox" data-layer="areas" checked /> Risk areas</label>
-          <label><input type="checkbox" data-layer="reports" checked /> Citizen reports</label>
-          <label><input type="checkbox" data-layer="sentinelDevices" checked /> Sentinel devices</label>
-          <label><input type="checkbox" data-layer="tasks" checked /> Tasks</label>
-          <label><input type="checkbox" data-layer="routes" checked /> Routes</label>
-          <label><input type="checkbox" data-layer="coverage" checked /> Coverage status</label>
+          <div class="layer-list" id="layerList"></div>
+        </section>
 
-          <h2>Role Access</h2>
-          <div class="role-panel">
-            <strong id="roleTitle">City Operations</strong>
-            <p id="roleSees">Sees all operational layers.</p>
-            <p id="roleActions">Can coordinate city-wide response.</p>
-          </div>
-
+        <section>
           <h2>Legend</h2>
           <div class="legend" aria-label="Map legend">
-            <div><span class="legend-swatch risk-critical"></span> Critical risk area</div>
-            <div><span class="legend-swatch risk-high"></span> High risk area</div>
-            <div><span class="legend-line route-active"></span> Ongoing inspection trail</div>
-            <div><span class="legend-line route-cleared"></span> Cleared / inspected path</div>
-            <div><span class="legend-line route-pending"></span> Scheduled path</div>
-            <div><span class="legend-swatch coverage-swatch"></span> Coverage status</div>
+            <div><span class="legend-dot risk-dot"></span> Risk candidate / score</div>
+            <div><span class="legend-square scope-square"></span> Barangay analysis scope</div>
+            <div><span class="legend-line water-line"></span> River / water-risk corridor</div>
+            <div><span class="legend-dot ovitrap-dot"></span> Sentinel ovitrap</div>
             <div><span class="legend-dot report-dot"></span> Citizen report</div>
-            <div><span class="legend-dot ovitrap-dot"></span> Smart ovitrap</div>
-            <div><span class="legend-dot mosquito-trap-dot"></span> Mosquito trap</div>
-            <div><span class="legend-dot task-dot"></span> Assigned task</div>
+            <div><span class="legend-dot task-dot"></span> Inspection task</div>
+            <div><span class="legend-line route-active"></span> Walked inspection path</div>
+            <div><span class="legend-line perimeter-line"></span> Response / recheck perimeter</div>
           </div>
+        </section>
 
-          <h2>Role Demo</h2>
-          <p class="section-note">Use the highlighted action to move the demonstration forward.</p>
-          <div class="demo-panel">
-            <div class="demo-card" data-role-action="citizen">
-              <strong>Citizen</strong>
-              <span>Reports stagnant water in Marulas.</span>
-              <button id="citizenReportButton" type="button">Submit Report</button>
-            </div>
-            <div class="demo-card" data-role-action="barangay">
-              <strong>Barangay Admin</strong>
-              <span>Schedules the reported Marulas drainage area for inspection.</span>
-              <button id="barangayStatusButton" type="button">Schedule Inspection</button>
-            </div>
-            <div class="demo-card" data-role-action="city">
-              <strong>City Admin</strong>
-              <span>Creates deduped preventive tasks for critical and high-risk areas.</span>
-              <button id="cityTasksButton" type="button">Generate Tasks</button>
-            </div>
-            <div class="demo-card" data-role-action="inspector">
-              <strong>Field Inspector</strong>
-              <span>Patrols the same Marulas area, records a trail, and validates the report.</span>
-              <button id="inspectorDemoButton" type="button">Run Patrol Demo</button>
-              <button id="placeOvitrapButton" type="button">Place Ovitrap on Map</button>
-              <button id="placeMosquitoTrapButton" type="button">Place Mosquito Trap on Map</button>
-            </div>
-            <div class="demo-card" data-role-action="treatment">
-              <strong>Treatment Team</strong>
-              <span>Documents treatment and moves the area into monitoring.</span>
-              <button id="treatmentFocusButton" type="button">Record Treatment</button>
-            </div>
+        <section>
+          <h2>Why It Matters</h2>
+          <ul class="notes" id="stepNotes"></ul>
+        </section>
+
+        <div class="actions">
+          <button id="resetButton" type="button">Reset</button>
+          <button id="nextButton" type="button">Next step</button>
+        </div>
+      </aside>
+
+      <section class="map-shell" aria-label="HEXA environmental risk map">
+        <div class="map-header">
+          <div>
+            <p>Environmental surveillance only. Clinical dengue case reporting remains under PIDSR.</p>
+            <h2 id="mapTitle">Start with a blank barangay map</h2>
           </div>
-
-          <div data-role-section="route">
-            <h2>Route Tracker</h2>
-            <div class="tracker">
-            <div class="metric">
-              <span>Selected route</span>
-              <strong id="routeName">Route #2</strong>
-            </div>
-            <div class="metric">
-              <span>Distance</span>
-              <strong id="distanceValue">0.00 km</strong>
-            </div>
-            <div class="metric">
-              <span>Trail points</span>
-              <strong id="pointValue">0</strong>
-            </div>
-            <div class="button-grid">
-              <button id="startRouteButton" type="button">Start</button>
-              <button id="pauseRouteButton" type="button">Pause</button>
-              <button id="resumeRouteButton" type="button">Resume</button>
-              <button id="completeRouteButton" type="button">Complete</button>
-              <button id="addPointButton" type="button">Add Demo Point</button>
-              <button id="gpsButton" type="button">Use GPS</button>
-              <button id="resetRouteButton" type="button">Reset Route</button>
-            </div>
-            </div>
-          </div>
-
-          <h2>Summary</h2>
-          <dl class="summary" id="summary"></dl>
-        </aside>
-
-        <div id="map" aria-label="Agila operations map"></div>
+          <span class="status-pill" id="statusPill">Ready</span>
+        </div>
+        <div id="map"></div>
+        <div id="mapFallback" class="fallback-label" hidden>Map tiles unavailable. Demo data is still available.</div>
       </section>
     </main>
 
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    ></script>
-    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="/map.js"></script>
   </body>
 </html>

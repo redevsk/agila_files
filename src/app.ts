@@ -12,4 +12,20 @@ app.get('/map', (_req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
+app.get('/demo', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'demo.html'));
+});
+
+app.get('/citizen', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'citizen.html'));
+});
+
+app.get('/barangay', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'barangay.html'));
+});
+
+app.get('/city', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'city.html'));
+});
+
 module.exports = app;

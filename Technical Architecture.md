@@ -55,7 +55,7 @@ Refine should consume stable REST endpoints from the Node/Express backend. Keep 
 8. Monitoring and Green status expiration.
 9. Basic risk scoring.
 10. CSV/PDF reporting.
-11. Simulated Sentinel trap integration.
+11. Simulated Smart ovitrap integration.
 
 ## Source Module Plan
 
@@ -280,7 +280,6 @@ Public statuses:
 
 Device types:
 *   `smart_ovitrap`
-*   `smart_mosquito_trap`
 
 Device statuses:
 *   `planned`
@@ -299,7 +298,6 @@ Device statuses:
 *   `water_level`
 *   `temperature`
 *   `humidity`
-*   `insect_entry_events`
 *   `signal_strength`
 *   `recorded_at`
 *   `created_at`
@@ -393,7 +391,7 @@ Device statuses:
 5. `confirmed` or `closed`
 
 ### Preventive Surveillance Flow
-1. System identifies overdue routine coverage, expiring Green areas, historical hotspots, unchecked areas, or sentinel signals.
+1. System identifies overdue routine coverage, expiring Green areas, historical hotspots, unchecked areas, or smart-ovitrap signals.
 2. Barangay or city admin reviews recommendations.
 3. Admin creates preventive patrol tasks.
 4. Inspector checks assigned areas.
@@ -427,7 +425,7 @@ Use a simple explainable score:
 *   Not checked in 14 days: `+25`
 *   Green status expires soon: `+20`
 *   Citizen report nearby or assigned to the zone: `+20`
-*   Sentinel trap activity spike: `+15`
+*   Smart ovitrap activity spike: `+15`
 *   Dense residential area: `+10`
 *   Drainage/canal area: `+10`
 *   Skipped or unchecked in the last route: `+10`
@@ -467,27 +465,11 @@ Implementation shortcuts:
   "waterLevel": 63,
   "temperature": 30.4,
   "humidity": 78,
-  "insectEntryEvents": 0,
   "signalStrength": -72,
   "recordedAt": "2026-07-07T08:30:00Z"
 }
 ```
 
-```json
-{
-  "deviceCode": "MOSQ-BRGY-004",
-  "type": "smart_mosquito_trap",
-  "lat": 14.6012,
-  "lng": 120.9815,
-  "batteryLevel": 74,
-  "waterLevel": null,
-  "temperature": 31.1,
-  "humidity": 81,
-  "insectEntryEvents": 18,
-  "signalStrength": -68,
-  "recordedAt": "2026-07-07T08:45:00Z"
-}
-```
 
 ## Acceptance Criteria
 
@@ -510,7 +492,7 @@ Implementation shortcuts:
 *   Can start, pause, resume, and complete a route.
 *   Can mark route points as checked, skipped, need revisit, or unable to access.
 *   Can submit inspection results.
-*   Can handle assigned sentinel trap checks and updates.
+*   Can handle assigned smart ovitrap checks and updates.
 
 ### Treatment Team
 *   Can view assigned treatment tasks.
@@ -530,3 +512,4 @@ After the hackathon, migrate from SQLite to PostgreSQL/PostGIS when the product 
 *   larger datasets,
 *   multi-user production concurrency,
 *   proper GIS analytics.
+

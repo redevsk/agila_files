@@ -1,6 +1,6 @@
 const { TASK_TYPES } = require('../../constants/statuses');
 
-const tasks = [
+const initialTasks = [
   {
     id: 1,
     type: TASK_TYPES.PREVENTIVE_PATROL,
@@ -34,6 +34,8 @@ const tasks = [
   },
 ];
 
+const tasks = initialTasks.map((task) => ({ ...task }));
+
 async function findAllTasks() {
   return tasks;
 }
@@ -55,8 +57,14 @@ async function updateTask(id, changes) {
   return task;
 }
 
+async function resetTasks() {
+  tasks.splice(0, tasks.length, ...initialTasks.map((task) => ({ ...task })));
+  return tasks;
+}
+
 module.exports = {
   createTask,
   findAllTasks,
+  resetTasks,
   updateTask,
 };

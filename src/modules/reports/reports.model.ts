@@ -1,4 +1,4 @@
-const reports = [
+const initialReports = [
   {
     id: 1,
     submittedBy: null,
@@ -25,6 +25,8 @@ const reports = [
   },
 ];
 
+const reports = initialReports.map((report) => ({ ...report }));
+
 async function findAllReports() {
   return reports;
 }
@@ -47,8 +49,14 @@ async function updateReportStatus(id, status) {
   return report;
 }
 
+async function resetReports() {
+  reports.splice(0, reports.length, ...initialReports.map((report) => ({ ...report })));
+  return reports;
+}
+
 module.exports = {
   createReport,
   findAllReports,
+  resetReports,
   updateReportStatus,
 };

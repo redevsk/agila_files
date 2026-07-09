@@ -1,4 +1,4 @@
-const routes = [
+const initialRoutes = [
   {
     id: 1,
     assignedTo: 3,
@@ -37,6 +37,11 @@ const routes = [
   },
 ];
 
+const routes = initialRoutes.map((route) => ({
+  ...route,
+  trailJson: [...route.trailJson],
+}));
+
 async function findAllRoutes() {
   return routes;
 }
@@ -52,8 +57,21 @@ async function updateRoute(id, changes) {
   return route;
 }
 
+async function resetRoutes() {
+  routes.splice(
+    0,
+    routes.length,
+    ...initialRoutes.map((route) => ({
+      ...route,
+      trailJson: [...route.trailJson],
+    })),
+  );
+  return routes;
+}
+
 module.exports = {
   findAllRoutes,
   findRouteById,
+  resetRoutes,
   updateRoute,
 };

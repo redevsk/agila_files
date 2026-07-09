@@ -14,7 +14,13 @@ async function createTreatment(payload) {
   return treatment;
 }
 
+async function resetTreatments() {
+  treatments.splice(0, treatments.length);
+  return treatments;
+}
+
 module.exports = {
   createTreatment,
   findAllTreatments,
+  resetTreatments,
 };
