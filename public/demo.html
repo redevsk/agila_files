@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HEXA Environmental Risk Demo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/demo.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="demo-topbar">
+        <div class="demo-shell">
+          <a class="brand-lockup" href="/demo" aria-label="HEXA demo home">
+            <img src="/img/logo.png" alt="HEXA" class="h-10 w-auto" />
+            <span>HEXA Environmental Risk Demo</span>
+          </a>
+          <div class="demo-actions">
+            <button class="btn btn-outline-secondary" id="resetButton" type="button">Reset</button>
+            <button class="btn btn-primary" id="nextButton" type="button">Next step</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="demo-shell demo-main">
+        <section class="demo-intro" aria-labelledby="demoTitle">
+          <div>
+            <p>Environmental surveillance only. Clinical dengue case reporting remains under PIDSR.</p>
+            <h1 id="demoTitle">Step-by-step dengue vector risk workflow</h1>
+          </div>
+          <span class="status status-blue" id="publicStatusPill">Ready</span>
+        </section>
+
+        <nav class="step-rail" id="stepRail" aria-label="Workflow steps"></nav>
+
+        <section class="demo-grid">
+          <article class="map-panel">
+            <header class="panel-header">
+              <div>
+                <h2 id="mapTitle">Start with a blank barangay map</h2>
+                <p id="mapSubtitle">Nothing is assumed yet. The app first needs operational areas before it can score risk.</p>
+              </div>
+            </header>
+
+            <div class="layer-bar" id="layerBar"></div>
+
+            <div class="map-wrap">
+              <div id="demoMap"></div>
+              <div id="mapFallback" class="map-fallback" hidden>
+                Map tiles are unavailable. Demo controls still work.
+              </div>
+              <div class="map-legend compact" id="mapLegend" aria-label="Map legend">
+                <strong>Legend</strong>
+                <div><span class="legend-dot risk"></span> Risk candidate</div>
+                <div><span class="legend-dot sentinel"></span> Sentinel</div>
+                <div><span class="legend-dot report"></span> Report</div>
+                <div><span class="legend-line route"></span> Walked path</div>
+              </div>
+            </div>
+          </article>
+
+          <aside class="step-panel">
+            <div id="rolePanel"></div>
+          </aside>
+        </section>
+
+        <p class="demo-status" id="status" role="status">Blank map ready. Click Next step to begin area mapping.</p>
+      </main>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/demo.js"></script>
+  </body>
+</html>

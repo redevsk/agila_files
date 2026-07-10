@@ -1,0 +1,1294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HEXA · Barangay Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/role-pages.css" />
+  </head>
+  <body class="min-h-screen bg-[#f1f5f9] text-slate-900 antialiased">
+    <main class="grid min-h-screen lg:grid-cols-[280px_1fr]">
+      <!-- Sidebar -->
+      <aside
+        class="flex flex-col border-r border-white/5 bg-gradient-to-b from-[#0c1a2e] via-[#0f1f36] to-[#0a1628] p-0 text-white"
+      >
+        <div class="border-b border-white/5 px-5 py-5">
+          <a class="flex items-center gap-3">
+            <img src="/img/logo.png" alt="HEXA" class="h-10 w-auto" />
+            <span>
+              <strong class="block text-lg font-display tracking-wide"
+                >HEXA</strong
+              >
+              <small
+                class="block text-sm font-semibold uppercase tracking-[0.22em] text-teal-300/70"
+                >Barangay Ops</small
+              >
+            </span>
+          </a>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto px-3 py-4">
+          <div class="space-y-1">
+            <button
+              class="nav-btn active"
+              data-section="dashboard"
+              onclick="switchSection('dashboard')"
+            >
+              <svg
+                class="nav-icon"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="7" height="9" />
+                <rect x="14" y="3" width="7" height="5" />
+                <rect x="14" y="12" width="7" height="9" />
+                <rect x="3" y="16" width="7" height="5" />
+              </svg>
+              <span>Dashboard</span>
+            </button>
+            <a href="/barangay-operations" class="nav-btn">
+              <svg
+                class="nav-icon"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span>Map Navigation</span>
+            </a>
+            <button class="nav-btn" data-section="inspectors" onclick="switchSection('inspectors')">
+              <svg
+                class="nav-icon"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span>Inspectors</span>
+            </button>
+            <button class="nav-btn" data-section="response-team" onclick="switchSection('response-team')">
+              <svg
+                class="nav-icon"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              </svg>
+              <span>Response Team</span>
+            </button>
+            <button
+              class="nav-btn"
+              data-section="sentinels"
+              onclick="switchSection('sentinels')"
+            >
+              <svg
+                class="nav-icon"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+              <span>Sentinels Stats</span>
+            </button>
+            <button
+              class="nav-btn"
+              data-section="reports"
+              onclick="switchSection('reports')"
+            >
+              <svg
+                class="nav-icon"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+              <span>Residence Report</span>
+            </button>
+            <button
+              class="nav-btn"
+              data-section="notifications"
+              onclick="switchSection('notifications')"
+            >
+              <svg
+                class="nav-icon"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span>Notifications</span>
+            </button>
+            <button
+              class="nav-btn"
+              data-section="profile"
+              onclick="switchSection('profile')"
+            >
+              <svg
+                class="nav-icon"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <span>Profile</span>
+            </button>
+          </div>
+        </nav>
+
+        <div class="border-t border-white/5 px-3 py-3">
+          <button onclick="logout()" class="nav-btn w-full">
+            <svg
+              class="nav-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Mobile hamburger -->
+      <button id="sidebarToggle" aria-label="Open sidebar" class="fixed right-4 top-4 z-50 hidden h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm" onclick="toggleSidebar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div id="sidebarOverlay" class="fixed inset-0 z-30 hidden bg-slate-950/40" onclick="toggleSidebar()"></div>
+
+      <!-- Main Content -->
+      <section class="flex min-h-0 flex-col overflow-y-auto">
+        <!-- Dashboard Section -->
+        <div id="section-dashboard" class="section-panel">
+          <header
+            class="border-b border-slate-200 bg-white px-6 py-4 shadow-sm"
+          >
+            <p
+              class="text-base font-semibold uppercase tracking-[0.18em] text-teal-600"
+            >
+              Dashboard
+            </p>
+            <h2
+              class="mt-0.5 text-2xl font-display font-bold tracking-tight text-slate-900"
+            >
+              Welcome, <span id="userName">Barangay Admin</span>
+            </h2>
+          </header>
+          <div class="grid gap-5 p-6">
+            <div class="metric-row" id="dashboardMetrics"></div>
+            <div class="grid gap-5 md:grid-cols-2">
+              <div
+                class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              >
+                <h3 class="font-display text-base font-bold text-slate-900">
+                  Priority Tasks
+                </h3>
+                <div class="mt-3 space-y-2" id="dashboardTasks"></div>
+              </div>
+              <div
+                class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              >
+                <h3 class="font-display text-base font-bold text-slate-900">
+                  Recent Activity
+                </h3>
+                <div class="mt-3 space-y-2" id="dashboardActivity"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inspectors Section -->
+        <div id="section-inspectors" class="section-panel hidden">
+          <header
+            class="border-b border-slate-200 bg-white px-6 py-4 shadow-sm"
+          >
+            <p
+              class="text-base font-semibold uppercase tracking-[0.18em] text-teal-600"
+            >
+              Inspectors
+            </p>
+            <h2
+              class="mt-0.5 text-2xl font-display font-bold tracking-tight text-slate-900"
+            >
+              Inspector List &amp; Status
+            </h2>
+          </header>
+          <div class="p-6">
+            <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div id="inspectorsList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Response Team Section -->
+        <div id="section-response-team" class="section-panel hidden">
+          <header
+            class="border-b border-slate-200 bg-white px-6 py-4 shadow-sm"
+          >
+            <p
+              class="text-base font-semibold uppercase tracking-[0.18em] text-teal-600"
+            >
+              Response Team
+            </p>
+            <h2
+              class="mt-0.5 text-2xl font-display font-bold tracking-tight text-slate-900"
+            >
+              Response Team &amp; Status
+            </h2>
+          </header>
+          <div class="p-6">
+            <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div id="responseTeamList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sentinels Section -->
+        <div id="section-sentinels" class="section-panel hidden">
+          <header
+            class="border-b border-slate-200 bg-white px-6 py-4 shadow-sm"
+          >
+            <p
+              class="text-base font-semibold uppercase tracking-[0.18em] text-teal-600"
+            >
+              Sentinels
+            </p>
+            <h2
+              class="mt-0.5 text-2xl font-display font-bold tracking-tight text-slate-900"
+            >
+              Sentinel Device Statistics
+            </h2>
+          </header>
+          <div class="grid gap-5 p-6">
+            <div
+              class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+              id="sentinelsMetrics"
+            ></div>
+            <div class="grid gap-5 md:grid-cols-2">
+              <div
+                class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              >
+                <h3 class="font-display text-base font-bold text-slate-900">
+                  Battery Distribution
+                </h3>
+                <div class="mt-3 space-y-3" id="batteryDistribution"></div>
+              </div>
+              <div
+                class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              >
+                <h3 class="font-display text-base font-bold text-slate-900">
+                  Status Overview
+                </h3>
+                <div class="mt-3 space-y-3" id="statusOverview"></div>
+              </div>
+            </div>
+            <div
+              class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+            >
+              <h3 class="font-display text-base font-bold text-slate-900">
+                Device Cards
+              </h3>
+              <div class="sentinel-grid mt-3" id="sentinelsGrid"></div>
+            </div>
+            <div
+              class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+            >
+              <h3 class="font-display text-base font-bold text-slate-900">
+                All Devices
+              </h3>
+              <div class="mt-3 overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr
+                      class="border-b border-slate-200 text-left text-xs font-semibold uppercase tracking-wider text-slate-500"
+                    >
+                      <th class="py-2 pr-3">Device</th>
+                      <th class="py-2 pr-3">Status</th>
+                      <th class="py-2 pr-3">Battery</th>
+                      <th class="py-2 pr-3">Last Seen</th>
+                    </tr>
+                  </thead>
+                  <tbody id="deviceTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="section-reports" class="section-panel hidden">
+          <header
+            class="border-b border-slate-200 bg-white px-6 py-4 shadow-sm"
+          >
+            <p
+              class="text-base font-semibold uppercase tracking-[0.18em] text-teal-600"
+            >
+              Reports
+            </p>
+            <h2
+              class="mt-0.5 text-2xl font-display font-bold tracking-tight text-slate-900"
+            >
+              Residence Report
+            </h2>
+          </header>
+          <div class="grid gap-5 p-6">
+            <div
+              class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+            >
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr
+                      class="border-b border-slate-200 text-left text-xs font-semibold uppercase tracking-wider text-slate-500"
+                    >
+                      <th class="py-2 pr-3">ID</th>
+                      <th class="py-2 pr-3">Description</th>
+                      <th class="py-2 pr-3">Status</th>
+                      <th class="py-2 pr-3">Risk</th>
+                      <th class="py-2 pr-3">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="reportTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div id="section-notifications" class="section-panel hidden">
+          <header
+            class="border-b border-slate-200 bg-white px-6 py-4 shadow-sm"
+          >
+            <p
+              class="text-base font-semibold uppercase tracking-[0.18em] text-teal-600"
+            >
+              Notifications
+            </p>
+            <h2
+              class="mt-0.5 text-2xl font-display font-bold tracking-tight text-slate-900"
+            >
+              Alerts & Notifications
+            </h2>
+          </header>
+          <div class="grid gap-5 p-6">
+            <div
+              class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+            >
+              <div class="space-y-2" id="notificationsList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="section-profile" class="section-panel hidden">
+          <header
+            class="border-b border-slate-200 bg-white px-6 py-4 shadow-sm"
+          >
+            <p
+              class="text-base font-semibold uppercase tracking-[0.18em] text-teal-600"
+            >
+              Profile
+            </p>
+            <h2
+              class="mt-0.5 text-2xl font-display font-bold tracking-tight text-slate-900"
+            >
+              Account Information
+            </h2>
+          </header>
+          <div class="grid gap-5 p-6 max-w-lg">
+            <div
+              class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+            >
+              <div class="flex items-center gap-4 mb-6">
+                <div
+                  class="grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-teal-500 to-teal-700 text-xl font-black text-white"
+                >
+                  <span id="profileInitial">A</span>
+                </div>
+                <div>
+                  <h3 class="font-display text-lg font-bold text-slate-900" id="profileNameDisplay">—</h3>
+                  <p class="text-sm text-slate-500" id="profileEmailDisplay">—</p>
+                </div>
+              </div>
+              <div class="grid gap-4">
+                <label class="grid gap-1 text-sm font-semibold text-slate-700">
+                  First Name
+                  <input id="profileFirstName" class="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20" />
+                </label>
+                <label class="grid gap-1 text-sm font-semibold text-slate-700">
+                  Last Name
+                  <input id="profileLastName" class="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20" />
+                </label>
+                <label class="grid gap-1 text-sm font-semibold text-slate-700">
+                  Email
+                  <input id="profileEmailInput" class="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20" />
+                </label>
+                <label class="grid gap-1 text-sm font-semibold text-slate-700">
+                  Barangay
+                  <input id="profileBarangay" class="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none bg-slate-50 text-slate-500" readonly />
+                </label>
+                <hr class="border-slate-100" />
+                <label class="grid gap-1 text-sm font-semibold text-slate-700">
+                  Change Password
+                  <input id="profilePassword" type="password" class="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20" placeholder="New password" />
+                </label>
+              </div>
+              <div class="mt-6 flex justify-end gap-3">
+                <button class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">Cancel</button>
+                <button class="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700">Save Changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <style>
+      .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        padding: 0.625rem 0.875rem;
+        border-radius: 0.625rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.65);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-decoration: none;
+      }
+      .nav-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+      }
+      .nav-btn.active {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+      .nav-icon {
+        flex-shrink: 0;
+        opacity: 0.7;
+      }
+      .nav-btn:hover .nav-icon,
+      .nav-btn.active .nav-icon {
+        opacity: 1;
+      }
+      .section-panel {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+      }
+      .section-panel.hidden {
+        display: none;
+      }
+      .metric-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+      .metric-card .label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #94a3b8;
+      }
+      .metric-card .value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-top: 0.25rem;
+      }
+      .activity-item {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0.625rem 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+      .activity-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-top: 5px;
+        flex-shrink: 0;
+      }
+      .activity-dot.report {
+        background: #3b82f6;
+      }
+      .activity-dot.task {
+        background: #8b5cf6;
+      }
+      .activity-dot.alert {
+        background: #ef4444;
+      }
+      .activity-dot.inspection {
+        background: #f59e0b;
+      }
+      .activity-dot.treatment {
+        background: #10b981;
+      }
+      .activity-dot.patrol {
+        background: #06b6d4;
+      }
+      .activity-content {
+        flex: 1;
+        min-width: 0;
+      }
+      .activity-text {
+        font-size: 0.8125rem;
+        color: #334155;
+        line-height: 1.4;
+      }
+      .activity-time {
+        font-size: 0.6875rem;
+        color: #94a3b8;
+      }
+      .task-card {
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        border-left: 3px solid #e2e8f0;
+        background: #f8fafc;
+        font-size: 0.8125rem;
+      }
+      .task-card.critical {
+        border-left-color: #ef4444;
+      }
+      .task-card.high {
+        border-left-color: #f97316;
+      }
+      .task-card.medium {
+        border-left-color: #eab308;
+      }
+      .task-card.low {
+        border-left-color: #22c55e;
+      }
+      .task-card .task-title {
+        font-weight: 600;
+        color: #0f172a;
+      }
+      .task-card .task-meta {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-top: 2px;
+      }
+      .inspector-menu { position: relative; }
+      .inspector-dot-btn {
+        background: transparent; border: none; cursor: pointer; padding: 4px; border-radius: 4px; color: #94a3b8; line-height: 1;
+      }
+      .inspector-dot-btn:hover { background: #f1f5f9; color: #334155; }
+      .inspector-dropdown {
+        position: absolute; right: 0; top: 100%; z-index: 50; min-width: 180px;
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 4px; margin-top: 4px;
+      }
+      .inspector-dropdown button {
+        display: block; width: 100%; text-align: left; padding: 0.5rem 0.75rem;
+        font-size: 0.8125rem; border-radius: 0.375rem; background: none; border: none;
+        cursor: pointer; color: #334155;
+      }
+      .inspector-dropdown button:hover { background: #f1f5f9; }
+      .inspector-dropdown.hidden { display: none; }
+      @media (max-width: 1023px) {
+        #sidebarToggle { display: flex !important; }
+        main aside {
+          position: fixed; top: 0; left: 0; bottom: 0; z-index: 40;
+          transform: translateX(-100%); transition: transform 0.25s ease;
+        }
+        main aside.open { transform: translateX(0); }
+        #sidebarOverlay.open { display: block !important; }
+      }
+    </style>
+
+    <script>
+      var $ = function (id) {
+        return document.getElementById(id);
+      };
+
+      function switchSection(name) {
+        document.querySelectorAll(".section-panel").forEach(function (el) {
+          el.classList.add("hidden");
+        });
+        var target = $("section-" + name);
+        if (target) target.classList.remove("hidden");
+        document
+          .querySelectorAll(".nav-btn[data-section]")
+          .forEach(function (btn) {
+            btn.classList.remove("active");
+          });
+        var activeBtn = document.querySelector(
+          '.nav-btn[data-section="' + name + '"]',
+        );
+        if (activeBtn) activeBtn.classList.add("active");
+        if (window.innerWidth < 1024) toggleSidebar();
+      }
+
+      function timeAgo(date) {
+        if (!date) return "";
+        var now = new Date();
+        var diff = now - (typeof date === "string" ? new Date(date) : date);
+        var mins = Math.floor(diff / 60000);
+        if (mins < 1) return "Just now";
+        if (mins < 60) return mins + "m ago";
+        var hrs = Math.floor(mins / 60);
+        if (hrs < 24) return hrs + "h ago";
+        var days = Math.floor(hrs / 24);
+        if (days < 7) return days + "d ago";
+        return Math.floor(days / 7) + "w ago";
+      }
+
+      function toggleSidebar() {
+        document.querySelector('main aside').classList.toggle('open');
+        document.getElementById('sidebarOverlay').classList.toggle('open');
+      }
+
+      function toggleMenu(btn) {
+        var dropdown = btn.nextElementSibling;
+        var isHidden = dropdown.classList.contains("hidden");
+        document.querySelectorAll(".inspector-dropdown").forEach(function(d) { d.classList.add("hidden"); });
+        if (isHidden) dropdown.classList.remove("hidden");
+      }
+      function changeInspector(id) { alert("Change inspector " + id); }
+      function viewInspector(id) {
+        var allUsers = window._allUsers || [];
+        var u = allUsers.find(function(x) { return x.id === id; });
+        if (!u) return alert("User not found");
+        var parts = (u.name || "").split(" ");
+        var first = parts[0] || "";
+        var last = parts.slice(1).join(" ") || "";
+        var overlay = document.createElement("div");
+        overlay.className = "fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/60 backdrop-blur-sm";
+        overlay.id = "inspectorModal";
+        overlay.innerHTML = '<div class="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl"><div class="flex items-center justify-between mb-5"><h3 class="font-display text-lg font-bold text-slate-900">Inspector Details</h3><button onclick="this.closest(\'#inspectorModal\').remove()" class="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600">&times;</button></div><div class="grid gap-4"><label class="grid gap-1 text-sm font-semibold text-slate-700">First Name<input id="modalFirstName" class="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20" value="' + first + '" /></label><label class="grid gap-1 text-sm font-semibold text-slate-700">Last Name<input id="modalLastName" class="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20" value="' + last + '" /></label><label class="grid gap-1 text-sm font-semibold text-slate-700">Email<input id="modalEmail" class="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20" value="' + (u.email || "") + '" /></label><hr class="border-slate-100" /><label class="grid gap-1 text-sm font-semibold text-slate-700">Change Password<input id="modalPassword" type="password" class="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20" placeholder="New password" /></label></div><div class="mt-6 flex justify-end gap-3"><button onclick="this.closest(\'#inspectorModal\').remove()" class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">Cancel</button><button class="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700">Save</button></div></div>';
+        document.body.appendChild(overlay);
+      }
+      function deleteInspector(id) { if (confirm("Remove inspector #" + id + "?")) alert("Inspector " + id + " removed"); }
+      document.addEventListener("click", function(e) {
+        if (!e.target.closest(".inspector-menu")) {
+          document.querySelectorAll(".inspector-dropdown").forEach(function(d) { d.classList.add("hidden"); });
+        }
+      });
+
+      function logout() {
+        document.getElementById('logoutModal').classList.remove('hidden');
+        document.getElementById('logoutModal').classList.add('flex');
+      }
+      function confirmLogout() {
+        localStorage.removeItem("user");
+        window.location.href = "/login/barangay";
+      }
+      function cancelLogout() {
+        document.getElementById('logoutModal').classList.add('hidden');
+        document.getElementById('logoutModal').classList.remove('flex');
+      }
+
+      var user = JSON.parse(localStorage.getItem("user") || "{}");
+      var barangayId = user.barangayId;
+
+      // Profile
+      function fillProfile(barangayName) {
+        var parts = (user.name || "").split(" ");
+        var first = parts[0] || "";
+        var last = parts.slice(1).join(" ") || "";
+        if (user.name) {
+          $("userName").textContent = "Barangay Admin " + user.name;
+          $("profileNameDisplay").textContent = user.name;
+          $("profileEmailDisplay").textContent = user.email || "";
+          $("profileInitial").textContent = (user.name || "A").charAt(0).toUpperCase();
+          $("profileFirstName").value = first;
+          $("profileLastName").value = last;
+          $("profileEmailInput").value = user.email || "";
+          $("profileBarangay").value = barangayName || "Barangay #" + (user.barangayId || "?");
+        }
+      }
+      fillProfile();
+
+      // Dashboard metrics
+      function loadDashboard() {
+        var bid = barangayId || 1;
+        Promise.all([
+          fetch("/api/v1/dashboard/barangay/" + bid).then(function (r) {
+            return r.json();
+          }),
+          fetch("/api/v1/sentinel-devices").then(function (r) {
+            return r.json();
+          }),
+          fetch("/api/v1/tickets").then(function (r) {
+            return r.json();
+          }),
+          fetch("/api/v1/users").then(function (r) {
+            return r.json();
+          }),
+          fetch("/api/v1/barangays").then(function (r) {
+            return r.json();
+          }),
+        ])
+          .then(function (results) {
+            var dash = results[0].data || {};
+            var allDevices = results[1].data || [];
+            var tickets = results[2].data || [];
+            var allUsers = results[3].data || [];
+            var barangays = results[4].data || [];
+
+            var areas = dash.areas || [];
+            var tasks = dash.tasks || [];
+            var reports = dash.reports || [];
+            var devices = barangayId
+              ? allDevices.filter(function (d) {
+                  return d.barangayId === barangayId;
+                })
+              : allDevices;
+
+            var criticalZ = areas.filter(function (a) {
+              return a.priority === "critical";
+            }).length;
+            var openT = tasks.filter(function (t) {
+              return t.status !== "completed";
+            }).length;
+            var activeD = devices.filter(function (d) {
+              return d.status === "active";
+            }).length;
+            var recheck = tasks.filter(function (t) {
+              return t.status === "in_progress" || t.status === "paused";
+            }).length;
+
+            $("dashboardMetrics").innerHTML = [
+              { label: "Critical zones", value: criticalZ },
+              { label: "Open tasks", value: openT },
+              {
+                label: "Sentinels online",
+                value: devices.length ? activeD + " / " + devices.length : "—",
+              },
+              { label: "For recheck", value: recheck },
+            ]
+              .map(function (m) {
+                return (
+                  '<div class="metric-card"><div class="label">' +
+                  m.label +
+                  '</div><div class="value">' +
+                  m.value +
+                  "</div></div>"
+                );
+              })
+              .join("");
+
+            // Tasks list
+            var priorityRank = { critical: 0, high: 1, medium: 2, low: 3 };
+            var sorted = tasks
+              .slice()
+              .sort(function (a, b) {
+                return (
+                  (priorityRank[a.priority] || 99) -
+                  (priorityRank[b.priority] || 99)
+                );
+              })
+              .slice(0, 5);
+            $("dashboardTasks").innerHTML = sorted.length
+              ? sorted
+                  .map(function (t) {
+                    return (
+                      '<div class="task-card ' +
+                      (t.priority || "low") +
+                      '"><div class="task-title">' +
+                      t.type.replace(/_/g, " ") +
+                      " #" +
+                      t.id +
+                      '</div><div class="task-meta">' +
+                      (t.priority || "—") +
+                      " · " +
+                      t.status +
+                      (t.dueAt ? " · Due " + timeAgo(t.dueAt) : "") +
+                      "</div></div>"
+                    );
+                  })
+                  .join("")
+              : '<p class="text-sm text-slate-400">No tasks assigned.</p>';
+
+            // Recent activity (reports + tasks)
+            var acts = [];
+            reports.forEach(function (r) {
+              acts.push({
+                time: timeAgo(r.createdAt),
+                label:
+                  "Report #" +
+                  r.id +
+                  ": " +
+                  (r.description || "").substring(0, 45),
+                type: "report",
+                ts: r.createdAt ? new Date(r.createdAt) : new Date(0),
+              });
+            });
+            tasks.forEach(function (t) {
+              acts.push({
+                time: timeAgo(t.createdAt),
+                label:
+                  "Task #" +
+                  t.id +
+                  ": " +
+                  t.type.replace(/_/g, " ") +
+                  " — " +
+                  t.status,
+                type: "task",
+                ts: t.createdAt ? new Date(t.createdAt) : new Date(0),
+              });
+            });
+            acts.sort(function (a, b) {
+              return b.ts - a.ts;
+            });
+            $("dashboardActivity").innerHTML =
+              acts
+                .slice(0, 8)
+                .map(function (a) {
+                  return (
+                    '<div class="activity-item"><div class="activity-dot ' +
+                    a.type +
+                    '"></div><div class="activity-content"><p class="activity-text">' +
+                    a.label +
+                    '</p><span class="activity-time">' +
+                    a.time +
+                    "</span></div></div>"
+                  );
+                })
+                .join("") ||
+              '<p class="text-sm text-slate-400">No recent activity.</p>';
+
+            // Sentinel stats
+            var activeCount = devices.filter(function (d) {
+              return d.status === "active";
+            }).length;
+            var maintCount = devices.filter(function (d) {
+              return d.status === "needs_maintenance";
+            }).length;
+            var lowBattCount = devices.filter(function (d) {
+              return (d.batteryLevel || 100) < 30;
+            }).length;
+            var onlineCount = devices.filter(function (d) {
+              var l = d.lastSeenAt ? new Date(d.lastSeenAt) : null;
+              return l && new Date() - l < 86400000;
+            }).length;
+
+            $("sentinelsMetrics").innerHTML = [
+              {
+                label: "Total Devices",
+                value: devices.length,
+                color: "text-slate-900",
+              },
+              {
+                label: "Active",
+                value: activeCount + " / " + devices.length,
+                color: "text-emerald-600",
+              },
+              {
+                label: "Online (24h)",
+                value: onlineCount,
+                color: "text-blue-600",
+              },
+              {
+                label: "Low Battery",
+                value: lowBattCount,
+                color: "text-red-600",
+              },
+            ]
+              .map(function (m) {
+                return (
+                  '<div class="metric-card"><div class="label">' +
+                  m.label +
+                  '</div><div class="value ' +
+                  m.color +
+                  '">' +
+                  m.value +
+                  "</div></div>"
+                );
+              })
+              .join("");
+
+            // Battery distribution
+            var bins = { critical: 0, low: 0, moderate: 0, good: 0 };
+            devices.forEach(function (d) {
+              var b = d.batteryLevel || 0;
+              if (b < 20) bins.critical++;
+              else if (b < 50) bins.low++;
+              else if (b < 75) bins.moderate++;
+              else bins.good++;
+            });
+            var binColors = {
+              critical: "#ef4444",
+              low: "#f97316",
+              moderate: "#eab308",
+              good: "#22c55e",
+            };
+            var binLabels = {
+              critical: "Critical (<20%)",
+              low: "Low (20-49%)",
+              moderate: "Moderate (50-74%)",
+              good: "Good (75-100%)",
+            };
+            var maxBin = Math.max(
+              bins.critical,
+              bins.low,
+              bins.moderate,
+              bins.good,
+              1,
+            );
+            $("batteryDistribution").innerHTML =
+              Object.keys(bins)
+                .map(function (k) {
+                  var pct = (bins[k] / maxBin) * 100;
+                  return (
+                    '<div><div class="flex items-center justify-between text-sm mb-1"><span class="font-medium text-slate-700">' +
+                    binLabels[k] +
+                    '</span><span class="font-semibold text-slate-900">' +
+                    bins[k] +
+                    '</span></div><div class="h-2.5 rounded-full bg-slate-100 overflow-hidden"><div class="h-full rounded-full transition-all" style="width:' +
+                    pct +
+                    "%;background:" +
+                    binColors[k] +
+                    '"></div></div></div>'
+                  );
+                })
+                .join("") || '<p class="text-sm text-slate-400">No data</p>';
+
+            // Status overview
+            var statuses = {};
+            devices.forEach(function (d) {
+              statuses[d.status] = (statuses[d.status] || 0) + 1;
+            });
+            var statusColors = {
+              active: "#22c55e",
+              needs_maintenance: "#f97316",
+              planned: "#3b82f6",
+              inactive: "#94a3b8",
+            };
+            var statusLabels = {
+              active: "Active",
+              needs_maintenance: "Needs Maintenance",
+              planned: "Planned",
+              inactive: "Inactive",
+            };
+            $("statusOverview").innerHTML = Object.keys(statuses).length
+              ? Object.keys(statuses)
+                  .map(function (s) {
+                    var pct = (statuses[s] / devices.length) * 100;
+                    return (
+                      '<div class="flex items-center gap-3"><span class="inline-block w-3 h-3 rounded-full" style="background:' +
+                      (statusColors[s] || "#94a3b8") +
+                      '"></span><span class="flex-1 text-sm text-slate-700">' +
+                      (statusLabels[s] || s) +
+                      '</span><span class="text-sm font-semibold text-slate-900">' +
+                      statuses[s] +
+                      '</span><span class="text-xs text-slate-400 w-8 text-right">' +
+                      Math.round(pct) +
+                      "%</span></div>"
+                    );
+                  })
+                  .join("")
+              : '<p class="text-sm text-slate-400">No data</p>';
+
+            // Sentinel device cards (like original sentinelStatus)
+            var deviceRisk = function (bl) {
+              if (bl < 20) return "critical";
+              if (bl < 50) return "high";
+              if (bl < 75) return "moderate";
+              return "low";
+            };
+            var riskLabel = {
+              critical: "Critical",
+              high: "High",
+              moderate: "Mod.",
+              low: "Low",
+            };
+            $("sentinelsGrid").innerHTML = devices.length
+              ? devices
+                  .map(function (d) {
+                    var bl = d.batteryLevel || 0;
+                    var r = deviceRisk(bl);
+                    return (
+                      '<div class="sentinel-card ' +
+                      r +
+                      '"><div class="sentinel-head"><span class="sentinel-id">' +
+                      (d.deviceCode || "—") +
+                      '</span><span class="sentinel-badge ' +
+                      r +
+                      '">' +
+                      riskLabel[r] +
+                      '</span></div><div class="sentinel-body"><span class="sentinel-zone">' +
+                      (d.status || "—") +
+                      '</span><strong class="sentinel-eggs">' +
+                      bl +
+                      '<small>% batt</small></strong></div><div class="sentinel-bar ' +
+                      r +
+                      '" style="width:' +
+                      bl +
+                      '%"></div></div>'
+                    );
+                  })
+                  .join("")
+              : '<p class="text-sm text-slate-400 py-4 text-center">No devices.</p>';
+
+            // Device table
+            $("deviceTableBody").innerHTML = devices.length
+              ? devices
+                  .map(function (d) {
+                    var batt = d.batteryLevel || 0;
+                    var battClass =
+                      batt < 20
+                        ? "text-red-600"
+                        : batt < 50
+                          ? "text-amber-600"
+                          : "text-emerald-600";
+                    var statusClass =
+                      d.status === "active"
+                        ? "text-emerald-600"
+                        : d.status === "needs_maintenance"
+                          ? "text-amber-600"
+                          : "text-slate-500";
+                    return (
+                      '<tr class="border-b border-slate-100 text-sm"><td class="py-2.5 pr-3 font-medium text-slate-800">' +
+                      (d.deviceCode || "—") +
+                      '</td><td class="py-2.5 pr-3"><span class="font-semibold ' +
+                      statusClass +
+                      '">' +
+                      (d.status || "—") +
+                      '</span></td><td class="py-2.5 pr-3"><span class="font-semibold ' +
+                      battClass +
+                      '">' +
+                      batt +
+                      '%</span></td><td class="py-2.5 pr-3 text-slate-500">' +
+                      timeAgo(d.lastSeenAt) +
+                      "</td></tr>"
+                    );
+                  })
+                  .join("")
+              : '<tr><td colspan="4" class="py-4 text-center text-sm text-slate-400">No devices found.</td></tr>';
+
+            // Reports table
+            $("reportTableBody").innerHTML = reports.length
+              ? reports
+                  .map(function (r) {
+                    var statusColors = {
+                      submitted: "bg-slate-100 text-slate-600",
+                      under_review: "bg-amber-50 text-amber-600",
+                      scheduled_for_inspection: "bg-blue-50 text-blue-600",
+                      checked: "bg-green-50 text-green-600",
+                      closed: "bg-slate-100 text-slate-500",
+                    };
+                    var riskColors = {
+                      high: "text-red-600",
+                      medium: "text-amber-600",
+                      low: "text-green-600",
+                    };
+                    return (
+                      '<tr class="border-b border-slate-100 text-sm"><td class="py-2.5 pr-3 font-medium text-slate-800">#' +
+                      r.id +
+                      '</td><td class="py-2.5 pr-3 text-slate-600 max-w-xs truncate">' +
+                      (r.description || "") +
+                      '</td><td class="py-2.5 pr-3"><span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-bold ' +
+                      (statusColors[r.status] ||
+                        "bg-slate-100 text-slate-600") +
+                      '">' +
+                      (r.status || "—").replace(/_/g, " ") +
+                      '</span></td><td class="py-2.5 pr-3 font-semibold ' +
+                      (riskColors[r.riskLevel] || "") +
+                      '">' +
+                      (r.riskLevel || "—") +
+                      '</td><td class="py-2.5 pr-3 text-slate-500">' +
+                      timeAgo(r.createdAt) +
+                      "</td></tr>"
+                    );
+                  })
+                  .join("")
+              : '<tr><td colspan="5" class="py-4 text-center text-sm text-slate-400">No reports found.</td></tr>';
+
+            // Notifications
+            var notifs = [];
+            reports.forEach(function (r) {
+              notifs.push({
+                time: timeAgo(r.createdAt),
+                label:
+                  "Report #" +
+                  r.id +
+                  " (" +
+                  r.riskLevel +
+                  " risk): " +
+                  (r.description || "").substring(0, 50),
+                type: r.riskLevel === "high" ? "alert" : "report",
+                ts: r.createdAt ? new Date(r.createdAt) : new Date(0),
+              });
+            });
+            tasks.forEach(function (t) {
+              notifs.push({
+                time: timeAgo(t.createdAt),
+                label:
+                  "Task #" +
+                  t.id +
+                  ": " +
+                  t.type.replace(/_/g, " ") +
+                  " is " +
+                  t.status,
+                type: "task",
+                ts: t.createdAt ? new Date(t.createdAt) : new Date(0),
+              });
+            });
+            devices
+              .filter(function (d) {
+                return (d.batteryLevel || 100) < 30;
+              })
+              .forEach(function (d) {
+                notifs.push({
+                  time: "Now",
+                  label:
+                    d.deviceCode +
+                    " battery low (" +
+                    d.batteryLevel +
+                    "%) — maintenance needed",
+                  type: "alert",
+                  ts: new Date(),
+                });
+              });
+            notifs.sort(function (a, b) {
+              return b.ts - a.ts;
+            });
+            $("notificationsList").innerHTML = notifs.length
+              ? notifs
+                  .slice(0, 20)
+                  .map(function (n) {
+                    return (
+                      '<div class="activity-item"><div class="activity-dot ' +
+                      n.type +
+                      '"></div><div class="activity-content"><p class="activity-text">' +
+                      n.label +
+                      '</p><span class="activity-time">' +
+                      n.time +
+                      "</span></div></div>"
+                    );
+                  })
+                  .join("")
+              : '<p class="text-sm text-slate-400 py-4 text-center">No notifications.</p>';
+
+          // Inspectors table
+          window._allUsers = allUsers;
+          var inspectors = allUsers.filter(function(u) { return u.role === 'inspector'; });
+          var inspectorTaskCounts = {};
+          tasks.forEach(function(t) {
+            if (t.assignedTo) inspectorTaskCounts[t.assignedTo] = (inspectorTaskCounts[t.assignedTo] || 0) + 1;
+          });
+          $('inspectorsList').innerHTML = inspectors.length ? inspectors.map(function(u) {
+            var taskCount = inspectorTaskCounts[u.id] || 0;
+            var status = taskCount > 0 ? 'On Task' : 'Available';
+            var statusClass = taskCount > 0 ? 'text-amber-600' : 'text-emerald-600';
+            var initial = (u.name || '?').charAt(0).toUpperCase();
+            return '<div class="flex items-center gap-4 py-3 border-b border-slate-100 last:border-0"><div class="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-teal-500 to-teal-700 text-sm font-bold text-white">' + initial + '</div><div class="flex-1"><p class="font-semibold text-slate-800">' + (u.name || '—') + '</p><p class="text-xs text-slate-400">' + (u.email || '—') + '</p></div><span class="text-sm font-semibold ' + statusClass + '">' + status + '</span><span class="text-xs text-slate-400 mr-3">' + taskCount + ' tasks</span><div class="relative inspector-menu"><button class="inspector-dot-btn" onclick="toggleMenu(this)" data-id="' + u.id + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button><div class="inspector-dropdown hidden"><button onclick="changeInspector(' + u.id + ')">Change</button><button onclick="viewInspector(' + u.id + ')">View Full Information</button><button class="text-red-600" onclick="deleteInspector(' + u.id + ')">Delete/Remove</button></div></div></div>';
+          }).join('') : '<p class="text-sm text-slate-400 text-center py-4">No inspectors found.</p>';
+
+          // Response team
+          var teamMembers = allUsers.filter(function(u) { return u.role === 'treatment_team'; });
+          $('responseTeamList').innerHTML = teamMembers.length ? teamMembers.map(function(u) {
+            var taskCount = inspectorTaskCounts[u.id] || 0;
+            var status = taskCount > 0 ? 'On Task' : 'Available';
+            var statusClass = taskCount > 0 ? 'text-amber-600' : 'text-emerald-600';
+            var initial = (u.name || '?').charAt(0).toUpperCase();
+            return '<div class="flex items-center gap-4 py-3 border-b border-slate-100 last:border-0"><div class="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-sm font-bold text-white">' + initial + '</div><div class="flex-1"><p class="font-semibold text-slate-800">' + (u.name || '—') + '</p><p class="text-xs text-slate-400">' + (u.email || '—') + '</p></div><span class="text-sm font-semibold ' + statusClass + '">' + status + '</span><span class="text-xs text-slate-400 mr-3">' + taskCount + ' tasks</span><div class="relative inspector-menu"><button class="inspector-dot-btn" onclick="toggleMenu(this)" data-id="' + u.id + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button><div class="inspector-dropdown hidden"><button onclick="changeInspector(' + u.id + ')">Change</button><button onclick="viewInspector(' + u.id + ')">View Full Information</button><button class="text-red-600" onclick="deleteInspector(' + u.id + ')">Delete/Remove</button></div></div></div>';
+          }).join('') : '<p class="text-sm text-slate-400 text-center py-4">No response team members found.</p>';
+
+          // Profile barangay name
+          var b = barangays.find(function(b) { return b.id === user.barangayId; });
+          fillProfile(b ? b.name : null);
+          })
+          .catch(function (e) {
+            console.warn("Failed to load data", e);
+            $("dashboardMetrics").innerHTML =
+              '<p class="text-sm text-slate-400 col-span-full text-center py-8">Unable to load dashboard data. Please try again.</p>';
+          });
+      }
+
+      loadDashboard();
+    </script>
+
+    <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/40 backdrop-blur-sm">
+      <div class="w-80 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-xl">
+        <p class="text-lg font-bold text-slate-900">Leave dashboard?</p>
+        <p class="mt-2 text-sm text-slate-500">Are you sure you want to logout?</p>
+        <div class="mt-6 flex justify-center gap-3">
+          <button onclick="cancelLogout()" class="rounded-xl border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">Cancel</button>
+          <button onclick="confirmLogout()" class="rounded-xl bg-red-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-red-700">Logout</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

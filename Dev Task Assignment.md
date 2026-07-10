@@ -9,7 +9,7 @@ Owns the Refine-based frontend, user-facing web/mobile-friendly interface, role-
 Owns the API, database, authentication, permissions, workflow state, task assignment logic, reporting, and data processing.
 
 ### Dev 3: Maps & IoT Research Engineer
-Owns GIS/map implementation, spatial data modeling, route/coverage logic, map layers, and research/prototyping for Sentinel trap integration.
+Owns GIS/map implementation, spatial data modeling, route/coverage logic, map layers, and research/prototyping for Smart ovitrap integration.
 
 ## Shared MVP Goal
 Build a working prototype that supports:
@@ -21,7 +21,7 @@ Build a working prototype that supports:
 *   Treatment team task tracking.
 *   Checked, unchecked, scheduled, skipped, monitoring, and cleared statuses.
 *   Basic risk scoring.
-*   Optional/simulated Sentinel trap data.
+*   Optional/simulated Smart ovitrap data.
 *   CSV/PDF reporting.
 
 ## Hackathon Implementation Constraint
@@ -66,7 +66,7 @@ See [Technical Architecture.md](Technical%20Architecture.md) for the implementat
 *   Inspector task list.
 *   Inspector route/activity screen.
 *   Inspection validation form.
-*   Sentinel trap check form for inspectors.
+*   Smart ovitrap check form for inspectors.
 *   Treatment team task list.
 *   Treatment route/activity screen.
 *   Treatment completion form.
@@ -106,7 +106,7 @@ See [Technical Architecture.md](Technical%20Architecture.md) for the implementat
 *   Implement public citizen status logic with Green status expiration.
 *   Implement CSV/PDF export support.
 *   Store photos, notes, route trails, and status histories.
-*   Support optional/simulated Sentinel trap data ingestion.
+*   Support optional/simulated Smart ovitrap data ingestion.
 
 ### Core Data Models
 *   Users.
@@ -142,14 +142,14 @@ See [Technical Architecture.md](Technical%20Architecture.md) for the implementat
 *   Public location status lookup.
 *   Risk score calculation.
 *   Sentinel device CRUD.
-*   Sentinel trap check/update.
+*   Smart ovitrap check/update.
 *   Simulated Sentinel reading ingestion.
 *   Dashboard summaries.
 *   Area priority ranking.
 *   CSV/PDF exports.
 
 ### Workflow Rules
-*   System can recommend preventive patrol tasks from overdue coverage, expiring Green status, historical hotspots, unchecked areas, and sentinel signals.
+*   System can recommend preventive patrol tasks from overdue coverage, expiring Green status, historical hotspots, unchecked areas, and smart-ovitrap signals.
 *   System can rank predefined zones using lightweight geo/risk scoring.
 *   Citizen report starts as Submitted.
 *   Barangay admin reviews and marks it Under Review, Duplicate, Rejected, or Scheduled for Inspection.
@@ -159,7 +159,7 @@ See [Technical Architecture.md](Technical%20Architecture.md) for the implementat
 *   Monitoring expires into Cleared if no new issue appears.
 *   Green public status expires after the configured period.
 *   Red public status is triggered by confirmed breeding, unresolved high-risk alert, or repeated reports.
-*   Sentinel trap activity can create inspection recommendations, but does not automatically confirm danger.
+*   Smart ovitrap activity can create inspection recommendations, but does not automatically confirm danger.
 
 ### Deliverables
 *   Database schema and migrations.
@@ -191,8 +191,8 @@ See [Technical Architecture.md](Technical%20Architecture.md) for the implementat
 *   Define spatial data structures for barangays, zones, route points, checked areas, and public status areas.
 *   Define and seed 10-20 predefined surveillance zones for the demo.
 *   Define lightweight geo-analysis rules for zone prioritization.
-*   Research practical Sentinel trap integration options.
-*   Prototype simulated Sentinel trap data for the MVP.
+*   Research practical Smart ovitrap integration options.
+*   Prototype simulated Smart ovitrap data for the MVP.
 *   Define IoT payload structure for future hardware integration.
 *   Support Dev 1 with map components and Dev 2 with spatial/backend requirements.
 
@@ -225,13 +225,13 @@ See [Technical Architecture.md](Technical%20Architecture.md) for the implementat
     *   Green: Recently Checked / Cleared.
 *   Display Sentinel layers:
     *   Smart Ovitrap locations.
-    *   Smart Mosquito Trap locations.
+    *   Smart Ovitrap locations.
     *   Device health.
     *   Last reading.
     *   Maintenance status.
 
 ### IoT Research Responsibilities
-*   Research Smart Ovitrap and Smart Mosquito Trap hardware options.
+*   Research Smart Ovitrap hardware options.
 *   Identify realistic sensor fields for MVP/pilot:
     *   Device ID.
     *   Device type.
@@ -252,7 +252,7 @@ See [Technical Architecture.md](Technical%20Architecture.md) for the implementat
     *   LoRaWAN.
     *   Manual upload during early pilot.
 *   Define sample payloads for simulated readings.
-*   Define how trap readings influence risk score without overclaiming accuracy.
+*   Define how ovitrap readings influence risk score without overclaiming accuracy.
 *   Document limitations: relative activity only, not disease confirmation or laboratory-grade mosquito counts.
 
 ### Map/Spatial Data Questions To Resolve
@@ -307,7 +307,7 @@ See [Technical Architecture.md](Technical%20Architecture.md) for the implementat
 *   Dev 3 integrates route trail visualization and checked/unchecked coverage display.
 
 ### Week 4: Sentinel + Reporting
-*   Dev 1 builds sentinel trap check form and reporting screens.
+*   Dev 1 builds smart ovitrap check form and reporting screens.
 *   Dev 2 builds sentinel device/readings APIs, simulated ingestion, risk scoring, and exports.
 *   Dev 3 provides simulated Sentinel payloads, trap layer rendering, and IoT research summary.
 
@@ -356,4 +356,5 @@ See [Technical Architecture.md](Technical%20Architecture.md) for the implementat
 8. Monitoring and Green status expiration.
 9. Basic risk scoring.
 10. CSV/PDF reporting.
-11. Simulated Sentinel trap integration.
+11. Simulated Smart ovitrap integration.
+

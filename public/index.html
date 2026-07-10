@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HEXA — Environmental Risk Surveillance Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      #homeMap {
+        width: 100%;
+        height: 100%;
+        min-height: 500px;
+        background: #eef5f3;
+      }
+      .leaflet-container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body class="bg-[#f1f5f9] text-slate-900 antialiased">
+    <div class="flex min-h-screen flex-col">
+      <header
+        class="sticky top-0 z-50 border-b border-white/10 bg-[#0c1a2e] px-5 py-1.5 lg:px-8"
+      >
+        <div
+          class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4"
+        >
+          <a class="flex items-center" href="/">
+            <img src="/img/logo.png" alt="HEXA" class="h-11 w-auto" />
+            <span
+              class="hidden text-lg font-bold tracking-widest text-white sm:block"
+              style="font-family:'Libre Baskerville',serif"
+              >PROJECT HEXA</span
+            >
+          </a>
+
+          <div class="relative group">
+            <button
+              class="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/15 px-3 py-1.5 text-xs font-bold text-white backdrop-blur transition hover:bg-white/25"
+              type="button"
+            >
+              Portal
+              <svg
+                class="h-3 w-3 transition group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            <div
+              class="invisible absolute right-0 top-full z-50 mt-1.5 w-44 origin-top-right scale-95 rounded-xl border border-white/20 bg-[#0f1f36] p-1 opacity-0 shadow-2xl backdrop-blur-xl transition-all duration-150 group-hover:visible group-hender:visible group-hover:scale-100 group-hover:opacity-100"
+            >
+              <a
+                class="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10"
+                href="/login/citizen"
+                >Citizen Portal</a
+              >
+              <a
+                class="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10"
+                href="/login/barangay"
+                >Barangay Portal</a
+              >
+              <a
+                class="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10"
+                href="/login/city"
+                >City Portal</a
+              >
+              <hr class="my-1 border-white/10" />
+              <a
+                class="block rounded-lg px-3 py-2 text-xs font-semibold text-violet-300 transition hover:bg-white/10"
+                href="/login/admin"
+                >Admin Portal</a
+              >
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="relative flex-1 bg-slate-950">
+        <div id="homeMap" class="absolute inset-0 z-0 opacity-75"></div>
+        <div
+          class="absolute inset-0 z-10 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent"
+        ></div>
+
+        <div
+          class="relative z-20 mx-auto flex h-full w-full max-w-7xl flex-col items-start justify-end gap-6 px-5 pb-12 pt-24 lg:px-8"
+        >
+          <div class="max-w-3xl">
+            <p
+              class="mb-3 text-xs font-black uppercase tracking-[0.28em] text-teal-300"
+            >
+              Environmental dengue vector surveillance
+            </p>
+            <h1
+              class="text-4xl font-black leading-none tracking-tight text-white md:text-6xl"
+            >
+              Map. Monitor. Respond.
+            </h1>
+            <p class="mt-4 max-w-xl text-lg leading-8 text-slate-300">
+              HEXA maps environmental risk zones, deploys sentinel ovitraps,
+              coordinates field inspections, and tracks response actions — all
+              before clinical cases emerge.
+            </p>
+          </div>
+
+          <div
+            class="grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+          >
+            <a
+              class="group rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur transition-all duration-150 hover:bg-white/20"
+              href="/citizen"
+            >
+              <p
+                class="text-[0.6rem] font-black uppercase tracking-[0.22em] text-teal-300"
+              >
+                Public
+              </p>
+              <p class="mt-1 text-sm font-bold text-white">Citizen View</p>
+              <p class="mt-0.5 text-xs text-slate-400">
+                Check risk near you and submit reports
+              </p>
+            </a>
+            <a
+              class="group rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur transition-all duration-150 hover:bg-white/20"
+              href="/barangay/dashboard"
+            >
+              <p
+                class="text-[0.6rem] font-black uppercase tracking-[0.22em] text-teal-300"
+              >
+                Operations
+              </p>
+              <p class="mt-1 text-sm font-bold text-white">Barangay View</p>
+              <p class="mt-0.5 text-xs text-slate-400">
+                Inspect, respond, and recheck
+              </p>
+            </a>
+            <a
+              class="group rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur transition-all duration-150 hover:bg-white/20"
+              href="/city"
+            >
+              <p
+                class="text-[0.6rem] font-black uppercase tracking-[0.22em] text-teal-300"
+              >
+                Oversight
+              </p>
+              <p class="mt-1 text-sm font-bold text-white">City View</p>
+              <p class="mt-0.5 text-xs text-slate-400">
+                Compare hotspots across barangays
+              </p>
+            </a>
+            <a
+              class="group rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur transition-all duration-150 hover:bg-white/20"
+              href="/field-inspector"
+            >
+              <p
+                class="text-[0.6rem] font-black uppercase tracking-[0.22em] text-teal-300"
+              >
+                Field
+              </p>
+              <p class="mt-1 text-sm font-bold text-white">Field Inspector</p>
+              <p class="mt-0.5 text-xs text-slate-400">
+                Conduct site inspections
+              </p>
+            </a>
+            <a
+              class="group rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur transition-all duration-150 hover:bg-white/20"
+              href="/response-team"
+            >
+              <p
+                class="text-[0.6rem] font-black uppercase tracking-[0.22em] text-teal-300"
+              >
+                Action
+              </p>
+              <p class="mt-1 text-sm font-bold text-white">Response Team</p>
+              <p class="mt-0.5 text-xs text-slate-400">Deploy treatments</p>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      (function () {
+        var CENTER = [14.6816, 120.9741];
+        if (!window.L) return;
+
+        var map = L.map("homeMap", {
+          zoomSnap: 0.25,
+          zoomControl: false,
+          attributionControl: false,
+        }).setView(CENTER, 14);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+        }).addTo(map);
+
+        var data = {
+          scopeBounds: [
+            [14.67895, 120.97085],
+            [14.68395, 120.97805],
+          ],
+          zones: [
+            { center: [14.68095, 120.9741], radius: 260, level: "critical" },
+            { center: [14.68235, 120.97615], radius: 210, level: "moderate" },
+            { center: [14.68155, 120.9723], radius: 190, level: "high" },
+          ],
+          sentinels: [
+            { center: [14.68078, 120.97445] },
+            { center: [14.68125, 120.97372] },
+            { center: [14.68048, 120.97395] },
+            { center: [14.68178, 120.97205] },
+            { center: [14.68125, 120.97262] },
+            { center: [14.6821, 120.97685] },
+            { center: [14.68005, 120.97328] },
+          ],
+          waterPath: [
+            [14.68215, 120.97195],
+            [14.68155, 120.97255],
+            [14.68105, 120.97325],
+            [14.68062, 120.97412],
+            [14.68005, 120.97485],
+            [14.67935, 120.97555],
+          ],
+        };
+
+        function color(v) {
+          return (
+            {
+              low: "#16a34a",
+              moderate: "#d99a00",
+              high: "#f97316",
+              critical: "#dc2626",
+            }[v] || "#2563eb"
+          );
+        }
+
+        var layerGroup = L.layerGroup().addTo(map);
+        var bounds = [];
+
+        L.rectangle(data.scopeBounds, {
+          color: "#0f766e",
+          weight: 3,
+          fillColor: "#0f766e",
+          fillOpacity: 0.03,
+          dashArray: "12 8",
+        }).addTo(layerGroup);
+        bounds.push(...data.scopeBounds);
+
+        L.polyline(data.waterPath, {
+          color: "#0284c7",
+          weight: 9,
+          opacity: 0.25,
+          lineCap: "round",
+        }).addTo(layerGroup);
+        L.polyline(data.waterPath, {
+          color: "#0369a1",
+          weight: 2,
+          opacity: 0.7,
+          dashArray: "6 8",
+        }).addTo(layerGroup);
+        bounds.push(...data.waterPath);
+
+        data.zones.forEach(function (zone) {
+          L.circle(zone.center, {
+            radius: zone.radius,
+            color: color(zone.level),
+            fillColor: color(zone.level),
+            fillOpacity: 0.07,
+            weight: 2,
+          }).addTo(layerGroup);
+          bounds.push(zone.center);
+        });
+
+        data.sentinels.forEach(function (s) {
+          var icon = L.divIcon({
+            className: "",
+            html: '<div class="map-pin sentinel-pin" style="background:#0f766e;min-width:36px;padding:3px 6px;border:2px solid #fff;border-radius:999px;color:#fff;font-size:9px;font-weight:900;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.3)">OVI</div>',
+            iconSize: [36, 20],
+            iconAnchor: [18, 10],
+          });
+          L.marker(s.center, { icon: icon }).addTo(layerGroup);
+          bounds.push(s.center);
+        });
+
+        map.fitBounds(bounds, { padding: [48, 48], maxZoom: 14 });
+      })();
+    </script>
+  </body>
+</html>

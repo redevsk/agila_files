@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HEXA Environmental Risk Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="panel" aria-label="Demo workflow">
+        <div class="brand">
+          <span class="brand-mark">HX</span>
+          <div>
+            <h1>HEXA Risk Map</h1>
+            <p id="status">Blank map ready. Select Step 1 to begin.</p>
+          </div>
+        </div>
+
+        <section>
+          <h2>Role Views</h2>
+          <nav class="view-links" aria-label="Separated user dashboards">
+            <a href="/citizen">Citizen</a>
+            <a href="/barangay/dashboard">Barangay</a>
+            <a href="/city">City</a>
+          </nav>
+        </section>
+
+        <section>
+          <h2>Workflow</h2>
+          <ol class="demo-flow" id="stepRail" aria-label="Environmental risk workflow"></ol>
+        </section>
+
+        <section class="story-panel">
+          <span id="stepBadge">Blank</span>
+          <strong id="stepTitle">Start with a blank barangay map</strong>
+          <p id="stepText">Nothing is assumed yet. The app first maps operational risk areas before scoring or assigning work.</p>
+          <div class="step-metrics" id="stepMetrics"></div>
+        </section>
+
+        <section>
+          <h2>Visible Layers</h2>
+          <div class="layer-list" id="layerList"></div>
+        </section>
+
+        <section>
+          <h2>Legend</h2>
+          <div class="legend" aria-label="Map legend">
+            <div><span class="legend-dot risk-dot"></span> Risk candidate / score</div>
+            <div><span class="legend-square scope-square"></span> Barangay analysis scope</div>
+            <div><span class="legend-line water-line"></span> River / water-risk corridor</div>
+            <div><span class="legend-dot ovitrap-dot"></span> Sentinel ovitrap</div>
+            <div><span class="legend-dot report-dot"></span> Citizen report</div>
+            <div><span class="legend-dot task-dot"></span> Inspection task</div>
+            <div><span class="legend-line route-active"></span> Walked inspection path</div>
+            <div><span class="legend-line perimeter-line"></span> Response / recheck perimeter</div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Why It Matters</h2>
+          <ul class="notes" id="stepNotes"></ul>
+        </section>
+
+        <div class="actions">
+          <button id="resetButton" type="button">Reset</button>
+          <button id="nextButton" type="button">Next step</button>
+        </div>
+      </aside>
+
+      <section class="map-shell" aria-label="HEXA environmental risk map">
+        <div class="map-header">
+          <div>
+            <p>Environmental surveillance only. Clinical dengue case reporting remains under PIDSR.</p>
+            <h2 id="mapTitle">Start with a blank barangay map</h2>
+          </div>
+          <span class="status-pill" id="statusPill">Ready</span>
+        </div>
+        <div id="map"></div>
+        <div id="mapFallback" class="fallback-label" hidden>Map tiles unavailable. Demo data is still available.</div>
+      </section>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/map.js"></script>
+  </body>
+</html>

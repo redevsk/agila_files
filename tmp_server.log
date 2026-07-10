@@ -1,0 +1,5 @@
+
+> agila-files@1.0.0 dev
+> tsx watch src/server.ts
+
+Agila API listening on port 3000

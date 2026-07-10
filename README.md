@@ -9,6 +9,7 @@ Planning and implementation scaffold for a two-day hackathon MVP: a vector surve
 *   [Dev Task Assignment.md](Dev%20Task%20Assignment.md)
 *   [Technical Architecture.md](Technical%20Architecture.md)
 *   [Validation Improvements.md](Validation%20Improvements.md)
+*   [MVP Map Views.md](MVP%20Map%20Views.md)
 *   [DEVELOPMENT_RULES.md](DEVELOPMENT_RULES.md)
 
 ## Hackathon Architecture
@@ -44,13 +45,15 @@ src/
   config/
   utils/
   constants/
-  app.js
-  server.js
+  app.ts
+  server.ts
 ```
 
 ## Current Source State
 
 The source now follows the feature/module MVC structure. The first implementation pass uses in-memory seed data so frontend and map work can start quickly before SQLite is wired in.
+
+The backend source is TypeScript and runs with `tsx`. Use `.ts` for API/server modules and reserve `.tsx` for future Refine/React frontend components.
 
 ## Run
 
@@ -59,15 +62,30 @@ npm install
 npm start
 ```
 
+Run a TypeScript check with:
+
+```bash
+npm run check
+```
+
 The API is mounted under:
 
 ```text
 /api/v1
 ```
 
+The prototype map tester is available at:
+
+```text
+http://localhost:3000/map
+```
+
+The map MVP is focused on Valenzuela City, specifically Barangay Dambana and Barangay Marulas. It uses OpenStreetMap tiles when online and includes a schematic offline demo fallback so the route trail and risk-area workflow can still be shown without web map tiles.
+
 Useful prototype endpoints:
 *   `GET /api/v1/dashboard/city`
 *   `GET /api/v1/maps/layers`
+*   `GET /api/v1/maps/coverage`
 *   `GET /api/v1/areas/priority-ranking`
 *   `POST /api/v1/tasks/generate-preventive`
 *   `GET /api/v1/public-status/areas`

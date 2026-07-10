@@ -1,0 +1,515 @@
+const role = document.body.dataset.rolePage;
+const $ = (id) => document.getElementById(id);
+
+const riskColor = { critical: '#dc2626', high: '#f97316', moderate: '#d99a00', low: '#16a34a' };
+const riskLabel = { critical: 'Critical', high: 'High', moderate: 'Mod.', low: 'Low' };
+
+function toggleCollapse(btn) {
+  const body = btn.closest('article').querySelector('.collapse-body');
+  if (!body) return;
+  body.classList.toggle('is-open');
+  btn.textContent = body.classList.contains('is-open') ? 'Show less' : 'See more';
+}
+
+const center = [14.68135, 120.97455];
+const scopeBounds = [
+  [14.67765, 120.96965],
+  [14.68475, 120.98035],
+];
+
+const sentinels = [
+  {
+    id: "OVI-A",
+    pos: [14.68065, 120.9748],
+    risk: "critical",
+    eggs: 91,
+    zone: "School drainage",
+  },
+  {
+    id: "OVI-A2",
+    pos: [14.68105, 120.9741],
+    risk: "high",
+    eggs: 72,
+    zone: "General Luna",
+  },
+  {
+    id: "OVI-A3",
+    pos: [14.6797, 120.97355],
+    risk: "high",
+    eggs: 76,
+    zone: "Sampaguita",
+  },
+  {
+    id: "OVI-C1",
+    pos: [14.68255, 120.97245],
+    risk: "moderate",
+    eggs: 49,
+    zone: "Mabini cluster",
+  },
+  {
+    id: "OVI-B",
+    pos: [14.68275, 120.9769],
+    risk: "moderate",
+    eggs: 42,
+    zone: "J.P. Rizal",
+  },
+  {
+    id: "OVI-D",
+    pos: [14.67925, 120.97675],
+    risk: "low",
+    eggs: 18,
+    zone: "Transmitter site",
+  },
+];
+
+const citizenReport = {
+  id: "R-104",
+  pos: [14.68088, 120.97415],
+  label: "Report",
+};
+const task = { id: "T-22", pos: [14.68105, 120.9744], label: "Inspect" };
+
+const barangaySearchTargets = [
+  { name: "School drainage", keywords: ["school", "drainage", "ovi-a", "drainage canal a", "drainage canal b"], pos: [14.68065, 120.9748], zoom: 18 },
+  { name: "General Luna", keywords: ["general luna", "canal", "ovi-a2"], pos: [14.68105, 120.9741], zoom: 18 },
+  { name: "Sampaguita", keywords: ["sampaguita", "ovi-a3"], pos: [14.6797, 120.97355], zoom: 18 },
+  { name: "Mabini cluster", keywords: ["mabini", "cluster", "ovi-c1"], pos: [14.68255, 120.97245], zoom: 18 },
+  { name: "J.P. Rizal", keywords: ["j.p. rizal", "jp rizal", "rizal", "ovi-b"], pos: [14.68275, 120.9769], zoom: 18 },
+  { name: "Transmitter site", keywords: ["transmitter", "tower", "ovi-d"], pos: [14.67925, 120.97675], zoom: 18 },
+  { name: "Citizen report", keywords: ["report", "citizen report", "larvae"], pos: citizenReport.pos, zoom: 18 },
+  { name: "Inspection task", keywords: ["task", "inspection", "inspect"], pos: task.pos, zoom: 18 },
+];
+
+const inspectionPath = [
+  [14.6812, 120.97435],
+  [14.68195, 120.97438],
+  [14.68208, 120.97345],
+  [14.68118, 120.9734],
+  [14.6811, 120.97415],
+  [14.68042, 120.97423],
+  [14.67982, 120.97505],
+  [14.67995, 120.97642],
+  [14.68072, 120.97655],
+  [14.68088, 120.97415],
+];
+
+const cityBarangays = [
+  {
+    name: "Karuhatan",
+    score: 88,
+    risk: "critical",
+    bounds: [
+      [14.67795, 120.9699],
+      [14.68455, 120.9799],
+    ],
+  },
+  {
+    name: "Marulas",
+    score: 61,
+    risk: "high",
+    bounds: [
+      [14.6757, 120.9753],
+      [14.68145, 120.9835],
+    ],
+  },
+  {
+    name: "Tinajeros",
+    score: 39,
+    risk: "moderate",
+    bounds: [
+      [14.67475, 120.9668],
+      [14.67975, 120.97355],
+    ],
+  },
+];
+
+function icon(html, className) {
+  return L.divIcon({
+    className: "",
+    html: `<div class="${className}">${html}</div>`,
+    iconAnchor: [22, 18],
+  });
+}
+
+function list(id, items) {
+  const node = $(id);
+  if (!node) return;
+  node.innerHTML = items
+    .map(
+      (item) =>
+        `<li class="${item.current ? "is-current" : ""}">${item.text || item}</li>`,
+    )
+    .join("");
+}
+
+function metrics(items) {
+  const node = $("metrics");
+  if (!node) return;
+  node.innerHTML = items
+    .map(
+      ({ label, value }) =>
+        `<div><span>${label}</span><strong>${value}</strong></div>`,
+    )
+    .join("");
+}
+
+function ops(items) {
+  const node = $("opsGrid");
+  if (!node) return;
+  node.innerHTML = items
+    .map(
+      ({ label, value }) =>
+        `<div><span>${label}</span><strong>${value}</strong></div>`,
+    )
+    .join("");
+}
+
+function queue(items) {
+  const node = $("priorityQueue");
+  if (!node) return;
+  node.innerHTML = `<div class="queue-stack">${items
+    .map(
+      (item) =>
+        `<div class="queue-item ${item.tone || ""}"><span>${item.label}</span><strong>${item.value}</strong></div>`,
+    )
+    .join("")}</div>`;
+}
+
+function addBaseMap() {
+  const map = L.map("roleMap", {
+    zoomControl: true,
+    scrollWheelZoom: true,
+  }).setView(center, 16);
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 19,
+    attribution: "&copy; Esri, Maxar, Earthstar Geographics",
+  }).addTo(map);
+  return map;
+}
+
+function addLegend(map, rows) {
+  const legend = L.control({ position: "bottomleft" });
+  legend.onAdd = () => {
+    const div = L.DomUtil.create("div", "map-legend");
+    div.innerHTML = `<strong>Legend</strong>${rows
+      .map((row) => `<span><i class="${row.className}"></i>${row.label}</span>`)
+      .join("")}`;
+    return div;
+  };
+  legend.addTo(map);
+}
+
+function addBarangayScope(map) {
+  L.rectangle(scopeBounds, {
+    color: "#0f766e",
+    weight: 3,
+    dashArray: "9 7",
+    fill: false,
+  }).addTo(map);
+}
+
+function addRiskLayers(map, options = {}) {
+  L.circle([14.68075, 120.97435], {
+    radius: 430,
+    color: "#dc2626",
+    weight: 4,
+    fillColor: "#dc2626",
+    fillOpacity: 0,
+  }).addTo(map);
+
+  L.circle([14.68145, 120.97305], {
+    radius: 350,
+    color: "#f97316",
+    weight: 2,
+    fillColor: "#f97316",
+    fillOpacity: 0,
+  }).addTo(map);
+
+  L.circle([14.68255, 120.9765], {
+    radius: 390,
+    color: "#d99a00",
+    weight: 2,
+    fillColor: "#d99a00",
+    fillOpacity: 0,
+  }).addTo(map);
+}
+
+function addSentinels(map, detailed = true) {
+  sentinels.forEach((trap) => {
+    const text = detailed ? `${trap.id}<br>${trap.eggs}` : "OVI";
+    L.marker(trap.pos, { icon: icon(text, `trap-pin ${trap.risk}`) })
+      .bindPopup(
+        `<strong>${trap.id}</strong><br>${trap.zone}<br>${trap.eggs} eggs counted`,
+      )
+      .addTo(map);
+  });
+}
+
+function citizenView(map) {
+  addRiskLayers(map, { public: true });
+  L.marker(citizenReport.pos, { icon: icon("My report", "report-pin") }).addTo(
+    map,
+  );
+  L.marker([14.67995, 120.97685], {
+    icon: icon("Advisory", "hex-pin moderate"),
+  }).addTo(map);
+  addLegend(map, [
+    { className: "legend-risk", label: "Public monitoring area" },
+    { className: "legend-report", label: "Submitted report" },
+  ]);
+  if (window._userHome && window._userHome.lat && window._userHome.lng) {
+    map.setView([window._userHome.lat, window._userHome.lng], 16);
+  } else {
+    map.fitBounds(scopeBounds, { padding: [28, 28] });
+  }
+
+  metrics([
+    { label: "Area status", value: "Monitoring" },
+    { label: "My latest report", value: "Pending" },
+  ]);
+  list("statusFlow", [
+    { text: "Submitted" },
+    { text: "Pending Review", current: true },
+    { text: "Inspection Task Created" },
+    { text: "Field Verification" },
+    { text: "Action Taken / Resolved" },
+  ]);
+  list("featureList", [
+    "Submit stagnant water, canal, larvae, garbage, tire, container, flood, and mosquito reports.",
+    "Attach a location pin, photo evidence, short description, and date/time.",
+    "View public advisories and report status only; internal routes and risk scoring stay private.",
+  ]);
+
+}
+
+const recentActivity = [
+  { time: '2h ago', label: 'Citizen report R-104 (larvae) submitted near General Luna', type: 'report' },
+  { time: '3h ago', label: 'Inspector checked in at School drainage perimeter', type: 'inspection' },
+  { time: '5h ago', label: 'Treatment team completed larvicide at Mabini cluster', type: 'treatment' },
+  { time: '6h ago', label: 'OVI-A sentinel alert: 91 eggs counted — critical threshold', type: 'alert' },
+  { time: '8h ago', label: 'Task T-22 assigned to BHW-03 for General Luna inspection', type: 'task' },
+  { time: '1d ago', label: 'Routine preventive patrol completed — Dambana Creekside', type: 'patrol' },
+];
+
+function sentinelStatus() {
+  const node = $('sentinelGrid');
+  if (!node) return;
+  node.innerHTML = sentinels.map((trap) => `
+    <div class="sentinel-card ${trap.risk}">
+      <div class="sentinel-head">
+        <span class="sentinel-id">${trap.id}</span>
+        <span class="sentinel-badge ${trap.risk}">${riskLabel[trap.risk]}</span>
+      </div>
+      <div class="sentinel-body">
+        <span class="sentinel-zone">${trap.zone}</span>
+        <strong class="sentinel-eggs">${trap.eggs}<small> eggs</small></strong>
+      </div>
+      <div class="sentinel-bar ${trap.risk}" style="width:${Math.min(trap.eggs, 100)}%"></div>
+    </div>
+  `).join('');
+}
+
+function activityFeed() {
+  const node = $('activityList');
+  if (!node) return;
+  node.innerHTML = recentActivity.map((item) => `
+    <div class="activity-item">
+      <div class="activity-dot ${item.type}"></div>
+      <div class="activity-content">
+        <p class="activity-text">${item.label}</p>
+        <span class="activity-time">${item.time}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function barangayView(map) {
+  addRiskLayers(map);
+  addSentinels(map);
+  L.marker(citizenReport.pos, {
+    icon: icon(citizenReport.label, "report-pin"),
+  }).addTo(map);
+  L.marker(task.pos, { icon: icon(task.label, "task-pin") }).addTo(map);
+  L.polyline(inspectionPath, {
+    color: "#7c3aed",
+    weight: 5,
+    opacity: 0.8,
+  }).addTo(map);
+  addLegend(map, [
+    { className: "legend-scope", label: "Barangay scope" },
+    { className: "legend-risk", label: "Risk perimeter" },
+    { className: "legend-trap", label: "Smart ovitrap" },
+    { className: "legend-report", label: "Citizen report" },
+    { className: "legend-task", label: "Inspection task" },
+  ]);
+  map.fitBounds(scopeBounds, { padding: [28, 28] });
+
+  metrics([
+    { label: "Critical zones", value: "1" },
+    { label: "Open tasks", value: "4" },
+    { label: "Sentinels online", value: "6 / 7" },
+    { label: "For recheck", value: "2" },
+  ]);
+  ops([
+    { label: "Active reports", value: "12" },
+    { label: "Pending inspections", value: "4" },
+    { label: "High-risk areas", value: "2" },
+    { label: "Teams deployed", value: "2" },
+    { label: "Tasks overdue", value: "1" },
+    { label: "Response status", value: "Ongoing" },
+  ]);
+  sentinelStatus();
+  activityFeed();
+  queue([
+    {
+      label: "School drainage cluster",
+      value: "Critical score 91",
+      tone: "critical",
+    },
+    { label: "General Luna canal", value: "High score 72" },
+    { label: "Transmitter edge", value: "Monitoring", tone: "low" },
+  ]);
+
+  const searchInput = $("barangayAreaSearch");
+  const searchButton = $("barangayAreaSearchButton");
+  const searchStatus = $("barangayAreaSearchStatus");
+  let searchMarker = null;
+
+  function runBarangaySearch() {
+    const query = (searchInput && searchInput.value ? searchInput.value : "").trim().toLowerCase();
+    if (!query) {
+      if (searchStatus) searchStatus.textContent = "Enter an area, zone, task, or sentinel name.";
+      return;
+    }
+    const target = barangaySearchTargets.find((item) =>
+      item.name.toLowerCase().includes(query) ||
+      item.keywords.some((keyword) => keyword.includes(query) || query.includes(keyword))
+    );
+    if (!target) {
+      if (searchStatus) searchStatus.textContent = `No operation area found for "${searchInput.value}".`;
+      return;
+    }
+    if (searchMarker) map.removeLayer(searchMarker);
+    searchMarker = L.circleMarker(target.pos, {
+      radius: 14,
+      color: "#0f766e",
+      weight: 3,
+      fillColor: "#14b8a6",
+      fillOpacity: 0,
+    }).addTo(map);
+    map.flyTo(target.pos, target.zoom, { duration: 0.8 });
+    if (searchStatus) searchStatus.textContent = `Showing ${target.name}.`;
+  }
+
+  if (searchButton && searchInput) {
+    searchButton.addEventListener("click", runBarangaySearch);
+    searchInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") runBarangaySearch();
+    });
+  }
+}
+
+const cityAlerts = [
+  { time: '1h ago', label: 'Karuhatan critical threshold exceeded — 91 eggs at School drainage', type: 'critical' },
+  { time: '4h ago', label: 'Marulas inspection overdue — BHW-02 missed check-in', type: 'warning' },
+  { time: '6h ago', label: 'Tinajeros sentinel OVI-C1 moderate — recheck scheduled', type: 'info' },
+  { time: '12h ago', label: 'Treatment team deployed to General Luna canal (Marulas)', type: 'success' },
+  { time: '1d ago', label: 'Weekly report generated — 3 barangays, 14 completed actions', type: 'info' },
+];
+
+function barangayComparison() {
+  const node = $('comparisonTable');
+  if (!node) return;
+  node.innerHTML = `<table class="compare-table">
+    <thead><tr><th>Barangay</th><th>Score</th><th>Status</th></tr></thead>
+    <tbody>${cityBarangays.map((b) => `
+      <tr>
+        <td class="compare-name">${b.name}</td>
+        <td><span class="compare-score ${b.risk}">${b.score}</span></td>
+        <td><span class="compare-badge ${b.risk}">${b.risk}</span></td>
+      </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function alertFeed() {
+  const node = $('alertFeed');
+  if (!node) return;
+  node.innerHTML = cityAlerts.map((a) => `
+    <div class="alert-item ${a.type}">
+      <div class="alert-icon ${a.type}"></div>
+      <div class="alert-body">
+        <p class="alert-text">${a.label}</p>
+        <span class="alert-time">${a.time}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function cityView(map) {
+  cityBarangays.forEach((area) => {
+    const color =
+      area.risk === "critical"
+        ? "#dc2626"
+        : area.risk === "high"
+          ? "#f97316"
+          : "#d99a00";
+    L.rectangle(area.bounds, {
+      color,
+      weight: 3,
+      fillColor: color,
+      fillOpacity: 0.11,
+    })
+      .bindPopup(
+        `<strong>${area.name}</strong><br>Environmental risk score: ${area.score}`,
+      )
+      .addTo(map);
+    const labelPos = [
+      (area.bounds[0][0] + area.bounds[1][0]) / 2,
+      (area.bounds[0][1] + area.bounds[1][1]) / 2,
+    ];
+    L.marker(labelPos, {
+      icon: icon(`${area.name}<br>${area.score}`, `hex-pin ${area.risk}`),
+    }).addTo(map);
+  });
+  addSentinels(map, false);
+  addLegend(map, [
+    { className: "legend-risk", label: "Barangay risk area" },
+    { className: "legend-trap", label: "Sentinel network" },
+  ]);
+  map.fitBounds([
+    [14.6744, 120.9664],
+    [14.6852, 120.984],
+  ]);
+
+  metrics([
+    { label: "Barangays watched", value: "3" },
+    { label: "Critical hotspots", value: "1" },
+    { label: "Overdue inspections", value: "2" },
+    { label: "Completed actions", value: "14" },
+  ]);
+  ops([
+    { label: "Highest risk", value: "Karuhatan" },
+    { label: "Weekly trend", value: "+12%" },
+    { label: "Avg. closure time", value: "2.4 days" },
+    { label: "Report export", value: "Ready" },
+  ]);
+  barangayComparison();
+  alertFeed();
+  list("featureList", [
+    "Karuhatan: critical perimeter needs recheck after intervention expiry.",
+    "Marulas: high mosquito-prone conditions around drainage and vacant lots.",
+    "Tinajeros: moderate risk, continue sentinel monitoring.",
+  ]);
+  queue([
+    { label: "Karuhatan", value: "Critical / 1 unresolved", tone: "critical" },
+    { label: "Marulas", value: "High / response active" },
+    { label: "Tinajeros", value: "Moderate / monitor", tone: "low" },
+  ]);
+}
+
+const map = addBaseMap();
+window._appMap = map;
+
+if (role === "citizen") citizenView(map);
+if (role === "barangay") barangayView(map);
+if (role === "city") cityView(map);

@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HEXA · My Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/role-pages.css" />
+  </head>
+  <body data-role-page="citizen" class="min-h-screen bg-slate-950 text-slate-900">
+    <main>
+      <section class="relative min-h-screen overflow-hidden bg-slate-950">
+        <div id="roleMap" class="absolute inset-0 z-0 min-h-screen opacity-60"></div>
+        <div class="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/80 via-slate-950/50 to-slate-950/90"></div>
+
+        <header class="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-5 py-5 text-white lg:px-8">
+          <a href="/citizen" class="flex items-center gap-3">
+            <img src="/img/logo.png" alt="HEXA" class="h-10 w-auto" />
+            <span>
+              <strong class="block text-2xl tracking-wide">HEXA</strong>
+              <small class="block text-xs uppercase tracking-[0.24em] text-teal-100/80">My Profile</small>
+            </span>
+          </a>
+          <div class="relative" id="profileContainer">
+            <button id="profileBtn" class="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 backdrop-blur transition hover:bg-white/20">
+              <span class="grid h-8 w-8 place-items-center rounded-full bg-teal-600 text-xs font-black text-white" id="profileInitials">--</span>
+              <span class="text-sm font-bold text-white" id="profileName">User</span>
+              <svg id="profileChevron" class="h-3 w-3 text-white/60 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="profileDropdown" class="hidden absolute right-0 top-full z-50 mt-2 w-52 rounded-xl border border-white/20 bg-slate-900 p-1 shadow-2xl backdrop-blur-xl">
+              <div class="border-b border-white/10 px-3 py-2.5">
+                <p class="text-sm font-bold text-white" id="dropdownName">User</p>
+                <p class="text-xs text-slate-400" id="dropdownEmail">user@example.com</p>
+              </div>
+              <a href="/citizen" class="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                Dashboard
+              </a>
+              <button id="logoutBtn" class="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold text-red-300 transition hover:bg-white/10">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                Logout
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div class="relative z-20 mx-auto grid min-h-[85vh] w-full max-w-4xl items-center px-5 pb-12 pt-10 lg:px-8">
+          <div class="grid gap-8">
+            <div class="text-center text-white">
+              <h1 class="text-4xl font-black tracking-tight md:text-5xl">My Profile</h1>
+              <p class="mt-2 text-lg text-slate-100/80">Verify your identity and manage your account</p>
+            </div>
+
+            <div class="mx-auto grid w-full max-w-2xl gap-6">
+              <div class="rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-xl">
+                <div class="mb-6 flex items-start justify-between gap-4">
+                  <div class="flex items-center gap-4">
+                    <span class="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-teal-600 text-xl font-black text-white" id="profileAvatar">--</span>
+                    <div>
+                      <h2 class="text-xl font-bold text-white" id="profileDisplayName">Loading...</h2>
+                      <p class="text-sm text-slate-300" id="profileDisplayEmail">Loading...</p>
+                      <span class="mt-1 inline-block rounded-full bg-teal-500/20 px-3 py-0.5 text-xs font-semibold text-teal-300">Citizen</span>
+                      <span id="verificationBadge" class="mt-1 inline-block rounded-full px-3 py-0.5 text-xs font-semibold"></span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button id="editToggleBtn" class="flex shrink-0 items-center gap-2 rounded-xl border border-white/20 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/10">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                      Edit
+                    </button>
+                    <button id="cancelEditBtn" class="hidden shrink-0 items-center gap-2 rounded-xl border border-white/20 px-4 py-2 text-sm font-bold text-slate-300 transition hover:bg-white/10">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+                <div class="grid gap-4">
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">First Name</label>
+                      <input id="editFirstName" class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white outline-none transition focus:border-teal-500 focus:ring-1 focus:ring-teal-500" type="text" readonly />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">Last Name</label>
+                      <input id="editLastName" class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white outline-none transition focus:border-teal-500 focus:ring-1 focus:ring-teal-500" type="text" readonly />
+                    </div>
+                  </div>
+                  <div>
+                    <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">Email</label>
+                    <input id="editEmail" class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white outline-none transition focus:border-teal-500 focus:ring-1 focus:ring-teal-500" type="email" readonly />
+                  </div>
+                  <div id="savedAddressWrap" class="hidden">
+                    <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">Saved Address</label>
+                    <input id="savedAddressInput" class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white" readonly />
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-xl">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h3 class="text-lg font-bold text-white">Location Verification</h3>
+                    <p class="mt-1 text-sm text-slate-300">Share your current location to verify your report area</p>
+                  </div>
+                  <button id="locateMeBtn" class="flex items-center gap-2 rounded-xl bg-[#0f766e] px-5 py-3 font-bold text-white transition hover:bg-teal-800">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Find My Location
+                  </button>
+                </div>
+                <div id="locationBody" class="hidden mt-4">
+                  <div id="locationMap" class="h-64 rounded-xl border border-white/10 bg-slate-800"></div>
+                  <div id="locationStatus" class="mt-3 flex items-center gap-2 text-sm text-slate-400">
+                    <span class="inline-block h-2 w-2 rounded-full bg-slate-500" id="locationDot"></span>
+                    <span id="locationText">Click "Find My Location" to share your location</span>
+                  </div>
+                  <div id="locationCoords" class="mt-2 hidden">
+                  <div id="locationAddressWrap" class="mt-3 hidden">
+                    <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">Address</label>
+                    <input id="locationAddress" class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none" readonly />
+                  </div>
+                  <div id="locationActions" class="mt-4 hidden flex gap-3">
+                    <button id="cancelLocationData" class="flex-1 rounded-xl border border-white/20 px-4 py-2.5 text-sm font-bold text-slate-300 transition hover:bg-white/10">Cancel</button>
+                    <button id="saveLocationData" class="flex-1 rounded-xl bg-[#0f766e] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800">Save Address</button>
+                  </div>
+                </div>
+
+              </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="locationConsentModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/40 backdrop-blur-sm">
+      <div class="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-xl">
+        <div class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-teal-50">
+          <svg class="h-6 w-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h3 class="mt-4 text-lg font-bold text-slate-900">Location Consent</h3>
+        <p class="mt-2 text-sm text-slate-500">Allow HEXA to access your location for report verification?</p>
+        <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-left text-xs leading-relaxed text-slate-500">
+          <p class="mb-2 font-semibold text-slate-700">Terms & Conditions</p>
+          <ul class="list-inside list-disc space-y-1">
+            <li>Your location is used only to verify your report area.</li>
+            <li>Location data is not stored or shared with third parties.</li>
+            <li>You can revoke permission anytime via browser settings.</li>
+            <li>Accuracy depends on your device's GPS and network.</li>
+          </ul>
+        </div>
+        <label class="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-left">
+          <input id="consentCheckbox" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" />
+          <span class="text-sm text-slate-600">I have read and agree to the terms and conditions above.</span>
+        </label>
+        <div class="mt-6 flex justify-center gap-3">
+          <button id="cancelLocation" class="rounded-xl border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">Cancel</button>
+          <button id="confirmLocation" class="rounded-xl bg-teal-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:opacity-40" disabled>Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/20 backdrop-blur-sm">
+      <div class="w-80 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-xl">
+        <p class="text-lg font-bold text-slate-900">Leave dashboard?</p>
+        <p class="mt-2 text-sm text-slate-500">Are you sure you want to logout?</p>
+        <div class="mt-6 flex justify-center gap-3">
+          <button id="cancelLogout" class="rounded-xl border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">Cancel</button>
+          <button id="confirmLogout" class="rounded-xl bg-red-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-red-700">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      (function() {
+        if (window.L) {
+          window._bgMap = L.map('roleMap', { zoomSnap: 0.25, zoomControl: false, attributionControl: false }).setView([14.68135, 120.97455], 14);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(window._bgMap);
+          L.rectangle([[14.67765, 120.96965], [14.68475, 120.98035]], { color: '#0f766e', weight: 3, fillColor: '#0f766e', fillOpacity: 0.04, dashArray: '12 8' }).addTo(window._bgMap);
+          L.circle([14.68095, 120.9741], { radius: 260, color: '#dc2626', fillColor: '#dc2626', fillOpacity: 0.07, weight: 2 }).addTo(window._bgMap);
+          L.circle([14.68235, 120.97615], { radius: 210, color: '#d99a00', fillColor: '#d99a00', fillOpacity: 0.06, weight: 2 }).addTo(window._bgMap);
+          L.circle([14.68155, 120.9723], { radius: 190, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.06, weight: 2 }).addTo(window._bgMap);
+        }
+      })();
+    </script>
+    <script>
+      (function() {
+        function show(id) { var el = document.getElementById(id); el.classList.remove('hidden'); el.classList.add('flex'); }
+        function hide(id) { var el = document.getElementById(id); el.classList.add('hidden'); el.classList.remove('flex'); }
+
+        function notify(msg, type) {
+          var n = document.createElement('div');
+          n.className = 'fixed top-5 right-5 z-[200] flex items-center gap-3 rounded-xl border px-5 py-3 text-sm font-semibold shadow-2xl backdrop-blur-xl transition-all duration-300 translate-x-0';
+          if (type === 'error') n.className += ' border-red-500/40 bg-red-900/80 text-red-200';
+          else if (type === 'success') n.className += ' border-teal-500/40 bg-teal-900/80 text-teal-200';
+          else n.className += ' border-slate-500/40 bg-slate-800/80 text-slate-200';
+          n.innerHTML = msg + '<button class="ml-3 text-white/60 hover:text-white" onclick="this.parentElement.remove()">✕</button>';
+          document.body.appendChild(n);
+          setTimeout(function() { if (n.parentNode) { n.style.opacity = '0'; setTimeout(function() { if (n.parentNode) n.remove(); }, 300); } }, 3500);
+        }
+
+        try {
+          var u = JSON.parse(localStorage.getItem('user'));
+          if (!u || !u.name) { window.location.href = '/login/citizen'; return; }
+          document.getElementById('profileDisplayName').textContent = u.name;
+          document.getElementById('profileDisplayEmail').textContent = u.email || '';
+          document.getElementById('profileName').textContent = u.name;
+          document.getElementById('profileAvatar').textContent = u.name.split(' ').map(function(s) { return s[0]; }).join('').substring(0, 2).toUpperCase();
+          document.getElementById('profileInitials').textContent = u.name.split(' ').map(function(s) { return s[0]; }).join('').substring(0, 2).toUpperCase();
+          document.getElementById('dropdownName').textContent = u.name;
+          document.getElementById('dropdownEmail').textContent = u.email || '';
+
+          var nameParts = u.name.split(' ');
+          document.getElementById('editFirstName').value = nameParts[0] || '';
+          document.getElementById('editLastName').value = nameParts.slice(1).join(' ') || '';
+          document.getElementById('editEmail').value = u.email || '';
+
+          function setVerificationBadge(verified) {
+            var badge = document.getElementById('verificationBadge');
+            if (verified) {
+              badge.textContent = 'Verified';
+              badge.className = 'mt-1 inline-block rounded-full bg-teal-500/20 px-3 py-0.5 text-xs font-semibold text-teal-300';
+            } else {
+              badge.textContent = 'Unverified';
+              badge.className = 'mt-1 inline-block rounded-full bg-amber-500/20 px-3 py-0.5 text-xs font-semibold text-amber-300';
+            }
+          }
+
+          var locateBtn = document.getElementById('locateMeBtn');
+
+          function showSavedAddress(addr) {
+            document.getElementById('savedAddressInput').value = addr;
+            document.getElementById('savedAddressWrap').classList.remove('hidden');
+            document.getElementById('locationBody').classList.add('hidden');
+            locateBtn.innerHTML = '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg> Find My Location Again';
+            locateBtn.disabled = false;
+            locateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            setVerificationBadge(true);
+            if (window._bgMap && u.homeLat && u.homeLng) {
+              if (window._bgMarker) window._bgMap.removeLayer(window._bgMarker);
+              if (window._bgCircle) window._bgMap.removeLayer(window._bgCircle);
+              window._bgMarker = L.marker([u.homeLat, u.homeLng]).addTo(window._bgMap)
+                .bindPopup('<strong>Saved Location</strong><br>' + (u.homeAddress || addr));
+              window._bgCircle = L.circle([u.homeLat, u.homeLng], { radius: 50, color: '#0f766e', fillColor: '#0f766e', fillOpacity: 0.1, weight: 2 }).addTo(window._bgMap);
+              window._bgMap.setView([u.homeLat, u.homeLng], 15);
+            }
+          }
+
+          function hideSavedAddress() {
+            document.getElementById('savedAddressInput').value = '';
+            document.getElementById('savedAddressWrap').classList.add('hidden');
+            document.getElementById('locationBody').classList.remove('hidden');
+            locateBtn.innerHTML = '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg> Find My Location';
+            setVerificationBadge(false);
+          }
+
+          if (u.homeAddress) {
+            showSavedAddress(u.homeAddress);
+          } else {
+            setVerificationBadge(false);
+          }
+
+          var editing = false;
+
+          function setInputsReadonly(ro) {
+            ['editFirstName', 'editLastName', 'editEmail'].forEach(function(id) {
+              document.getElementById(id).readOnly = ro;
+            });
+          }
+
+          function applyProfileUpdate(fn, ln, em) {
+            var fullName = fn + ' ' + ln;
+            u.name = fullName;
+            u.email = em;
+            localStorage.setItem('user', JSON.stringify(u));
+            document.getElementById('profileDisplayName').textContent = fullName;
+            document.getElementById('profileDisplayEmail').textContent = em;
+            document.getElementById('profileName').textContent = fullName;
+            document.getElementById('profileAvatar').textContent = (fn[0] + ln[0]).toUpperCase();
+            document.getElementById('profileInitials').textContent = (fn[0] + ln[0]).toUpperCase();
+            document.getElementById('dropdownName').textContent = fullName;
+            document.getElementById('dropdownEmail').textContent = em;
+            document.getElementById('profileBtn').blur();
+          }
+
+          var origFirstName, origLastName, origEmail;
+
+          document.getElementById('editToggleBtn').addEventListener('click', function() {
+            var btn = document.getElementById('editToggleBtn');
+            var cancelBtn = document.getElementById('cancelEditBtn');
+            if (!editing) {
+              origFirstName = document.getElementById('editFirstName').value;
+              origLastName = document.getElementById('editLastName').value;
+              origEmail = document.getElementById('editEmail').value;
+              editing = true;
+              setInputsReadonly(false);
+              btn.innerHTML = '<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Save';
+              cancelBtn.classList.remove('hidden');
+              cancelBtn.classList.add('flex');
+              document.getElementById('editFirstName').focus();
+            } else {
+              var fn = document.getElementById('editFirstName').value.trim();
+              var ln = document.getElementById('editLastName').value.trim();
+              var em = document.getElementById('editEmail').value.trim();
+              if (!fn || !ln || !em) return;
+              btn.disabled = true;
+              btn.innerHTML = '<svg class="h-4 w-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Saving...';
+              fetch('/api/v1/users/' + u.id, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: fn + ' ' + ln, email: em }),
+              }).then(function(r) {
+                if (!r.ok) { return r.json().then(function(e) { throw new Error(e.error || 'Save failed'); }); }
+                editing = false;
+                setInputsReadonly(true);
+                btn.innerHTML = '<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg> Edit';
+                btn.disabled = false;
+                cancelBtn.classList.add('hidden');
+                cancelBtn.classList.remove('flex');
+                applyProfileUpdate(fn, ln, em);
+                notify('Profile information has been updated successfully', 'success');
+              }).catch(function(err) {
+                btn.disabled = false;
+                btn.innerHTML = '<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg> Edit';
+                document.getElementById('editEmail').focus();
+                setTimeout(function() { alert('Error: ' + err.message); }, 50);
+              });
+            }
+          });
+
+          document.getElementById('cancelEditBtn').addEventListener('click', function() {
+            if (!editing) return;
+            editing = false;
+            var btn = document.getElementById('editToggleBtn');
+            var cancelBtn = document.getElementById('cancelEditBtn');
+            setInputsReadonly(true);
+            document.getElementById('editFirstName').value = origFirstName;
+            document.getElementById('editLastName').value = origLastName;
+            document.getElementById('editEmail').value = origEmail;
+            btn.innerHTML = '<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg> Edit';
+            cancelBtn.classList.add('hidden');
+            cancelBtn.classList.remove('flex');
+            notify('Profile changes have been discarded', '');
+          });
+        } catch(e) { window.location.href = '/login/citizen'; return; }
+
+        var pc = document.getElementById('profileContainer');
+        var dd = document.getElementById('profileDropdown');
+        var pb = document.getElementById('profileBtn');
+        var cv = document.getElementById('profileChevron');
+
+        pb.addEventListener('click', function(e) {
+          e.stopPropagation();
+          dd.classList.toggle('hidden');
+          cv.classList.toggle('rotate-180');
+        });
+        document.addEventListener('click', function(e) {
+          if (dd.classList.contains('hidden')) return;
+          if (pc.contains(e.target)) return;
+          dd.classList.add('hidden');
+          cv.classList.remove('rotate-180');
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+          e.stopPropagation();
+          show('logoutModal');
+        });
+        document.getElementById('cancelLogout').addEventListener('click', function() { hide('logoutModal'); });
+        document.getElementById('confirmLogout').addEventListener('click', function() {
+          localStorage.removeItem('user');
+          window.location.href = '/login/citizen';
+        });
+
+        var locationMap = null;
+        var locationMarker = null;
+        var locationCircle = null;
+        var latestPosition = null;
+
+        function resetLocationUI() {
+          document.getElementById('locationCoords').classList.add('hidden');
+          document.getElementById('locationAddressWrap').classList.add('hidden');
+          document.getElementById('locationActions').classList.add('hidden');
+          document.getElementById('locationText').textContent = 'Click "Find My Location" to share your location';
+          document.getElementById('locationDot').className = 'inline-block h-2 w-2 rounded-full bg-slate-500';
+          document.getElementById('locationAddress').value = '';
+          if (locationMarker) { locationMap.removeLayer(locationMarker); locationMarker = null; }
+          if (locationCircle) { locationMap.removeLayer(locationCircle); locationCircle = null; }
+          latestPosition = null;
+        }
+
+          document.getElementById('locateMeBtn').addEventListener('click', function() {
+            if (!navigator.geolocation) {
+              document.getElementById('locationText').textContent = 'Geolocation is not supported by your browser.';
+              document.getElementById('locationDot').className = 'inline-block h-2 w-2 rounded-full bg-red-500';
+              return;
+            }
+            document.getElementById('consentCheckbox').checked = false;
+            document.getElementById('confirmLocation').disabled = true;
+            show('locationConsentModal');
+          });
+
+        document.getElementById('consentCheckbox').addEventListener('change', function() {
+          document.getElementById('confirmLocation').disabled = !this.checked;
+        });
+
+        document.getElementById('cancelLocation').addEventListener('click', function() {
+          hide('locationConsentModal');
+        });
+
+        document.getElementById('confirmLocation').addEventListener('click', function() {
+          hide('locationConsentModal');
+          document.getElementById('locationBody').classList.remove('hidden');
+          resetLocationUI();
+          document.getElementById('locationText').textContent = 'Getting your location...';
+          document.getElementById('locationDot').className = 'inline-block h-2 w-2 rounded-full bg-yellow-500 animate-pulse';
+
+          navigator.geolocation.getCurrentPosition(
+            function(pos) {
+              var lat = pos.coords.latitude;
+              var lng = pos.coords.longitude;
+              var acc = pos.coords.accuracy;
+              latestPosition = { lat: lat, lng: lng, acc: acc, ts: pos.timestamp };
+
+              document.getElementById('locationCoords').classList.remove('hidden');
+
+              document.getElementById('locationText').textContent = 'Location captured — fetching address...';
+              document.getElementById('locationDot').className = 'inline-block h-2 w-2 rounded-full bg-yellow-500 animate-pulse';
+
+              if (!locationMap) {
+                locationMap = L.map('locationMap', { zoomControl: true, scrollWheelZoom: true }).setView([lat, lng], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(locationMap);
+              } else {
+                locationMap.setView([lat, lng], 15);
+              }
+
+              if (locationMarker) locationMap.removeLayer(locationMarker);
+              if (locationCircle) locationMap.removeLayer(locationCircle);
+
+              locationMarker = L.marker([lat, lng]).addTo(locationMap)
+                .bindPopup('<strong>Your Location</strong><br>' + lat.toFixed(6) + ', ' + lng.toFixed(6))
+                .openPopup();
+
+              locationCircle = L.circle([lat, lng], { radius: acc, color: '#0f766e', fillColor: '#0f766e', fillOpacity: 0.15, weight: 2 }).addTo(locationMap);
+
+              fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                  var addr = data.display_name || (lat.toFixed(6) + ', ' + lng.toFixed(6));
+                  addr = addr.split(',').slice(0, 3).join(',').trim();
+                  document.getElementById('locationAddress').value = addr;
+                  document.getElementById('locationAddressWrap').classList.remove('hidden');
+                  document.getElementById('locationActions').classList.remove('hidden');
+                  document.getElementById('locationText').textContent = 'Location captured successfully';
+                  document.getElementById('locationDot').className = 'inline-block h-2 w-2 rounded-full bg-green-500';
+                })
+                .catch(function() {
+                  document.getElementById('locationAddress').value = lat.toFixed(6) + ', ' + lng.toFixed(6);
+                  document.getElementById('locationAddressWrap').classList.remove('hidden');
+                  document.getElementById('locationActions').classList.remove('hidden');
+                  document.getElementById('locationText').textContent = 'Location captured successfully';
+                  document.getElementById('locationDot').className = 'inline-block h-2 w-2 rounded-full bg-green-500';
+                });
+            },
+            function(err) {
+              var msg = 'Unable to retrieve your location.';
+              if (err.code === 1) msg = 'Location access denied. Please enable location permissions in your browser settings.';
+              else if (err.code === 2) msg = 'Location unavailable. Try again later.';
+              else if (err.code === 3) msg = 'Location request timed out. Please try again.';
+              document.getElementById('locationText').textContent = msg;
+              document.getElementById('locationDot').className = 'inline-block h-2 w-2 rounded-full bg-red-500';
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+          );
+        });
+
+        document.getElementById('saveLocationData').addEventListener('click', function() {
+          if (!latestPosition) return;
+          var addr = document.getElementById('locationAddress').value;
+          var saved = {
+            address: addr,
+            lat: latestPosition.lat,
+            lng: latestPosition.lng,
+            accuracy: latestPosition.acc,
+            timestamp: latestPosition.ts,
+          };
+          localStorage.setItem('savedLocation', JSON.stringify(saved));
+          u.homeAddress = addr;
+          u.homeLat = latestPosition.lat;
+          u.homeLng = latestPosition.lng;
+          localStorage.setItem('user', JSON.stringify(u));
+          fetch('/api/v1/users/' + u.id, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: u.name, email: u.email, homeAddress: addr, homeLat: latestPosition.lat, homeLng: latestPosition.lng }),
+          }).catch(function() {});
+          showSavedAddress(addr);
+          document.getElementById('locationText').textContent = 'Address saved successfully';
+          document.getElementById('locationDot').className = 'inline-block h-2 w-2 rounded-full bg-teal-400';
+          document.getElementById('locationActions').classList.add('hidden');
+          notify('Location address has been saved successfully', 'success');
+        });
+
+        document.getElementById('cancelLocationData').addEventListener('click', function() {
+          resetLocationUI();
+          document.getElementById('locationBody').classList.add('hidden');
+          notify('Location changes have been cancelled', '');
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,8 +1,8 @@
 const express = require('express');
-const { listItems } = require('./item.controller');
+const { cityCsv } = require('./exports.controller');
 
 const router = express.Router();
 
-router.get('/items', listItems);
+router.get('/city.csv', cityCsv);
 
 module.exports = router;
