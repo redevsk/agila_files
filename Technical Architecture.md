@@ -266,7 +266,6 @@ Public statuses:
 ### sentinel_devices
 *   `id`
 *   `device_code`
-*   `type`
 *   `barangay_id`
 *   `area_id`
 *   `lat`
@@ -277,9 +276,6 @@ Public statuses:
 *   `last_maintenance_at`
 *   `created_at`
 *   `updated_at`
-
-Device types:
-*   `smart_ovitrap`
 
 Device statuses:
 *   `planned`

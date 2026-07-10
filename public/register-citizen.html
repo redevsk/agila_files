@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HEXA · Citizen Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/role-pages.css" />
+    <style>
+      .terms-scroll::-webkit-scrollbar { width: 4px; }
+      .terms-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-slate-950 text-slate-900 antialiased">
+    <section class="relative min-h-screen overflow-hidden bg-slate-950">
+      <div id="roleMap" class="absolute inset-0 z-0 min-h-screen opacity-60"></div>
+      <div class="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/80 via-slate-950/50 to-slate-950/90"></div>
+
+      <header class="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-1.5 text-white lg:px-8">
+        <a href="/" class="flex items-center">
+            <img src="/img/logo.png" alt="HEXA" class="h-11 w-auto" />
+          <span>
+            <strong class="block text-lg tracking-[0.12em]" style="font-family:'Libre Baskerville',serif">PROJECT HEXA</strong>
+            <small class="block text-xs uppercase tracking-[0.24em] text-teal-100/80">Citizen Registration</small>
+          </span>
+        </a>
+        <a class="rounded-full border border-white/20 px-4 py-2 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white" href="/login/citizen">Already have an account?</a>
+      </header>
+
+      <div class="relative z-20 mx-auto flex min-h-[80vh] w-full max-w-7xl items-center justify-center px-5 py-10 lg:px-8">
+        <div class="w-full max-w-md rounded-2xl border border-white/20 bg-white/10 p-8 backdrop-blur-xl">
+          <div class="mb-8 text-center">
+            <img src="/img/logo.png" alt="HEXA" class="mx-auto h-20 w-auto" />
+            <h1 class="mt-4 text-2xl font-black text-white">Create Account</h1>
+            <p class="mt-1 text-sm text-slate-300">Join HEXA and help monitor your community</p>
+          </div>
+
+          <form onsubmit="register(event)" class="grid gap-5">
+            <p id="registerError" class="hidden rounded-xl bg-red-500/20 px-4 py-3 text-sm font-semibold text-red-300"></p>
+            <p id="registerSuccess" class="hidden rounded-xl bg-green-500/20 px-4 py-3 text-sm font-semibold text-green-300"></p>
+
+            <label class="grid gap-1.5 text-sm font-semibold text-slate-200">
+              Full Name
+              <input id="name" type="text" required class="min-h-12 rounded-xl border border-white/20 bg-white/15 px-4 text-white placeholder-slate-400 outline-none ring-0 transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30" placeholder="Enter your full name" />
+            </label>
+
+            <label class="grid gap-1.5 text-sm font-semibold text-slate-200">
+              Email Address
+              <input id="email" type="email" required class="min-h-12 rounded-xl border border-white/20 bg-white/15 px-4 text-white placeholder-slate-400 outline-none ring-0 transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30" placeholder="Enter your email" />
+            </label>
+
+            <div class="grid gap-1.5 text-sm font-semibold text-slate-200">
+              <span>Password</span>
+              <div class="relative">
+                <input id="password" type="password" required minlength="8" class="min-h-12 w-full rounded-xl border border-white/20 bg-white/15 px-4 pr-11 text-white placeholder-slate-400 outline-none ring-0 transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30" placeholder="At least 8 characters" />
+                <button type="button" onclick="togglePassword('password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 transition hover:text-white">
+                  <svg class="eye-open h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  <svg class="eye-closed hidden h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <label class="grid gap-1.5 text-sm font-semibold text-slate-200">
+              Confirm Password
+              <input id="confirmPassword" type="password" required class="min-h-12 rounded-xl border border-white/20 bg-white/15 px-4 text-white placeholder-slate-400 outline-none ring-0 transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30" placeholder="Re-enter your password" />
+            </label>
+
+            <label class="grid gap-1.5 text-sm font-semibold text-slate-200">
+              Home Address <span class="text-xs font-normal text-slate-400">(optional)</span>
+              <input id="address" type="text" class="min-h-12 rounded-xl border border-white/20 bg-white/15 px-4 text-white placeholder-slate-400 outline-none ring-0 transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30" placeholder="e.g. 123 Mabini St., Barangay" />
+            </label>
+
+            <div class="flex items-start gap-3 text-sm">
+              <input id="agreeTerms" type="checkbox" required class="mt-0.5 h-4 w-4 rounded border-white/30 bg-white/10 text-teal-600 focus:ring-teal-500" />
+              <span class="text-slate-300">
+                I have read and agree to the
+                <button type="button" onclick="openTermsModal()" class="font-semibold text-teal-300 underline-offset-2 hover:underline">Terms & Privacy Policy</button>
+              </span>
+            </div>
+
+            <button type="submit" class="min-h-12 rounded-xl bg-[#0f766e] font-black text-white shadow-lg transition hover:bg-teal-800">Create Account</button>
+          </form>
+
+          <div class="mt-6 border-t border-white/10 pt-6 text-center">
+            <p class="text-xs text-slate-400">Already registered? <a href="/login/citizen" class="font-semibold text-teal-300 underline-offset-2 hover:underline">Sign in</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Terms & Privacy Modal -->
+    <div id="termsModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/40 backdrop-blur-sm">
+      <div class="mx-4 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-xl terms-scroll">
+        <div class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-teal-50">
+          <svg class="h-6 w-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <h3 class="mt-4 text-lg font-bold text-slate-900">Terms & Privacy Policy</h3>
+        <p class="mt-1 text-xs text-slate-400">Last updated: July 2026</p>
+
+        <div class="mt-4 space-y-4 text-sm leading-relaxed text-slate-600">
+          <div>
+            <h4 class="font-bold text-slate-800">1. Acceptance of Terms</h4>
+            <p class="mt-1">By creating an account, you agree to be bound by these Terms and Conditions. If you do not agree, do not use the platform.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">2. Account Registration</h4>
+            <p class="mt-1">You must provide accurate and complete information. You are responsible for maintaining the confidentiality of your login credentials and for all activities under your account.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">3. Acceptable Use</h4>
+            <p class="mt-1">You agree to use the platform only for lawful purposes. You may not submit false reports, misuse emergency channels, or attempt to disrupt the system.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">4. Information We Collect</h4>
+            <p class="mt-1">We collect personal information you provide (name, email, address), report data you submit, and technical data such as device information and location when you use our services.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">5. How We Use Your Information</h4>
+            <p class="mt-1">Your information is used to verify reports, coordinate response efforts, and improve the platform. Location data is used only to confirm report areas and is not stored permanently.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">6. Data Sharing</h4>
+            <p class="mt-1">We do not sell your personal information. Data may be shared with authorized barangay and city officials solely for the purpose of public health response.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">7. Data Retention</h4>
+            <p class="mt-1">Account data is retained for as long as your account is active. Report data is retained for compliance and audit purposes. You may request deletion by contacting us.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">8. Your Rights</h4>
+            <p class="mt-1">You may access, update, or delete your personal data through your profile settings. You may withdraw consent for data processing at any time.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">9. Security</h4>
+            <p class="mt-1">We implement appropriate technical and organizational measures to protect your data against unauthorized access, alteration, or destruction.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">10. Limitation of Liability</h4>
+            <p class="mt-1">HEXA is a surveillance tool and does not replace professional medical or emergency services. We are not liable for damages arising from the use of the platform.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">11. Changes to Terms</h4>
+            <p class="mt-1">We reserve the right to update these terms. Continued use after changes constitutes acceptance of the updated terms.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">12. Contact</h4>
+            <p class="mt-1">For questions about these terms or your privacy, contact your local barangay office or the city health department.</p>
+          </div>
+        </div>
+
+        <label class="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-left">
+          <input id="termsCheckbox" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" onchange="updateAgreeButton()" />
+          <span class="text-sm text-slate-600">I have read and agree to the Terms & Privacy Policy.</span>
+        </label>
+
+        <div class="mt-6 flex justify-center gap-3">
+          <button id="cancelTerms" class="rounded-xl border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">Close</button>
+          <button id="confirmTerms" class="rounded-xl bg-teal-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:opacity-40" disabled onclick="acceptTerms()">I Agree</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      (function () {
+        if (!window.L) return;
+        var map = L.map('roleMap', { zoomSnap: 0.25, zoomControl: false, attributionControl: false }).setView([14.68135, 120.97455], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+        L.rectangle([[14.67765, 120.96965], [14.68475, 120.98035]], { color: '#0f766e', weight: 3, fillColor: '#0f766e', fillOpacity: 0.04, dashArray: '12 8' }).addTo(map);
+        L.circle([14.68095, 120.9741], { radius: 260, color: '#dc2626', fillColor: '#dc2626', fillOpacity: 0.07, weight: 2 }).addTo(map);
+        L.circle([14.68235, 120.97615], { radius: 210, color: '#d99a00', fillColor: '#d99a00', fillOpacity: 0.06, weight: 2 }).addTo(map);
+        L.circle([14.68155, 120.9723], { radius: 190, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.06, weight: 2 }).addTo(map);
+      })();
+
+      function togglePassword(id) {
+        var p = document.getElementById(id);
+        var b = p.parentElement.querySelector('button');
+        if (p.type === 'password') { p.type = 'text'; b.querySelector('.eye-open').classList.add('hidden'); b.querySelector('.eye-closed').classList.remove('hidden'); }
+        else { p.type = 'password'; b.querySelector('.eye-closed').classList.add('hidden'); b.querySelector('.eye-open').classList.remove('hidden'); }
+      }
+
+      function openTermsModal() {
+        document.getElementById('termsModal').classList.remove('hidden');
+        document.getElementById('termsModal').classList.add('flex');
+        document.getElementById('termsCheckbox').checked = false;
+        document.getElementById('confirmTerms').disabled = true;
+      }
+
+      function closeTermsModal() {
+        document.getElementById('termsModal').classList.add('hidden');
+        document.getElementById('termsModal').classList.remove('flex');
+      }
+
+      function updateAgreeButton() {
+        document.getElementById('confirmTerms').disabled = !document.getElementById('termsCheckbox').checked;
+      }
+
+      function acceptTerms() {
+        document.getElementById('agreeTerms').checked = true;
+        closeTermsModal();
+      }
+
+      document.getElementById('cancelTerms').addEventListener('click', closeTermsModal);
+      document.getElementById('termsModal').addEventListener('click', function (e) {
+        if (e.target === this) closeTermsModal();
+      });
+
+      async function register(event) {
+        event.preventDefault();
+        var errorEl = document.getElementById('registerError');
+        var successEl = document.getElementById('registerSuccess');
+        errorEl.classList.add('hidden');
+        successEl.classList.add('hidden');
+
+        var name = document.getElementById('name').value.trim();
+        var email = document.getElementById('email').value.trim();
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+        var address = document.getElementById('address').value.trim();
+
+        if (!name || !email || !password || !confirmPassword) {
+          errorEl.textContent = 'All required fields must be filled.';
+          errorEl.classList.remove('hidden');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          errorEl.textContent = 'Passwords do not match.';
+          errorEl.classList.remove('hidden');
+          return;
+        }
+
+        if (password.length < 8) {
+          errorEl.textContent = 'Password must be at least 8 characters.';
+          errorEl.classList.remove('hidden');
+          return;
+        }
+
+        try {
+          var res = await fetch('/api/v1/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, homeAddress: address || undefined })
+          });
+          var json = await res.json();
+          if (!res.ok) {
+            errorEl.textContent = json.error?.message || json.error || 'Registration failed.';
+            errorEl.classList.remove('hidden');
+            return;
+          }
+          successEl.textContent = 'Account created successfully! Redirecting to login...';
+          successEl.classList.remove('hidden');
+          setTimeout(function () { window.location.href = '/login/citizen'; }, 2000);
+        } catch (e) {
+          errorEl.textContent = 'Network error. Please try again.';
+          errorEl.classList.remove('hidden');
+        }
+      }
+    </script>
+  </body>
+</html>

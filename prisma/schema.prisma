@@ -7,86 +7,74 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model CityUser {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  password      String
+  role          String
+  city          String?
+  barangayId    Int?
+  homeAddress   String?
+  homeLat       Float?
+  homeLng       Float?
+  createdAt     DateTime @default(now())
 
-  auditLogs AuditLog[]
-}
-
-model BarangayUser {
-  id         Int      @id @default(autoincrement())
-  name       String
-  email      String   @unique
-  password   String
-  role       String
-  barangayId Int
-  createdAt  DateTime @default(now())
-
-  barangay    Barangay     @relation(fields: [barangayId], references: [id])
-  assignedTasks Task[]     @relation("TaskAssignee")
-  inspections  Inspection[]
-  treatments   Treatment[]
-  routes       Route[]
-  auditLogs    AuditLog[]
-}
-
-model HospitalUser {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-
-  auditLogs AuditLog[]
-}
-
-model CitizenUser {
-  id         Int      @id @default(autoincrement())
-  name       String
-  email      String   @unique
-  password   String
-  barangayId Int?
-  createdAt  DateTime @default(now())
-
-  barangay  Barangay? @relation(fields: [barangayId], references: [id])
-  reports   Report[]
-  auditLogs AuditLog[]
+  barangay      Barangay?     @relation(fields: [barangayId], references: [id])
+  reports       Report[]
+  assignedTasks Task[]        @relation("TaskAssignee")
+  inspections   Inspection[]
+  treatments    Treatment[]
+  routes        Route[]
+  operationRoutes OperationRoute[]
+  operationSentinels OperationSentinel[]
+  tickets       Ticket[]
+  auditLogs     AuditLog[]
 }
 
 model Barangay {
-  id             Int      @id @default(autoincrement())
-  name           String
+  id              Int      @id @default(autoincrement())
+  name            String
   boundaryGeojson String?
   createdAt       DateTime @default(now())
 
-  barangayUsers   BarangayUser[]
-  citizenUsers    CitizenUser[]
+  users           User[]
   areas           Area[]
   reports         Report[]
   tasks           Task[]
   sentinelDevices SentinelDevice[]
+  operationRoutes OperationRoute[]
+  operationSentinels OperationSentinel[]
+}
+
+model Ticket {
+  id          Int      @id @default(autoincrement())
+  type        String
+  description String
+  status      String   @default("Submitted")
+  submittedBy Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  submitter User @relation(fields: [submittedBy], references: [id])
 }
 
 model Area {
-  id              Int      @id @default(autoincrement())
-  barangayId      Int
-  name            String
-  type            String
-  boundaryGeojson  String?
-  centerLat       Float
-  centerLng       Float
-  lastCheckedAt   DateTime?
-  publicStatus    String   @default("gray")
-  historicalHotspot Boolean @default(false)
-  hasDrainage     Boolean  @default(false)
-  densityLevel    String?
-  riskScore       Int      @default(0)
-  priority        String?
-  createdAt       DateTime @default(now())
+  id                Int      @id @default(autoincrement())
+  barangayId        Int
+  name              String
+  type              String
+  boundaryGeojson   String?
+  centerLat         Float
+  centerLng         Float
+  lastCheckedAt     DateTime?
+  publicStatus      String   @default("gray")
+  historicalHotspot Boolean  @default(false)
+  hasDrainage       Boolean  @default(false)
+  densityLevel      String?
+  riskScore         Int      @default(0)
+  priority          String?
+  createdAt         DateTime @default(now())
 
   barangay        Barangay        @relation(fields: [barangayId], references: [id])
   reports         Report[]
@@ -109,54 +97,54 @@ model Report {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  submitter   CitizenUser @relation(fields: [submittedBy], references: [id])
-  barangay    Barangay    @relation(fields: [barangayId], references: [id])
-  area        Area?       @relation(fields: [areaId], references: [id])
+  submitter   User      @relation(fields: [submittedBy], references: [id])
+  barangay    Barangay  @relation(fields: [barangayId], references: [id])
+  area        Area?     @relation(fields: [areaId], references: [id])
   tasks       Task[]
   inspections Inspection[]
 }
 
 model Task {
-  id              Int      @id @default(autoincrement())
-  type            String
-  status          String   @default("scheduled")
-  priority        String?
-  assignedTo      Int?
-  barangayId      Int?
-  areaId          Int?
-  reportId        Int?
-  sentinelDeviceId Int?
-  dueAt           DateTime?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                Int      @id @default(autoincrement())
+  type              String
+  status            String   @default("scheduled")
+  priority          String?
+  assignedTo        Int?
+  barangayId        Int?
+  areaId            Int?
+  reportId          Int?
+  sentinelDeviceId  Int?
+  dueAt             DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  assignee         BarangayUser?   @relation("TaskAssignee", fields: [assignedTo], references: [id])
+  assignee         User?           @relation("TaskAssignee", fields: [assignedTo], references: [id])
   barangay         Barangay?       @relation(fields: [barangayId], references: [id])
   area             Area?           @relation(fields: [areaId], references: [id])
   report           Report?         @relation(fields: [reportId], references: [id])
   sentinelDevice   SentinelDevice? @relation(fields: [sentinelDeviceId], references: [id])
-  inspections       Inspection[]
-  treatments        Treatment[]
-  routePoints       RoutePoint[]
+  inspections      Inspection[]
+  treatments       Treatment[]
+  routePoints      RoutePoint[]
 }
 
 model Inspection {
-  id           Int      @id @default(autoincrement())
-  taskId       Int?
-  inspectorId  Int
-  reportId     Int?
-  lat          Float
-  lng          Float
-  result       String
+  id            Int      @id @default(autoincrement())
+  taskId        Int?
+  inspectorId   Int
+  reportId      Int?
+  lat           Float
+  lng           Float
+  result        String
   containerType String?
   waterPresent  Boolean?
-  larvaeSeen   Boolean?
-  notes        String?
-  photoUrl     String?
-  createdAt    DateTime @default(now())
+  larvaeSeen    Boolean?
+  notes         String?
+  photoUrl      String?
+  createdAt     DateTime @default(now())
 
   task       Task?      @relation(fields: [taskId], references: [id])
-  inspector  BarangayUser @relation(fields: [inspectorId], references: [id])
+  inspector  User       @relation(fields: [inspectorId], references: [id])
   report     Report?    @relation(fields: [reportId], references: [id])
   treatments Treatment[]
 }
@@ -175,7 +163,7 @@ model Treatment {
   createdAt     DateTime @default(now())
 
   task       Task?       @relation(fields: [taskId], references: [id])
-  team       BarangayUser @relation(fields: [teamId], references: [id])
+  team       User        @relation(fields: [teamId], references: [id])
   inspection Inspection? @relation(fields: [inspectionId], references: [id])
 }
 
@@ -190,7 +178,7 @@ model Route {
   trailJson   String?
   createdAt   DateTime @default(now())
 
-  assignee    BarangayUser @relation(fields: [assignedTo], references: [id])
+  assignee    User        @relation(fields: [assignedTo], references: [id])
   routePoints RoutePoint[]
 }
 
@@ -208,34 +196,61 @@ model RoutePoint {
   task  Task? @relation(fields: [taskId], references: [id])
 }
 
+model OperationRoute {
+  id          Int      @id @default(autoincrement())
+  barangayId  Int
+  createdBy   Int
+  name        String
+  type        String
+  geojson     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  barangay Barangay @relation(fields: [barangayId], references: [id])
+  creator  User     @relation(fields: [createdBy], references: [id])
+}
+
+model OperationSentinel {
+  id        Int      @id @default(autoincrement())
+  barangayId Int
+  createdBy Int
+  name      String
+  lat       Float
+  lng       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  barangay Barangay @relation(fields: [barangayId], references: [id])
+  creator  User     @relation(fields: [createdBy], references: [id])
+}
+
 model PublicStatus {
-  id           Int      @id @default(autoincrement())
-  areaId       Int
-  status       String   @default("gray")
-  sourceType   String?
-  sourceId     Int?
+  id            Int      @id @default(autoincrement())
+  areaId        Int
+  status        String   @default("gray")
+  sourceType    String?
+  sourceId      Int?
   lastCheckedAt DateTime?
-  expiresAt    DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  expiresAt     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   area Area @relation(fields: [areaId], references: [id])
 }
 
 model SentinelDevice {
-  id               Int      @id @default(autoincrement())
-  deviceCode       String   @unique
-  type             String
-  barangayId       Int
-  areaId           Int?
-  lat              Float
-  lng              Float
-  status           String   @default("planned")
-  batteryLevel     Int?
-  lastSeenAt       DateTime?
+  id                Int      @id @default(autoincrement())
+  deviceCode        String   @unique
+  barangayId        Int
+  areaId            Int?
+  lat               Float
+  lng               Float
+  status            String   @default("planned")
+  batteryLevel      Int?
+  lastSeenAt        DateTime?
   lastMaintenanceAt DateTime?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   barangay    Barangay         @relation(fields: [barangayId], references: [id])
   area        Area?            @relation(fields: [areaId], references: [id])
@@ -259,19 +274,13 @@ model SentinelReading {
 }
 
 model AuditLog {
-  id            Int      @id @default(autoincrement())
-  cityUserId    Int?
-  barangayUserId Int?
-  hospitalUserId Int?
-  citizenUserId  Int?
-  action        String
-  entityType    String
-  entityId      Int?
-  metadataJson  String?
-  createdAt     DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  userId     Int?
+  action     String
+  entityType String
+  entityId   Int?
+  metadataJson String?
+  createdAt  DateTime @default(now())
 
-  cityUser     CityUser?     @relation(fields: [cityUserId], references: [id])
-  barangayUser BarangayUser? @relation(fields: [barangayUserId], references: [id])
-  hospitalUser HospitalUser? @relation(fields: [hospitalUserId], references: [id])
-  citizenUser  CitizenUser?  @relation(fields: [citizenUserId], references: [id])
+  user User? @relation(fields: [userId], references: [id])
 }

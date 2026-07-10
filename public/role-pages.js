@@ -69,6 +69,17 @@ const citizenReport = {
 };
 const task = { id: "T-22", pos: [14.68105, 120.9744], label: "Inspect" };
 
+const barangaySearchTargets = [
+  { name: "School drainage", keywords: ["school", "drainage", "ovi-a", "drainage canal a", "drainage canal b"], pos: [14.68065, 120.9748], zoom: 18 },
+  { name: "General Luna", keywords: ["general luna", "canal", "ovi-a2"], pos: [14.68105, 120.9741], zoom: 18 },
+  { name: "Sampaguita", keywords: ["sampaguita", "ovi-a3"], pos: [14.6797, 120.97355], zoom: 18 },
+  { name: "Mabini cluster", keywords: ["mabini", "cluster", "ovi-c1"], pos: [14.68255, 120.97245], zoom: 18 },
+  { name: "J.P. Rizal", keywords: ["j.p. rizal", "jp rizal", "rizal", "ovi-b"], pos: [14.68275, 120.9769], zoom: 18 },
+  { name: "Transmitter site", keywords: ["transmitter", "tower", "ovi-d"], pos: [14.67925, 120.97675], zoom: 18 },
+  { name: "Citizen report", keywords: ["report", "citizen report", "larvae"], pos: citizenReport.pos, zoom: 18 },
+  { name: "Inspection task", keywords: ["task", "inspection", "inspect"], pos: task.pos, zoom: 18 },
+];
+
 const inspectionPath = [
   [14.6812, 120.97435],
   [14.68195, 120.97438],
@@ -169,9 +180,9 @@ function addBaseMap() {
     zoomControl: true,
     scrollWheelZoom: true,
   }).setView(center, 16);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
     maxZoom: 19,
-    attribution: "&copy; OpenStreetMap contributors",
+    attribution: "&copy; Esri, Maxar, Earthstar Geographics",
   }).addTo(map);
   return map;
 }
@@ -203,7 +214,7 @@ function addRiskLayers(map, options = {}) {
     color: "#dc2626",
     weight: 4,
     fillColor: "#dc2626",
-    fillOpacity: options.public ? 0.08 : 0.14,
+    fillOpacity: 0,
   }).addTo(map);
 
   L.circle([14.68145, 120.97305], {
@@ -211,7 +222,7 @@ function addRiskLayers(map, options = {}) {
     color: "#f97316",
     weight: 2,
     fillColor: "#f97316",
-    fillOpacity: 0.08,
+    fillOpacity: 0,
   }).addTo(map);
 
   L.circle([14.68255, 120.9765], {
@@ -219,7 +230,7 @@ function addRiskLayers(map, options = {}) {
     color: "#d99a00",
     weight: 2,
     fillColor: "#d99a00",
-    fillOpacity: 0.07,
+    fillOpacity: 0,
   }).addTo(map);
 }
 
@@ -246,7 +257,11 @@ function citizenView(map) {
     { className: "legend-risk", label: "Public monitoring area" },
     { className: "legend-report", label: "Submitted report" },
   ]);
-  map.fitBounds(scopeBounds, { padding: [28, 28] });
+  if (window._userHome && window._userHome.lat && window._userHome.lng) {
+    map.setView([window._userHome.lat, window._userHome.lng], 16);
+  } else {
+    map.fitBounds(scopeBounds, { padding: [28, 28] });
+  }
 
   metrics([
     { label: "Area status", value: "Monitoring" },
@@ -265,29 +280,6 @@ function citizenView(map) {
     "View public advisories and report status only; internal routes and risk scoring stay private.",
   ]);
 
-  const button = $("submitReportButton");
-  if (button) {
-    button.addEventListener("click", () => {
-      $("reportStatus").textContent =
-        "Report submitted: Pending Review. Barangay team can now validate and assign inspection.";
-      list("statusFlow", [
-        { text: "Submitted", current: true },
-        { text: "Pending Review" },
-        { text: "Inspection Task Created" },
-        { text: "Field Verification" },
-        { text: "Action Taken / Resolved" },
-      ]);
-    });
-  }
-
-  const locateButton = $("locateButton");
-  if (locateButton) {
-    locateButton.addEventListener("click", () => {
-      map.flyTo([14.6808, 120.9745], 17, { duration: 0.8 });
-      $("locationStatus").textContent =
-        `Showing public monitoring area for ${$("locationSearch").value || "selected location"}.`;
-    });
-  }
 }
 
 const recentActivity = [
@@ -332,7 +324,6 @@ function activityFeed() {
 }
 
 function barangayView(map) {
-  addBarangayScope(map);
   addRiskLayers(map);
   addSentinels(map);
   L.marker(citizenReport.pos, {
@@ -360,12 +351,12 @@ function barangayView(map) {
     { label: "For recheck", value: "2" },
   ]);
   ops([
-    { label: "Zone mapping", value: "Mapped" },
-    { label: "Risk scoring", value: "Live" },
-    { label: "High-risk alert", value: "Created" },
-    { label: "Inspection task", value: "BHW-03" },
-    { label: "Risk perimeter", value: "Verified" },
-    { label: "Intervention status", value: "Active" },
+    { label: "Active reports", value: "12" },
+    { label: "Pending inspections", value: "4" },
+    { label: "High-risk areas", value: "2" },
+    { label: "Teams deployed", value: "2" },
+    { label: "Tasks overdue", value: "1" },
+    { label: "Response status", value: "Ongoing" },
   ]);
   sentinelStatus();
   activityFeed();
@@ -378,6 +369,44 @@ function barangayView(map) {
     { label: "General Luna canal", value: "High score 72" },
     { label: "Transmitter edge", value: "Monitoring", tone: "low" },
   ]);
+
+  const searchInput = $("barangayAreaSearch");
+  const searchButton = $("barangayAreaSearchButton");
+  const searchStatus = $("barangayAreaSearchStatus");
+  let searchMarker = null;
+
+  function runBarangaySearch() {
+    const query = (searchInput && searchInput.value ? searchInput.value : "").trim().toLowerCase();
+    if (!query) {
+      if (searchStatus) searchStatus.textContent = "Enter an area, zone, task, or sentinel name.";
+      return;
+    }
+    const target = barangaySearchTargets.find((item) =>
+      item.name.toLowerCase().includes(query) ||
+      item.keywords.some((keyword) => keyword.includes(query) || query.includes(keyword))
+    );
+    if (!target) {
+      if (searchStatus) searchStatus.textContent = `No operation area found for "${searchInput.value}".`;
+      return;
+    }
+    if (searchMarker) map.removeLayer(searchMarker);
+    searchMarker = L.circleMarker(target.pos, {
+      radius: 14,
+      color: "#0f766e",
+      weight: 3,
+      fillColor: "#14b8a6",
+      fillOpacity: 0,
+    }).addTo(map);
+    map.flyTo(target.pos, target.zoom, { duration: 0.8 });
+    if (searchStatus) searchStatus.textContent = `Showing ${target.name}.`;
+  }
+
+  if (searchButton && searchInput) {
+    searchButton.addEventListener("click", runBarangaySearch);
+    searchInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") runBarangaySearch();
+    });
+  }
 }
 
 const cityAlerts = [
@@ -479,6 +508,7 @@ function cityView(map) {
 }
 
 const map = addBaseMap();
+window._appMap = map;
 
 if (role === "citizen") citizenView(map);
 if (role === "barangay") barangayView(map);

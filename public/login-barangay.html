@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HEXA · Barangay Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/role-pages.css" />
+  </head>
+  <body class="min-h-screen bg-[#0c1a2e] text-slate-900 antialiased">
+    <div class="grid min-h-screen lg:grid-cols-[400px_1fr]">
+      <aside class="flex flex-col border-r border-white/5 bg-gradient-to-b from-[#0c1a2e] via-[#0f1f36] to-[#0a1628] p-0 text-white">
+        <div class="border-b border-white/5 px-6 py-2">
+          <a class="flex items-center" href="/">
+            <img src="/img/logo.png" alt="HEXA" class="h-11 w-auto" />
+            <span>
+              <strong class="block text-lg font-display tracking-widest" style="font-family:'Libre Baskerville',serif">PROJECT HEXA</strong>
+              <small class="block text-sm font-semibold uppercase tracking-[0.22em] text-teal-300/70">Barangay Access</small>
+            </span>
+          </a>
+        </div>
+
+        <div class="flex flex-1 items-center justify-center px-6">
+          <div class="w-full max-w-sm">
+            <div class="mb-8">
+              <h1 class="text-3xl font-display font-bold leading-tight">Welcome back.</h1>
+              <p class="mt-2 text-sm leading-relaxed text-slate-300/80">Sign in to manage inspections, sentinel devices, and response tasks for your barangay.</p>
+            </div>
+
+            <form onsubmit="login(event)" class="grid gap-5">
+              <p id="loginError" class="hidden rounded-xl bg-red-500/20 px-4 py-3 text-sm font-semibold text-red-300"></p>
+              <label class="grid gap-1.5 text-sm font-semibold text-slate-200">
+                Email or Username
+                <input id="email" type="text" class="min-h-12 rounded-xl border border-white/20 bg-white/15 px-4 text-white placeholder-slate-400 outline-none ring-0 transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30" placeholder="admin@barangay.gov.ph" />
+              </label>
+              <div class="grid gap-1.5 text-sm font-semibold text-slate-200">
+                <span>Password</span>
+                <div class="relative">
+                  <input id="password" type="password" class="min-h-12 w-full rounded-xl border border-white/20 bg-white/15 px-4 pr-11 text-white placeholder-slate-400 outline-none ring-0 transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30" placeholder="Enter your password" />
+                  <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 transition hover:text-white">
+                    <svg class="eye-open h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <svg class="eye-closed hidden h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                  </button>
+                </div>
+              </div>
+              <button type="submit" class="min-h-12 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 font-black text-white shadow-lg transition hover:from-teal-700 hover:to-teal-800">Sign In</button>
+            </form>
+
+            <p class="mt-6 border-t border-white/10 pt-6 text-center text-xs text-slate-500">Demo: <strong>barangay@agila.test</strong> / <strong>password123</strong></p>
+          </div>
+        </div>
+      </aside>
+
+      <section class="relative hidden overflow-hidden lg:block">
+        <div id="roleMap" class="absolute inset-0 z-0"></div>
+        <div class="absolute inset-0 z-10 bg-gradient-to-b from-[#0c1a2e]/60 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-[#0c1a2e] to-transparent p-8">
+          <p class="text-sm font-semibold text-teal-300/80">Environmental surveillance only.</p>
+          <p class="text-xs text-slate-400">Clinical dengue case reporting remains under PIDSR.</p>
+        </div>
+      </section>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      (function () {
+        if (!window.L) return;
+        var map = L.map('roleMap', { zoomSnap: 0.25, zoomControl: false, attributionControl: false }).setView([14.68135, 120.97455], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+        L.rectangle([[14.67765, 120.96965], [14.68475, 120.98035]], { color: '#0f766e', weight: 3, fillColor: '#0f766e', fillOpacity: 0.04, dashArray: '12 8' }).addTo(map);
+        L.circle([14.68095, 120.9741], { radius: 260, color: '#dc2626', fillColor: '#dc2626', fillOpacity: 0.07, weight: 2 }).addTo(map);
+        L.circle([14.68235, 120.97615], { radius: 210, color: '#d99a00', fillColor: '#d99a00', fillOpacity: 0.06, weight: 2 }).addTo(map);
+        L.circle([14.68155, 120.9723], { radius: 190, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.06, weight: 2 }).addTo(map);
+        map.dragging.disable(); map.touchZoom.disable(); map.doubleClickZoom.disable(); map.scrollWheelZoom.disable(); map.keyboard.disable();
+      })();
+    </script>
+    <script>
+      function togglePassword() {
+        var p = document.getElementById('password');
+        var b = p.parentElement.querySelector('button');
+        if (p.type === 'password') { p.type = 'text'; b.querySelector('.eye-open').classList.add('hidden'); b.querySelector('.eye-closed').classList.remove('hidden'); }
+        else { p.type = 'password'; b.querySelector('.eye-closed').classList.add('hidden'); b.querySelector('.eye-open').classList.remove('hidden'); }
+      }
+      async function login(event) {
+        event.preventDefault();
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var errorEl = document.getElementById('loginError');
+        try {
+          var res = await fetch('/api/v1/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+          var json = await res.json();
+          if (!res.ok) { errorEl.textContent = json.error?.message || 'Login failed'; errorEl.classList.remove('hidden'); return; }
+          localStorage.setItem('user', JSON.stringify(json.data.user));
+          window.location.href = json.data.redirect || '/barangay';
+        } catch (e) { errorEl.textContent = 'Network error'; errorEl.classList.remove('hidden'); }
+      }
+    </script>
+  </body>
+</html>
